@@ -216,45 +216,46 @@ class BannerFragment extends EngineObject {
   }
 }
 
+// Platform positions — shared between buildLevel() and gameRender()
+const PLATFORMS = [
+  [10, 5], [12, 5],
+  [18, 6], [19, 6], [20, 6],
+  [26, 5],
+  [34, 7], [35, 7], [36, 7], [37, 7],
+  [46, 5], [47, 5],
+  [54, 6], [55, 6], [56, 6],
+  [64, 5],
+];
+
 ///////////////////////////////////////////////////////////////////////////////
 // Level construction — a side-scrolling farmyard
 function buildLevel() {
-  // Tile collision layer — width 80, height 24
+  // Tile collision layer — collision only; visuals drawn in gameRender()
+  // LittleJS TileLayer always reads from texture 0, so we use invisible tiles
+  // and paint the ground manually to avoid pig sprites appearing as terrain.
   const layer = new TileCollisionLayer(vec2(0,0), vec2(80, 24));
+  const invisible = () => new TileLayerData(-1, 0, false, hsl(0,0,1,0));
 
-  // Use terrain tile (index 1 = solid grass-top tile in the KP terrain sheet)
-  // Terrain.png is 64x192 = 2x6 grid of 32x32 tiles
-  const tileFor = (i) => new TileLayerData(i, 0, false, hsl(0,0,1,1));
-
-  // Ground (y=2)
+  // Ground collision (y=0,1,2)
   for (let x = 0; x < 80; x++) {
-    layer.setData(vec2(x, 2), tileFor(1));   // top of grass
-    layer.setData(vec2(x, 1), tileFor(7));   // dirt below
-    layer.setData(vec2(x, 0), tileFor(7));
+    layer.setData(vec2(x, 2), invisible());
+    layer.setData(vec2(x, 1), invisible());
+    layer.setData(vec2(x, 0), invisible());
     layer.setCollisionData(vec2(x, 2));
     layer.setCollisionData(vec2(x, 1));
     layer.setCollisionData(vec2(x, 0));
   }
 
-  // Some platforms / hay bales for jumping
-  const platforms = [
-    [10, 5], [12, 5],
-    [18, 6], [19, 6], [20, 6],
-    [26, 5],
-    [34, 7], [35, 7], [36, 7], [37, 7],
-    [46, 5], [47, 5],
-    [54, 6], [55, 6], [56, 6],
-    [64, 5],
-  ];
-  for (const [x, y] of platforms) {
-    layer.setData(vec2(x, y), tileFor(1));
+  // Platform collision
+  for (const [x, y] of PLATFORMS) {
+    layer.setData(vec2(x, y), invisible());
     layer.setCollisionData(vec2(x, y));
   }
 
-  // Walls / barn at the very end (x=78-79)
+  // Barn wall collision (x=78-79)
   for (let y = 3; y < 12; y++) {
-    layer.setData(vec2(78, y), tileFor(0));
-    layer.setData(vec2(79, y), tileFor(0));
+    layer.setData(vec2(78, y), invisible());
+    layer.setData(vec2(79, y), invisible());
     layer.setCollisionData(vec2(78, y));
     layer.setCollisionData(vec2(79, y));
   }
@@ -362,10 +363,22 @@ function gameUpdatePost() {
 
 function gameRender() {
   // Illustrated farm background — always centred on camera so no gaps appear
-  const bgW = SPRITES.bg.w / 48;   // 40 world units (1920px at scale 48)
-  const bgH = SPRITES.bg.h / 48;   // 15 world units (720px at scale 48)
+  const bgW = SPRITES.bg.w / 48;
+  const bgH = SPRITES.bg.h / 48;
   drawTile(vec2(cameraPos.x, 11), vec2(bgW, bgH),
     tile(0, vec2(SPRITES.bg.w, SPRITES.bg.h), TEX.bg));
+
+  // Ground — drawn here because LittleJS TileLayer reads texture 0 by default
+  drawRect(vec2(40, 1),    vec2(160, 4),    hsl(0.08, 0.45, 0.18));  // deep earth
+  drawRect(vec2(40, 2.55), vec2(160, 0.45), hsl(0.26, 0.35, 0.26));  // mud-grass surface
+
+  // Platforms — ochre hay-bale colour
+  for (const [x, y] of PLATFORMS) {
+    drawRect(vec2(x + 0.5, y), vec2(1.1, 0.3), hsl(0.10, 0.55, 0.46));
+  }
+
+  // Barn wall at right end of level
+  drawRect(vec2(78.5, 7.5), vec2(2.2, 9.4), hsl(0.60, 0.12, 0.26));
 }
 
 function gameRenderPost() {
