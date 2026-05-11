@@ -256,7 +256,7 @@ function render() {
     el.href = unlocked ? a.file : '#';
     if (!unlocked) el.setAttribute('aria-disabled', 'true');
     el.innerHTML = `
-      <div class="act-num">ACT ${'I'.repeat(a.n).replace(/IIII/, 'IV').replace(/IIIII/, 'V').replace(/IVI+$/, 'V')} — ${a.chapter}</div>
+      <div class="act-num">ACT ${['', 'I', 'II', 'III', 'IV', 'V'][a.n]} — ${a.chapter}</div>
       <h2>${a.title}${done ? ' ✓' : ''}</h2>
       <p>${a.blurb}</p>
       <div class="meta">

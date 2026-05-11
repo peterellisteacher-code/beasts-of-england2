@@ -7,6 +7,7 @@
 (function () {
 
 const MAX_TURNS = 7;
+const DOG_ARRIVAL = 6;   // dog clock threshold — arrival fires before MAX_TURNS
 const MAX_CONVICTION = 3;
 const HAND_SIZE = 5;
 
@@ -16,11 +17,12 @@ const state = {
   conviction: MAX_CONVICTION,
   sympathy: 50,           // 0–100 — how much of the meeting still listens to Snowball
   memory: 100,            // 0–100 — how much of the original principles will outlive this meeting
-  dogClock: 0,            // 0–MAX_TURNS — when full, dogs arrive
+  dogClock: 0,            // dogs arrive at DOG_ARRIVAL
   napoleonPower: 30,      // accumulating force; high = adversary moves do more damage
   adversaryNextDamage: 0, // pending damage from telegraphed move
   savedPlans: false,
   cardsPlayed: 0,
+  reshuffleCount: 0,
   deck: [],
   hand: [],
   discard: [],
@@ -130,10 +132,12 @@ function announce(msg) {
 function dealHand() {
   while (state.hand.length < HAND_SIZE && (state.deck.length > 0 || state.discard.length > 0)) {
     if (state.deck.length === 0) {
-      // Reshuffle discard into deck
       state.deck = window.shuffle([...state.discard]);
       state.discard = [];
-      addLog('narrator', 'You shuffle your remembered moves back into your hand.');
+      if (state.reshuffleCount === 0) {
+        addLog('narrator', 'You shuffle your remembered moves back into your hand.');
+      }
+      state.reshuffleCount++;
     }
     state.hand.push(state.deck.pop());
   }
@@ -203,7 +207,7 @@ function renderResources() {
   els['sympathy-label'].textContent = `${Math.round(state.sympathy)} %`;
   els['memory-fill'].style.width = `${state.memory}%`;
   els['memory-label'].textContent = `${Math.round(state.memory)} %`;
-  els['dog-fill'].style.width = `${(state.dogClock / MAX_TURNS) * 100}%`;
+  els['dog-fill'].style.width = `${Math.min(100, (state.dogClock / DOG_ARRIVAL) * 100)}%`;
   els['dog-status'].textContent =
     state.dogClock < 2 ? '— not yet released —' :
     state.dogClock < 4 ? '— audible at the gate —' :
@@ -255,7 +259,7 @@ function endTurn() {
 function checkEnd() {
   if (state.ended) return true;
   // Dog clock at or above 6 — dogs arrive (changed from MAX_TURNS=7 so this end condition is reachable in normal play)
-  if (state.dogClock >= 6) {
+  if (state.dogClock >= DOG_ARRIVAL) {
     finish('Napoleon stands. The dogs are inside the barn before anyone can react.');
     return true;
   }
@@ -284,8 +288,8 @@ function finish(narrationLine) {
   // Mark L5 complete + record ending
   const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
   if (!completed.includes(5)) completed.push(5);
-  localStorage.setItem('completedLevels', JSON.stringify(completed));
-  localStorage.setItem('finalEnding', ending);
+  try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
+  try { localStorage.setItem('finalEnding', ending); } catch(e) {}
 
   // Render outcome modal
   els['outcome-title'].textContent = ENDING_LINES[ending].title;

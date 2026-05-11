@@ -51,6 +51,19 @@ window.CARD_DEFINITIONS = {
     effect: (s) => { s.adversaryNextDamage = max(0, s.adversaryNextDamage - 14); s.napoleonPower = max(0, s.napoleonPower - 6); s.log('player', 'You make the threat visible as a threat. The argument loses its grip.'); }
   },
 
+  'L2-4': {
+    type: 'rhetoric', name: 'Question the Authority',
+    body: '"This has been proved by Science." Whose science? Where?',
+    cost: 1,
+    effect: (s) => { s.adversaryNextDamage = max(0, s.adversaryNextDamage - 10); s.memory = clamp(s.memory + 8, 0, 100); s.log('player', 'You ask for the source. Squealer skips and frisks and does not name one.'); }
+  },
+  'L2-5': {
+    type: 'rhetoric', name: 'Reverse the Charity',
+    body: '"It is for your sake." It is for theirs.',
+    cost: 1,
+    effect: (s) => { s.adversaryNextDamage = max(0, s.adversaryNextDamage - 8); s.sympathy = clamp(s.sympathy + 10, 0, 100); s.log('player', 'You name the false gift. The hens at the back stop nodding.'); }
+  },
+
   // === ACT III — Tactical Insights (from L3 Cowshed) ===
   'L3-1': {
     type: 'tactic', name: 'Hold the Door',
@@ -91,6 +104,13 @@ window.CARD_DEFINITIONS = {
     effect: (s) => { s.savedPlans = true; s.memory = clamp(s.memory + 16, 0, 100); s.log('player', 'You quietly transcribe Snowball\'s drawing onto a sheet from the harness-room.'); }
   },
 
+  'L4-4': {
+    type: 'suspicion', name: "Pilkington's Man Stroked Her Nose",
+    body: "Mollie's defection started weeks earlier. The neighbours have been waiting.",
+    cost: 1,
+    effect: (s) => { s.sympathy = clamp(s.sympathy + 8, 0, 100); s.memory = clamp(s.memory + 10, 0, 100); s.log('player', 'You name the pattern of contact. Several animals exchange glances.'); }
+  },
+
   // === STARTER DECK — used if player skipped earlier acts ===
   'starter-protest': {
     type: 'principle', name: 'You Speak Up',
@@ -120,7 +140,7 @@ window.buildDeckFromStorage = function () {
     return [
       'starter-protest','starter-protest','starter-protest',
       'starter-listen','starter-listen','starter-listen',
-      'L2-1','L3-2','L4-1'  // a few default cards as a baseline
+      'starter-protest','starter-listen','starter-protest'
     ];
   }
 

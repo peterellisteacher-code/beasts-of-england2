@@ -76,7 +76,7 @@ class Pig extends EngineObject {
     else this.coyoteTime = max(0, this.coyoteTime - 1/60);
 
     if (jump && this.coyoteTime > 0) {
-      this.velocity.y = 0.34;
+      this.velocity.y = 0.9;
       this.coyoteTime = 0;
       // Dust kick — small particle burst
       new ParticleEmitter(
@@ -122,7 +122,7 @@ class Pig extends EngineObject {
 class MrJones extends EngineObject {
   constructor(pos) {
     super(pos, vec2(3.5, 3.0));
-    this.setCollision(true, false);
+    this.setCollision(false, false);  // no physics box — win is triggered by proximity check
     this.gravityScale = 0;
     this.mass = 0;
     this.frame = 0;
@@ -200,7 +200,7 @@ class BannerFragment extends EngineObject {
     // Save card to localStorage
     const deck = JSON.parse(localStorage.getItem('animalDeck') || '[]');
     deck.push({ id: `L1-${cardsCollected}`, level: 1, type: 'principle', text: this.text });
-    localStorage.setItem('animalDeck', JSON.stringify(deck));
+    try { localStorage.setItem('animalDeck', JSON.stringify(deck)); } catch(e) {}
     // Particle burst
     new ParticleEmitter(
       this.pos, 0,
@@ -297,7 +297,7 @@ function showCinematic() {
       // Persist completion + go to level select (or refresh for now)
       const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
       if (!completed.includes(1)) completed.push(1);
-      localStorage.setItem('completedLevels', JSON.stringify(completed));
+      try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
       // Go to level-select hub (or stub for now)
       window.location.href = '../level-select/index.html';
     });
@@ -329,17 +329,23 @@ function gameUpdate() {
     if (d.length() < 2.5) {
       jones.flee();
       // Slight cam shake
-      cameraPos = cameraPos.add(vec2(randInRange(-0.1, 0.1), randInRange(-0.1, 0.1)));
+      setCameraPos(cameraPos.add(vec2(rand(0.1, -0.1), rand(0.1, -0.1))));
     }
   }
 
-  // After Jones has been fleeing for ~2 seconds, show cinematic
+  // After Jones starts fleeing, show cinematic after a short delay
   if (jones && jones.fleeing) {
     if (!levelComplete) {
       levelComplete = true;
       jones.fleeStart = time;
     }
-    if (time - jones.fleeStart > 2) showCinematic();
+    if (time - jones.fleeStart > 0.8) showCinematic();
+  }
+
+  // Respawn if player falls out of level bounds — skip when level is already won
+  if (!levelComplete && player && (player.pos.x < -1 || player.pos.x > 81 || player.pos.y < 0)) {
+    player.pos = vec2(3, 5);
+    player.velocity = vec2(0, 0);
   }
 
   // Restart key
@@ -349,7 +355,7 @@ function gameUpdate() {
 function gameUpdatePost() {
   // Camera follows player horizontally; clamp at level bounds
   if (player) {
-    const target = vec2(clamp(player.pos.x, 12, 70), 6);
+    const target = vec2(clamp(player.pos.x, 12, 74), 6);
     setCameraPos(cameraPos.lerp(target, 0.08));
   }
 }

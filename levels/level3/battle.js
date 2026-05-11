@@ -69,6 +69,7 @@ const state = {
   cardsEarned: [],
   totalKills: 0,
   totalEscapes: 0,
+  waveEscapes: 0,
   enemiesInPlay: [],
   spawnTimer: 0,
   waveStartTime: 0,
@@ -107,6 +108,7 @@ function startNextWave() {
   els['wave-narration'].textContent = wave.narration;
   document.getElementById('wave-num').textContent = `${state.waveIdx + 1} / 3`;
   state.waveEnemyIdx = 0;
+  state.waveEscapes = 0;
   state.spawnTimer = 0;
   state.waveStartTime = performance.now();
   state.waitingForNextWave = false;
@@ -160,6 +162,7 @@ function spawnNextEnemy() {
       enemy.el.classList.add('escaped');
       state.hp = Math.max(0, state.hp - 18);
       state.totalEscapes++;
+      state.waveEscapes++;
       renderTally();
       announce('An attacker reached the cowshed!', true);
       setTimeout(() => enemy.el.remove(), 360);
@@ -215,8 +218,8 @@ function checkWaveEnd() {
     state.waitingForNextWave = true;
     state.enemiesInPlay = [];
 
-    // Award card if more kills than escapes in this wave (judged loosely)
-    const earnedCard = state.totalEscapes < (state.waveIdx + 1) * 2;  // forgiving
+    // Award card if at most 1 enemy escaped this wave
+    const earnedCard = state.waveEscapes < 2;
     if (earnedCard && wave.card) {
       state.cardsEarned.push(wave.card);
       persistCard(wave.card);
@@ -262,7 +265,7 @@ function finishBattle() {
 
   const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
   if (!completed.includes(3)) completed.push(3);
-  localStorage.setItem('completedLevels', JSON.stringify(completed));
+  try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
 
   els['outcome-dialog'].showModal();
 }
@@ -271,7 +274,7 @@ function persistCard(card) {
   const deck = JSON.parse(localStorage.getItem('animalDeck') || '[]');
   if (deck.find(c => c.id === card.id)) return;
   deck.push({ id: card.id, level: 3, type: card.type, name: card.name, body: card.body });
-  localStorage.setItem('animalDeck', JSON.stringify(deck));
+  try { localStorage.setItem('animalDeck', JSON.stringify(deck)); } catch(e) {}
 }
 
 // === Boot ==================================================================

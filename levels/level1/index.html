@@ -15,9 +15,10 @@
          text-shadow: 2px 2px 0 #1a1814; }
   #cards-collected { letter-spacing: 0.05em; }
   #level-title { color: #9F1A1F; font-size: 22px; }
+  #controls-hint { font-size: 13px; color: #c8b88a; letter-spacing: 0.04em; margin-top: 4px; }
   #cinematic { position: fixed; inset: 0; background: rgba(26,24,20,0.96); color: #f0e8d0;
                display: none; flex-direction: column; align-items: center; justify-content: center;
-               font-family: 'IM Fell English', serif; padding: 40px; z-index: 100;
+               font-family: 'IM Fell English', serif; padding: 40px; z-index: 9999;
                text-align: center; }
   #cinematic.show { display: flex; }
   #cinematic h1 { font-family: 'Special Elite', monospace; font-size: 48px;
@@ -35,7 +36,10 @@
 <div id="hud-assertive" aria-live="assertive"></div>
 
 <div id="hud">
-  <div id="level-title">Chapter II — The Rebellion</div>
+  <div>
+    <div id="level-title">Chapter II — The Rebellion</div>
+    <div id="controls-hint">Move: WASD / Arrow keys &nbsp;|&nbsp; Jump: Space / W / ↑ &nbsp;|&nbsp; Restart: R &nbsp;|&nbsp; Goal: reach Mr. Jones →</div>
+  </div>
   <div id="cards-collected">Banner fragments: 0 / 3</div>
 </div>
 
