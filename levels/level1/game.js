@@ -368,9 +368,11 @@ function gameRender() {
   drawTile(vec2(cameraPos.x, 11), vec2(bgW, bgH),
     tile(0, vec2(SPRITES.bg.w, SPRITES.bg.h), TEX.bg));
 
-  // Ground — drawn here because LittleJS TileLayer reads texture 0 by default
-  drawRect(vec2(40, 1),    vec2(160, 4),    hsl(0.08, 0.45, 0.18));  // deep earth
-  drawRect(vec2(40, 2.55), vec2(160, 0.45), hsl(0.26, 0.35, 0.26));  // mud-grass surface
+  // Ground — drawn here because LittleJS TileLayer reads texture 0 by default.
+  // Earth rect extends to y=3.6 to bridge the gap to the background image bottom (y=3.5).
+  // Grass stripe sits at y=3 — the actual collision surface where the player stands.
+  drawRect(vec2(40, 1.0),  vec2(160, 5.2), hsl(0.08, 0.45, 0.18));  // deep earth (y −1.6→3.6)
+  drawRect(vec2(40, 3.15), vec2(160, 0.3), hsl(0.26, 0.35, 0.26));  // grass surface (y 3.0→3.3)
 
   // Platforms — ochre hay-bale colour
   for (const [x, y] of PLATFORMS) {
