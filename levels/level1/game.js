@@ -332,17 +332,17 @@ function gameUpdate() {
     }
   }
 
-  // After Jones has been fleeing for ~2 seconds, show cinematic
+  // After Jones starts fleeing, show cinematic after a short delay
   if (jones && jones.fleeing) {
     if (!levelComplete) {
       levelComplete = true;
       jones.fleeStart = time;
     }
-    if (time - jones.fleeStart > 2) showCinematic();
+    if (time - jones.fleeStart > 0.8) showCinematic();
   }
 
-  // Respawn if player falls out of level bounds
-  if (player && (player.pos.x < -1 || player.pos.x > 81 || player.pos.y < 0)) {
+  // Respawn if player falls out of level bounds — skip when level is already won
+  if (!levelComplete && player && (player.pos.x < -1 || player.pos.x > 81 || player.pos.y < 0)) {
     player.pos = vec2(3, 5);
     player.velocity = vec2(0, 0);
   }
