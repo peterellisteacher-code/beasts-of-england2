@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Beasts of England — Act V: The Sunday Meeting</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IM+Fell+English:ital@0;1&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="hud-polite" aria-live="polite"></div>
+<div id="hud-assertive" aria-live="assertive"></div>
+
+<div id="meeting-room">
+
+  <header id="meeting-masthead">
+    <div class="masthead-left">
+      <h1>The Sunday Meeting</h1>
+      <p class="meeting-sub">Chapter V — the great barn — the windmill plans on the floor — the dogs approaching</p>
+    </div>
+    <div class="masthead-right">
+      <a href="../level-select/index.html" class="ghost-button">↩ Back to acts</a>
+    </div>
+  </header>
+
+  <main id="meeting-stage">
+
+    <!-- LEFT — adversary panel -->
+    <aside id="adversary-rail" aria-label="The adversary">
+      <section class="adversary-card">
+        <h2 id="adversary-name">Squealer</h2>
+        <div class="portrait-slot">
+          <img src="../../assets/portraits/squealer.png" alt="Squealer" onerror="this.style.display='none'">
+        </div>
+        <p class="intent" id="adversary-intent">— preparing —</p>
+        <ul id="adversary-moves" class="moves-list"></ul>
+      </section>
+
+      <section class="dog-clock">
+        <h3>The dogs</h3>
+        <p class="dog-status" id="dog-status">— not yet released —</p>
+        <div class="dog-bar"><div class="dog-fill" id="dog-fill"></div></div>
+        <p class="dog-hint">When the bar fills, Napoleon looses the dogs and Snowball is gone.</p>
+      </section>
+    </aside>
+
+    <!-- CENTRE — narrative log -->
+    <section id="narrative">
+      <header class="narrative-header">
+        <p class="turn-indicator">Turn <span id="turn-num">1</span> of <span id="turn-max">7</span></p>
+      </header>
+
+      <div id="log-window" aria-live="polite"></div>
+
+      <div id="snowball-card" class="snowball-card">
+        <h3>Snowball is speaking</h3>
+        <p id="snowball-line">— gathering himself to begin —</p>
+      </div>
+    </section>
+
+    <!-- RIGHT — player resources -->
+    <aside id="player-rail" aria-label="Your resources">
+      <section class="resource-block">
+        <h3>Conviction</h3>
+        <div class="resource-meter">
+          <div class="resource-fill conviction-fill" id="conviction-fill"></div>
+          <span class="resource-label" id="conviction-label">3 / 3</span>
+        </div>
+        <p class="rail-hint">Spent to play cards. Refills each turn.</p>
+      </section>
+
+      <section class="resource-block">
+        <h3>Crowd sympathy</h3>
+        <div class="resource-meter">
+          <div class="resource-fill sympathy-fill" id="sympathy-fill"></div>
+          <span class="resource-label" id="sympathy-label">50 %</span>
+        </div>
+        <p class="rail-hint">How much of the meeting still listens to Snowball.</p>
+      </section>
+
+      <section class="resource-block">
+        <h3>Surviving memory</h3>
+        <div class="resource-meter">
+          <div class="resource-fill memory-fill" id="memory-fill"></div>
+          <span class="resource-label" id="memory-label">100 %</span>
+        </div>
+        <p class="rail-hint">How much of the original principles will outlive this meeting.</p>
+      </section>
+    </aside>
+
+  </main>
+
+  <!-- HAND — bottom drawer -->
+  <section id="hand-drawer" aria-label="Your hand">
+    <div class="hand-header">
+      <h2>Your hand</h2>
+      <div class="hand-controls">
+        <button type="button" class="primary-button" id="end-turn-btn">End turn ⇢</button>
+      </div>
+    </div>
+    <div id="hand-cards" class="hand-cards"></div>
+    <p class="deck-status">Deck: <span id="deck-remaining">0</span> remaining · Discard: <span id="discard-count">0</span></p>
+  </section>
+
+</div>
+
+<!-- Briefing modal -->
+<dialog id="briefing-dialog" aria-labelledby="briefing-title">
+  <h2 id="briefing-title">The Sunday Meeting begins</h2>
+  <p>Snowball is on his hind legs at the platform. The drawings of the windmill have been chalked on the floor of the harness-room and now spread before the assembled animals.</p>
+  <p>Napoleon does not speak — but he is not absent. He sits to one side, watching. The dogs have not yet appeared.</p>
+  <p>You hold the cards you collected through Acts I to IV. Snowball loses this meeting <em>(this is canonical)</em> — but how he loses, and what survives, is in your play.</p>
+  <ul class="briefing-objectives">
+    <li><strong>Bronze ending:</strong> Snowball is exiled. The principles forgotten.</li>
+    <li><strong>Silver ending:</strong> Snowball escapes. Some animal stays openly skeptical.</li>
+    <li><strong>Gold ending:</strong> Snowball escapes. The original principles are remembered. The windmill plans are saved on paper.</li>
+  </ul>
+  <button type="button" class="primary-button" id="enter-meeting" autofocus>Enter the meeting</button>
+</dialog>
+
+<!-- Outcome modal -->
+<dialog id="outcome-dialog" aria-labelledby="outcome-title">
+  <h2 id="outcome-title">— Outcome —</h2>
+  <div id="outcome-body"></div>
+  <div class="outcome-stats">
+    <p>Final crowd sympathy: <strong id="final-sympathy"></strong></p>
+    <p>Surviving memory: <strong id="final-memory"></strong></p>
+    <p>Cards played: <strong id="cards-played"></strong></p>
+  </div>
+  <p>This was the last act of the unit. Beyond Chapter V the rebellion enters its long curdling — but the seeds you planted here will be reread in your essay.</p>
+  <div class="outcome-buttons">
+    <a href="../level-select/index.html" class="primary-button">Return to acts</a>
+    <button type="button" class="ghost-button" id="restart-meeting">Replay the meeting</button>
+  </div>
+</dialog>
+
+<script src="cards.js"></script>
+<script src="meeting.js"></script>
+</body>
+</html>

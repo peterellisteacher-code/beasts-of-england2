@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Beasts of England — Act III: The Battle of the Cowshed</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="hud-polite" aria-live="polite"></div>
+<div id="hud-assertive" aria-live="assertive"></div>
+
+<header id="masthead">
+  <div>
+    <h1>The Battle of the Cowshed</h1>
+    <p class="meeting-sub">Chapter IV — three waves — Snowball commands</p>
+  </div>
+  <a href="../level-select/index.html" class="ghost-button">↩ Back to acts</a>
+</header>
+
+<main id="battlefield">
+
+  <section id="wave-banner">
+    <p class="wave-label" id="wave-label">— Awaiting orders —</p>
+    <p class="wave-narration" id="wave-narration"></p>
+  </section>
+
+  <section id="arena" aria-label="The cowshed arena">
+    <div id="cowshed" aria-hidden="true">
+      <div class="cowshed-roof"></div>
+      <div class="cowshed-wall"></div>
+    </div>
+    <div id="arena-floor" aria-hidden="true"></div>
+    <div id="enemy-track" aria-hidden="true"></div>
+    <div id="strike-zone" aria-hidden="true"><span>STRIKE</span></div>
+    <div id="boxer" aria-hidden="true">
+      <img class="boxer-portrait" src="../../assets/portraits/boxer.png" alt="">
+      <span class="boxer-label">BOXER</span>
+    </div>
+    <div id="snowball-banner" aria-hidden="true">
+      <img class="snowball-portrait" src="../../assets/portraits/snowball.png" alt="">
+      <span class="snowball-label">SNOWBALL</span>
+    </div>
+  </section>
+
+  <section id="status-rail">
+    <div class="status-block">
+      <h3>Wave</h3>
+      <p id="wave-num">— / 3</p>
+    </div>
+    <div class="status-block">
+      <h3>Cards earned</h3>
+      <ul id="card-tally"></ul>
+    </div>
+    <div class="status-block">
+      <h3>Cowshed integrity</h3>
+      <div class="hp-bar"><div class="hp-fill" id="hp-fill"></div></div>
+    </div>
+  </section>
+
+  <section id="action-tray">
+    <p class="action-hint" id="action-hint">— prepare —</p>
+    <button type="button" class="primary-button huge" id="action-btn" disabled>STRIKE</button>
+    <p class="action-sub" id="action-sub">Press SPACE or click STRIKE when an enemy is in the strike zone.</p>
+  </section>
+
+</main>
+
+<dialog id="briefing-dialog" aria-labelledby="briefing-title">
+  <h2 id="briefing-title">The Battle of the Cowshed</h2>
+  <p>Mr. Jones and his men return with sticks and a gun. They have been at The Red Lion. Snowball studied an old book of Julius Caesar's campaigns from the farmhouse.</p>
+  <p>The battle has three waves:</p>
+  <ol>
+    <li><strong>Pigeons and geese</strong> harass and demoralise the men.</li>
+    <li><strong>The feigned retreat</strong> — withdraw at exactly the right moment.</li>
+    <li><strong>The ambush at the cowshed</strong> — Boxer's killing strike.</li>
+  </ol>
+  <p>For each wave: when an enemy enters the <strong>strike zone</strong>, press SPACE (or click STRIKE). Hit too early, miss. Hit too late, the cowshed takes damage.</p>
+  <button type="button" class="primary-button" id="enter-battle" autofocus>To arms!</button>
+</dialog>
+
+<dialog id="outcome-dialog" aria-labelledby="outcome-title">
+  <h2 id="outcome-title">— Outcome —</h2>
+  <p id="outcome-body"></p>
+  <p class="outcome-stats" id="outcome-stats"></p>
+  <div class="outcome-buttons">
+    <a href="../level-select/index.html" class="primary-button">Return to acts</a>
+    <button type="button" class="ghost-button" id="restart-battle">Replay battle</button>
+  </div>
+</dialog>
+
+<script src="battle.js"></script>
+</body>
+</html>

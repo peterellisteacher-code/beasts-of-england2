@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Beasts of England — Act IV: The Windmill and the Mare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IM+Fell+English:ital@0;1&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="hud-polite" aria-live="polite"></div>
+<div id="hud-assertive" aria-live="assertive"></div>
+
+<header id="masthead">
+  <div>
+    <h1>The Windmill and the Mare</h1>
+    <p class="meeting-sub">Chapter V — late winter — two rooms in two parts of the farm</p>
+  </div>
+  <a href="../level-select/index.html" class="ghost-button">↩ Back to acts</a>
+</header>
+
+<nav id="track-tabs" role="tablist">
+  <button type="button" role="tab" id="tab-windmill" class="tab active" data-track="windmill" aria-selected="true">
+    <span class="tab-letter">A</span>
+    <span class="tab-name">The harness-room</span>
+    <span class="tab-sub">Snowball's drawings</span>
+  </button>
+  <button type="button" role="tab" id="tab-mollie" class="tab" data-track="mollie" aria-selected="false">
+    <span class="tab-letter">B</span>
+    <span class="tab-name">Mollie's stall</span>
+    <span class="tab-sub">Clover investigates</span>
+  </button>
+</nav>
+
+<main id="investigation">
+
+  <!-- TRACK A: HARNESS-ROOM with windmill plans -->
+  <section id="track-windmill" class="track active" role="tabpanel" aria-labelledby="tab-windmill">
+    <div class="scene scene-harness">
+      <h2 class="scene-name">Harness-room — chalk on the floor</h2>
+      <p class="scene-narration">
+        Snowball has chalked the windmill plans across the entire floor. He stands looking down at them. The other animals are not yet allowed in.
+      </p>
+      <div class="scene-stage scene-harness-stage">
+        <button type="button" class="hotspot hotspot-A1" data-id="A1" aria-label="Central windmill drawing">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">central drawing</span>
+        </button>
+        <button type="button" class="hotspot hotspot-A2" data-id="A2" aria-label="Sketches of dynamo and cables">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">crank &amp; dynamo</span>
+        </button>
+        <button type="button" class="hotspot hotspot-A3" data-id="A3" aria-label="Marginalia in pig's hand">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">marginalia</span>
+        </button>
+        <button type="button" class="hotspot hotspot-A4" data-id="A4" aria-label="Wet patch in the corner">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">wet patch in the corner</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACK B: MOLLIE'S STALL -->
+  <section id="track-mollie" class="track" role="tabpanel" aria-labelledby="tab-mollie">
+    <div class="scene scene-stall">
+      <h2 class="scene-name">Mollie's stall — Clover takes her aside</h2>
+      <p class="scene-narration">
+        Mollie has just galloped away across the field. Clover, troubled, returns to the stall to look for herself.
+      </p>
+      <div class="scene-stage scene-stall-stage">
+        <button type="button" class="hotspot hotspot-B1" data-id="B1" aria-label="Looking-glass on the wall">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">looking-glass</span>
+        </button>
+        <button type="button" class="hotspot hotspot-B2" data-id="B2" aria-label="Pile of straw in the corner">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">pile of straw</span>
+        </button>
+        <button type="button" class="hotspot hotspot-B3" data-id="B3" aria-label="Window onto the field that divides Animal Farm from Foxwood">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">stall window</span>
+        </button>
+        <button type="button" class="hotspot hotspot-B4" data-id="B4" aria-label="Stall door, half-open">
+          <span class="hotspot-marker">?</span>
+          <span class="hotspot-label">stall door</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<aside id="findings-rail">
+  <h2>Findings</h2>
+  <ul id="findings-list" class="findings-list">
+    <li class="findings-empty">Click hotspots in either room to discover what's there.</li>
+  </ul>
+  <div id="cards-collected">
+    <h3>Cards collected</h3>
+    <ul id="card-tally" class="card-tally"></ul>
+    <p class="rail-meta" id="findings-progress">0 of 8 hotspots inspected · 0 cards earned</p>
+  </div>
+  <button type="button" class="primary-button" id="finish-btn" disabled>I have seen enough ⇢</button>
+</aside>
+
+<dialog id="briefing-dialog" aria-labelledby="briefing-title">
+  <h2 id="briefing-title">Two rooms, one afternoon</h2>
+  <p>It is the second winter. Snowball has chalked the windmill plans across the harness-room floor. In a different stall, Clover has just found Mollie staring over the hedge that divides the farm from Foxwood.</p>
+  <p>You have time to look in either room. Click the marked hotspots to inspect. Some discoveries become <strong>Suspicion cards</strong> in your Act V deck.</p>
+  <p>Switch between rooms freely. There is no penalty for thoroughness. When you are done, finish the act.</p>
+  <button type="button" class="primary-button" id="enter-investigation" autofocus>Begin</button>
+</dialog>
+
+<dialog id="finding-dialog" aria-labelledby="finding-title">
+  <h2 id="finding-title">— Finding —</h2>
+  <p id="finding-body"></p>
+  <p class="finding-card" id="finding-card-line"></p>
+  <button type="button" class="primary-button" id="finding-continue" autofocus>Continue investigating</button>
+</dialog>
+
+<script src="investigation.js"></script>
+</body>
+</html>

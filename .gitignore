@@ -1,0 +1,5 @@
+.claude/
+.tools/
+.netlify/
+__pycache__/
+*.pyc

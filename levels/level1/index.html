@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Beasts of England — L1: The Rebellion</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #1a1814; overflow: hidden; }
+  #hud { position: fixed; top: 12px; left: 12px; right: 12px; pointer-events: none;
+         font-family: 'Special Elite', monospace; color: #f0e8d0; font-size: 18px;
+         display: flex; justify-content: space-between; z-index: 10;
+         text-shadow: 2px 2px 0 #1a1814; }
+  #cards-collected { letter-spacing: 0.05em; }
+  #level-title { color: #9F1A1F; font-size: 22px; }
+  #cinematic { position: fixed; inset: 0; background: rgba(26,24,20,0.96); color: #f0e8d0;
+               display: none; flex-direction: column; align-items: center; justify-content: center;
+               font-family: 'IM Fell English', serif; padding: 40px; z-index: 100;
+               text-align: center; }
+  #cinematic.show { display: flex; }
+  #cinematic h1 { font-family: 'Special Elite', monospace; font-size: 48px;
+                  color: #9F1A1F; margin: 0 0 20px; }
+  #cinematic p { max-width: 720px; font-size: 24px; line-height: 1.5; margin: 0 0 30px; }
+  #cinematic button { font-family: 'Special Elite', monospace; font-size: 18px;
+                      background: #9F1A1F; color: #f0e8d0; border: 2px solid #f0e8d0;
+                      padding: 14px 28px; cursor: pointer; }
+  #hud-polite, #hud-assertive { position: absolute; left: -10000px; }
+</style>
+</head>
+<body>
+
+<div id="hud-polite" aria-live="polite"></div>
+<div id="hud-assertive" aria-live="assertive"></div>
+
+<div id="hud">
+  <div id="level-title">Chapter II — The Rebellion</div>
+  <div id="cards-collected">Banner fragments: 0 / 3</div>
+</div>
+
+<div id="cinematic" role="dialog" aria-labelledby="cine-title">
+  <h1 id="cine-title">We are equal.</h1>
+  <p id="cine-body">
+    Mr. Jones flees through the five-barred gate. The animals stand panting in the yard.
+    Inside the great barn, Snowball and Napoleon climb a ladder, brushes in their trotters,
+    and paint upon the wall the unalterable laws by which all the animals on Animal Farm
+    must live for ever after.
+  </p>
+  <button id="cine-continue">Read the Seven Commandments</button>
+</div>
+
+<!-- LittleJS engine + game -->
+<script src="../../engine/littlejs/dist/littlejs.release.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
