@@ -75,7 +75,7 @@ class Pig extends EngineObject {
     else this.coyoteTime = max(0, this.coyoteTime - 1/60);
 
     if (jump && this.coyoteTime > 0) {
-      this.velocity.y = 0.34;
+      this.velocity.y = 0.9;
       this.coyoteTime = 0;
       // Dust kick — small particle burst
       new ParticleEmitter(
@@ -339,6 +339,12 @@ function gameUpdate() {
       jones.fleeStart = time;
     }
     if (time - jones.fleeStart > 2) showCinematic();
+  }
+
+  // Respawn if player falls off the left edge or below the level
+  if (player && (player.pos.x < -1 || player.pos.y < 0)) {
+    player.pos = vec2(3, 5);
+    player.velocity = vec2(0, 0);
   }
 
   // Restart key
