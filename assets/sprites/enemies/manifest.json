@@ -1,0 +1,53 @@
+{
+  "batch_id": "animal-farm-enemies-20260511",
+  "style_brief_hash": "muddy-earth-muted-pixel-art-animal-farm",
+  "notes": {
+    "size_adjustment": "RD PRO minimum is 96px per side. Requested 64x96 (farmhand) and 64x48 (dog) were below minimum. Both generated at 96x96. Spritesheets output at 384x192 (4 frames x 96px wide, 2 rows x 96px tall). frame_width for CSS animation = 96.",
+    "dog_animation": "First animate call timed out (5xx equivalent). One retry succeeded."
+  },
+  "generated": [
+    {
+      "slug": "farmhand-base",
+      "path": "C:\\Users\\Peter Ellis\\OneDrive\\Teaching\\2026\\10ESH - 2026\\Semester 1\\Novel Study\\Animal Farm\\Beasts of England\\assets\\sprites\\enemies\\farmhand-base.png",
+      "width_px": 96,
+      "height_px": 96,
+      "size_kb": 6.0,
+      "cost_usd": 0.18
+    },
+    {
+      "slug": "farmhand-walk",
+      "path": "C:\\Users\\Peter Ellis\\OneDrive\\Teaching\\2026\\10ESH - 2026\\Semester 1\\Novel Study\\Animal Farm\\Beasts of England\\assets\\sprites\\enemies\\farmhand-walk.png",
+      "width_px": 384,
+      "height_px": 192,
+      "frame_width_px": 96,
+      "frame_height_px": 96,
+      "frame_count": 4,
+      "rows": 2,
+      "size_kb": 33.9,
+      "cost_usd": 0.14
+    },
+    {
+      "slug": "dog-base",
+      "path": "C:\\Users\\Peter Ellis\\OneDrive\\Teaching\\2026\\10ESH - 2026\\Semester 1\\Novel Study\\Animal Farm\\Beasts of England\\assets\\sprites\\enemies\\dog-base.png",
+      "width_px": 96,
+      "height_px": 96,
+      "size_kb": 6.7,
+      "cost_usd": 0.18
+    },
+    {
+      "slug": "dog-walk",
+      "path": "C:\\Users\\Peter Ellis\\OneDrive\\Teaching\\2026\\10ESH - 2026\\Semester 1\\Novel Study\\Animal Farm\\Beasts of England\\assets\\sprites\\enemies\\dog-walk.png",
+      "width_px": 384,
+      "height_px": 192,
+      "frame_width_px": 96,
+      "frame_height_px": 96,
+      "frame_count": 4,
+      "rows": 2,
+      "size_kb": 39.5,
+      "cost_usd": 0.14
+    }
+  ],
+  "skipped": [],
+  "total_cost_usd": 0.64,
+  "remaining_balance_usd": 24.261
+}

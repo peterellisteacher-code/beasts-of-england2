@@ -12,18 +12,24 @@ const STRIKE_ZONE_RIGHT = 0.38;  // 38% — right edge (slightly wider for fairn
 const ESCAPE_DAMAGE = 25;        // HP lost per escaped enemy (was 18 — too forgiving)
 
 // === Wave script ============================================================
-// Each wave: { label, narration, enemies: [{ type, label, icon, speed (s) }],
-//              card: { id, type, name, body, cost } awarded if successful }
-// Sprite-based enemies. Mr. Jones uses the actual King-Human sprite from KP.
-// Other enemies are styled silhouettes (silk-screen look) — keeping aesthetic consistency.
+// Each wave: { label, narration, enemies: [...], card }
+// man/dog use rd_advanced_animate walking spritesheets (384×192, 4 frames, 96×96 each).
+// jones uses the KP idle spritesheet (static first frame, 11-frame strip).
+const MAN_SPRITE  = '../../assets/sprites/enemies/farmhand-walk.png';
+const DOG_SPRITE  = '../../assets/sprites/enemies/dog-walk.png';
+const JONES_SPRITE = '../../assets/sprites/king-human/jones-idle.png';
+
 const WAVES = [
   {
     label: 'WAVE I — The Skirmishers',
     narration: 'Pigeons and geese swoop and bite. Snowball: "Drive them off — but do not engage." The men hesitate.',
     enemies: [
-      { type: 'man', label: 'STABLE BOY', sprite: null, speed: 5 },
-      { type: 'man', label: 'FARMHAND',   sprite: null, speed: 4.5 },
-      { type: 'man', label: 'FARMHAND',   sprite: null, speed: 4 },
+      { type: 'man', label: 'STABLE BOY',
+        sprite: MAN_SPRITE, spriteFrames: 4, spriteRows: 2, speed: 5 },
+      { type: 'man', label: 'FARMHAND',
+        sprite: MAN_SPRITE, spriteFrames: 4, spriteRows: 2, speed: 4.5 },
+      { type: 'man', label: 'FARMHAND',
+        sprite: MAN_SPRITE, spriteFrames: 4, spriteRows: 2, speed: 4 },
     ],
     card: { id: 'L3-3', type: 'tactic', name: 'Coordinate',
             body: 'Pigeons, geese, sheep — each in formation.', cost: 2 }
@@ -32,10 +38,10 @@ const WAVES = [
     label: 'WAVE II — The Feigned Retreat',
     narration: 'Snowball orders the animals back into the yard. The men press forward with whoops, thinking they have won.',
     enemies: [
-      { type: 'man',   label: 'PILKINGTON\'S MAN', sprite: null, speed: 3.5 },
+      { type: 'man', label: "PILKINGTON'S MAN",
+        sprite: MAN_SPRITE, spriteFrames: 4, spriteRows: 2, speed: 3.5 },
       { type: 'jones', label: 'MR. JONES',
-        sprite: '../../assets/sprites/king-human/jones-idle.png',
-        spriteFrame: 0, spriteWidth: 96, spriteHeight: 96, totalFrames: 11, speed: 3 },
+        sprite: JONES_SPRITE, spriteFrames: 11, spriteRows: 1, staticFrame: true, speed: 3 },
     ],
     card: { id: 'L3-2', type: 'tactic', name: 'Feint',
             body: 'Snowball used this at the Cowshed. Use it again.', cost: 1 }
@@ -44,11 +50,12 @@ const WAVES = [
     label: 'WAVE III — The Cowshed Ambush',
     narration: 'The cows, sheep and three horses charge from inside the cowshed. Boxer rears up. The dogs are at his hooves.',
     enemies: [
-      { type: 'dog', label: 'DOG', sprite: null, speed: 2.5 },
-      { type: 'dog', label: 'DOG', sprite: null, speed: 2.4 },
+      { type: 'dog', label: 'DOG',
+        sprite: DOG_SPRITE, spriteFrames: 4, spriteRows: 2, speed: 2.5 },
+      { type: 'dog', label: 'DOG',
+        sprite: DOG_SPRITE, spriteFrames: 4, spriteRows: 2, speed: 2.4 },
       { type: 'jones', label: 'MR. JONES',
-        sprite: '../../assets/sprites/king-human/jones-idle.png',
-        spriteFrame: 0, spriteWidth: 96, spriteHeight: 96, totalFrames: 11, speed: 2.2 },
+        sprite: JONES_SPRITE, spriteFrames: 11, spriteRows: 1, staticFrame: true, speed: 2.2 },
     ],
     card: { id: 'L3-1', type: 'tactic', name: 'Hold the Door',
             body: 'A defensive stance. Buys time.', cost: 2 }
@@ -128,12 +135,18 @@ function spawnNextEnemy() {
   const def = wave.enemies[state.waveEnemyIdx++];
 
   const e = document.createElement('div');
-  e.className = `enemy ${def.type}`;
-  if (def.sprite) {
-    // Use animated sprite frame (first frame as static — animating mid-transit is overkill)
-    e.innerHTML = `<div class="enemy-sprite" style="background-image:url('${def.sprite}'); background-size: ${def.totalFrames * 100}% 100%; background-position: 0% 0%;" aria-hidden="true"></div><span class="label">${def.label}</span>`;
+  // has-sprite removes the coloured rectangle background
+  e.className = `enemy ${def.type}${def.sprite ? ' has-sprite' : ''}`;
+  if (def.sprite && def.staticFrame) {
+    // Jones — show first frame of idle strip (N frames × 1 row)
+    const bsz = `${def.spriteFrames * 100}% 100%`;
+    e.innerHTML = `<div class="enemy-sprite" style="background-image:url('${def.sprite}');background-size:${bsz};background-position:0% 0%;" aria-hidden="true"></div><span class="label">${def.label}</span>`;
+  } else if (def.sprite) {
+    // Walking sprite — 4 frames × 2 rows from rd_advanced_animate.
+    // background-size 400% 200% shows 1/4 width, 1/2 height (= one frame from row 0).
+    // CSS animation steps through frames 0-3 using background-position-x.
+    e.innerHTML = `<div class="enemy-sprite enemy-sprite-walk" style="background-image:url('${def.sprite}');" aria-hidden="true"></div><span class="label">${def.label}</span>`;
   } else {
-    // Styled silhouette — clean vector look, no emoji
     e.innerHTML = `<div class="enemy-silhouette enemy-silhouette-${def.type}" aria-hidden="true"></div><span class="label">${def.label}</span>`;
   }
   e.style.left = '100%';
