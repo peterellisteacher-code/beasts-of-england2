@@ -92,7 +92,10 @@ body {
 /* Arena */
 #arena {
   position: relative;
-  background: linear-gradient(to bottom, #6CA0C8 0%, #B7CFD7 50%, var(--earth) 50%, var(--earth-deep) 100%);
+  background-color: #3A4047;
+  background-image: url('../../assets/backgrounds/bg-level3-cowshed.jpg');
+  background-size: cover;
+  background-position: center;
   border: 2px solid var(--ink);
   overflow: hidden;
   box-shadow: 0 4px 18px var(--shadow);

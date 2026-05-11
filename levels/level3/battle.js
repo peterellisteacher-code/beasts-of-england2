@@ -34,7 +34,7 @@ const WAVES = [
       { type: 'man',   label: 'PILKINGTON\'S MAN', sprite: null, speed: 3.5 },
       { type: 'jones', label: 'MR. JONES',
         sprite: '../../assets/sprites/king-human/jones-idle.png',
-        spriteFrame: 0, spriteWidth: 78, spriteHeight: 58, totalFrames: 11, speed: 3 },
+        spriteFrame: 0, spriteWidth: 96, spriteHeight: 96, totalFrames: 11, speed: 3 },
     ],
     card: { id: 'L3-2', type: 'tactic', name: 'Feint',
             body: 'Snowball used this at the Cowshed. Use it again.', cost: 1 }
@@ -47,7 +47,7 @@ const WAVES = [
       { type: 'dog', label: 'DOG', sprite: null, speed: 2.4 },
       { type: 'jones', label: 'MR. JONES',
         sprite: '../../assets/sprites/king-human/jones-idle.png',
-        spriteFrame: 0, spriteWidth: 78, spriteHeight: 58, totalFrames: 11, speed: 2.2 },
+        spriteFrame: 0, spriteWidth: 96, spriteHeight: 96, totalFrames: 11, speed: 2.2 },
     ],
     card: { id: 'L3-1', type: 'tactic', name: 'Hold the Door',
             body: 'A defensive stance. Buys time.', cost: 2 }

@@ -13,15 +13,16 @@ setCanvasFixedSize(vec2(1280, 720));
 
 // --- Sprite paths (textureInfos[] index in load order) ---
 const SPRITES = {
-  pigIdle:   { path: '../../assets/sprites/pig/pig-idle.png',           frames: 11, w: 34, h: 28 },
-  pigRun:    { path: '../../assets/sprites/pig/pig-run.png',            frames: 6,  w: 34, h: 28 },
-  pigJump:   { path: '../../assets/sprites/pig/pig-jump.png',           frames: 1,  w: 34, h: 28 },
-  pigFall:   { path: '../../assets/sprites/pig/pig-fall.png',           frames: 1,  w: 34, h: 28 },
-  jonesIdle: { path: '../../assets/sprites/king-human/jones-idle.png',  frames: 11, w: 78, h: 58 },
-  jonesRun:  { path: '../../assets/sprites/king-human/jones-run.png',   frames: 8,  w: 78, h: 58 },
-  jonesHit:  { path: '../../assets/sprites/king-human/jones-hit.png',   frames: 2,  w: 78, h: 58 },
+  pigIdle:   { path: '../../assets/sprites/pig/pig-idle.png',           frames: 11, w: 64, h: 64 },
+  pigRun:    { path: '../../assets/sprites/pig/pig-run.png',            frames: 6,  w: 64, h: 64 },
+  pigJump:   { path: '../../assets/sprites/pig/pig-jump.png',           frames: 1,  w: 64, h: 64 },
+  pigFall:   { path: '../../assets/sprites/pig/pig-fall.png',           frames: 1,  w: 64, h: 64 },
+  jonesIdle: { path: '../../assets/sprites/king-human/jones-idle.png',  frames: 11, w: 96, h: 96 },
+  jonesRun:  { path: '../../assets/sprites/king-human/jones-run.png',   frames: 8,  w: 96, h: 96 },
+  jonesHit:  { path: '../../assets/sprites/king-human/jones-hit.png',   frames: 2,  w: 96, h: 96 },
   terrain:   { path: '../../assets/sprites/tiles/terrain.png',          frames: 1,  w: 32, h: 32 },
   diamond:   { path: '../../assets/sprites/effects/big-diamond-idle.png', frames: 10, w: 18, h: 14 },
+  bg:        { path: '../../assets/backgrounds/bg-level1-farm.jpg',     frames: 1,  w: 1920, h: 720 },
 };
 const ASSET_LIST = Object.values(SPRITES).map(s => s.path);
 const TEX = {};
@@ -104,10 +105,10 @@ class Pig extends EngineObject {
 
   render() {
     const stateMap = {
-      idle: { tex: TEX.pigIdle, frames: SPRITES.pigIdle.frames, w: 34, h: 28 },
-      run:  { tex: TEX.pigRun,  frames: SPRITES.pigRun.frames,  w: 34, h: 28 },
-      jump: { tex: TEX.pigJump, frames: 1, w: 34, h: 28 },
-      fall: { tex: TEX.pigFall, frames: 1, w: 34, h: 28 },
+      idle: { tex: TEX.pigIdle, frames: SPRITES.pigIdle.frames, w: 64, h: 64 },
+      run:  { tex: TEX.pigRun,  frames: SPRITES.pigRun.frames,  w: 64, h: 64 },
+      jump: { tex: TEX.pigJump, frames: 1, w: 64, h: 64 },
+      fall: { tex: TEX.pigFall, frames: 1, w: 64, h: 64 },
     };
     const a = stateMap[this.state] || stateMap.idle;
     const frame = this.frame % a.frames;
@@ -141,9 +142,9 @@ class MrJones extends EngineObject {
   }
   render() {
     const stateMap = {
-      idle: { tex: TEX.jonesIdle, frames: SPRITES.jonesIdle.frames, w: 78, h: 58 },
-      run:  { tex: TEX.jonesRun,  frames: SPRITES.jonesRun.frames,  w: 78, h: 58 },
-      hit:  { tex: TEX.jonesHit,  frames: SPRITES.jonesHit.frames,  w: 78, h: 58 },
+      idle: { tex: TEX.jonesIdle, frames: SPRITES.jonesIdle.frames, w: 96, h: 96 },
+      run:  { tex: TEX.jonesRun,  frames: SPRITES.jonesRun.frames,  w: 96, h: 96 },
+      hit:  { tex: TEX.jonesHit,  frames: SPRITES.jonesHit.frames,  w: 96, h: 96 },
     };
     const a = stateMap[this.state] || stateMap.idle;
     const frame = this.frame % a.frames;
@@ -313,9 +314,9 @@ function gameInit() {
   setCameraPos(vec2(12, 6));
   // Background colour shows through any gaps — sky blue
   if (typeof setBackgroundColor === 'function') {
-    setBackgroundColor(hsl(0.55, 0.45, 0.62));
+    setBackgroundColor(hsl(0.58, 0.15, 0.18));   // dark slate — background image covers this
   } else if (typeof setCanvasClearColor === 'function') {
-    setCanvasClearColor(hsl(0.55, 0.45, 0.62));
+    setCanvasClearColor(hsl(0.58, 0.15, 0.18));
   }
   buildLevel();
   updateHUD();
@@ -354,18 +355,11 @@ function gameUpdatePost() {
 }
 
 function gameRender() {
-  // Sky band (drawn before tile layer)
-  drawRect(vec2(40, 18), vec2(160, 28), hsl(0.55, 0.45, 0.62));   // sky
-  drawRect(vec2(40, 7),  vec2(160, 8),  hsl(0.55, 0.35, 0.78));   // hazy horizon
-  // Sun
-  drawRect(vec2(60, 12), vec2(2.5, 2.5), hsl(0.13, 0.6, 0.85));
-  // A few clouds — sized + positioned by player progress for parallax feel
-  const px = player ? player.pos.x : 0;
-  const cloudOff = px * 0.15;
-  drawRect(vec2(8 - cloudOff, 14),  vec2(5, 1.6), hsl(0,0,1, 0.85));
-  drawRect(vec2(28 - cloudOff, 16), vec2(7, 2),   hsl(0,0,1, 0.85));
-  drawRect(vec2(50 - cloudOff, 15), vec2(4, 1.4), hsl(0,0,1, 0.85));
-  drawRect(vec2(70 - cloudOff, 17), vec2(6, 1.8), hsl(0,0,1, 0.85));
+  // Illustrated farm background — always centred on camera so no gaps appear
+  const bgW = SPRITES.bg.w / 48;   // 40 world units (1920px at scale 48)
+  const bgH = SPRITES.bg.h / 48;   // 15 world units (720px at scale 48)
+  drawTile(vec2(cameraPos.x, 11), vec2(bgW, bgH),
+    tile(0, vec2(SPRITES.bg.w, SPRITES.bg.h), TEX.bg));
 }
 
 function gameRenderPost() {
