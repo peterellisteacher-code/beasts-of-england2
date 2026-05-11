@@ -121,7 +121,7 @@ class Pig extends EngineObject {
 class MrJones extends EngineObject {
   constructor(pos) {
     super(pos, vec2(3.5, 3.0));
-    this.setCollision(true, false);
+    this.setCollision(false, false);  // no physics box — win is triggered by proximity check
     this.gravityScale = 0;
     this.mass = 0;
     this.frame = 0;
