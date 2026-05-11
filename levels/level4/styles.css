@@ -158,72 +158,20 @@ body {
   min-height: 0;
 }
 
-/* Harness-room — chalk-on-floorboard background */
+/* Harness-room — illustrated background */
 .scene-harness-stage {
-  background: var(--wood-deep);
-  background-image:
-    repeating-linear-gradient(0deg,
-      transparent 0 26px,
-      rgba(255,255,255,0.03) 26px 28px),
-    repeating-linear-gradient(90deg,
-      transparent 0 8%,
-      rgba(0,0,0,0.18) 8% calc(8% + 1px));
-}
-/* Add chalk-drawn windmill silhouette */
-.scene-harness-stage::before {
-  content: '';
-  position: absolute;
-  left: 35%; top: 22%;
-  width: 28%; height: 28%;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(208,224,234,0.85) 0 4%, transparent 4%),
-    linear-gradient(to bottom, transparent 30%, rgba(208,224,234,0.6) 30% 35%, transparent 35%);
-  border: 2px dashed var(--chalk-blue);
-  pointer-events: none;
-}
-.scene-harness-stage::after {
-  content: 'three storeys · dynamo · cables';
-  position: absolute;
-  left: 30%; top: 50%;
-  font-family: var(--font-handwriting);
-  font-size: 1.4rem;
-  color: rgba(208,224,234,0.7);
-  pointer-events: none;
+  background-color: var(--wood-deep);
+  background-image: url('../../assets/backgrounds/bg-level4-harness.webp');
+  background-size: cover;
+  background-position: center top;
 }
 
-/* Mollie's stall — straw + window background */
+/* Mollie's stall — illustrated background */
 .scene-stall-stage {
-  /* Wood plank wall on top 18%, sandy floor 18%-100%, plank seams as overlay */
-  background:
-    repeating-linear-gradient(90deg,
-      transparent 0 32px,
-      rgba(0,0,0,0.18) 32px 34px),
-    linear-gradient(to bottom,
-      var(--wood) 0%, var(--wood) 18%,
-      #C9A36B 18% 100%);
-}
-.scene-stall-stage::before {
-  /* Window block */
-  content: '';
-  position: absolute;
-  right: 6%; top: 16%;
-  width: 22%; height: 28%;
-  background: linear-gradient(to bottom, #6CA0C8 0%, #B7CFD7 100%);
-  border: 4px solid var(--wood-deep);
-  pointer-events: none;
-}
-.scene-stall-stage::after {
-  /* Straw pile */
-  content: '';
-  position: absolute;
-  left: 32%; top: 56%;
-  width: 36%; height: 36%;
-  background: #E5C97E;
-  background-image: repeating-linear-gradient(45deg,
-    transparent 0 4px,
-    rgba(0,0,0,0.2) 4px 5px);
-  clip-path: polygon(20% 100%, 0 50%, 30% 0, 60% 10%, 100% 30%, 100% 100%);
-  pointer-events: none;
+  background-color: #8C5A30;
+  background-image: url('../../assets/backgrounds/bg-level4-stall.webp');
+  background-size: cover;
+  background-position: center;
 }
 
 /* Hotspots — positions per id */
@@ -260,16 +208,16 @@ body {
 .hotspot.found .hotspot-marker::after { content: '✓'; }
 .hotspot.found .hotspot-marker span { display: none; }
 .hotspot-marker {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   background: var(--red);
   color: var(--paper);
-  border: 2px solid var(--paper);
+  border: 3px solid var(--paper);
   border-radius: 50%;
   display: grid; place-items: center;
   font-family: var(--font-typewriter);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.7), 0 0 0 2px var(--ink);
   animation: pulse 2.4s ease-in-out infinite;
 }
 .hotspot.found .hotspot-marker { animation: none; }

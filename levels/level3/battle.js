@@ -8,7 +8,8 @@
 (function () {
 
 const STRIKE_ZONE_LEFT = 0.28;   // 28% — left edge of strike zone
-const STRIKE_ZONE_RIGHT = 0.36;  // 36% — right edge
+const STRIKE_ZONE_RIGHT = 0.38;  // 38% — right edge (slightly wider for fairness with sprites)
+const ESCAPE_DAMAGE = 25;        // HP lost per escaped enemy (was 18 — too forgiving)
 
 // === Wave script ============================================================
 // Each wave: { label, narration, enemies: [{ type, label, icon, speed (s) }],
@@ -151,21 +152,22 @@ function spawnNextEnemy() {
 
   // Schedule next spawn
   if (state.waveEnemyIdx < wave.enemies.length) {
-    setTimeout(() => spawnNextEnemy(), 1200 + Math.random() * 800);
+    setTimeout(() => spawnNextEnemy(), 700 + Math.random() * 500);
   }
 
   // Schedule arrival check
   setTimeout(() => {
     if (!enemy.hit && !enemy.escaped) {
-      // Enemy reached Boxer — damage cowshed, remove
       enemy.escaped = true;
       enemy.el.classList.add('escaped');
-      state.hp = Math.max(0, state.hp - 18);
+      state.hp = Math.max(0, state.hp - ESCAPE_DAMAGE);
       state.totalEscapes++;
       state.waveEscapes++;
       renderTally();
       announce('An attacker reached the cowshed!', true);
       setTimeout(() => enemy.el.remove(), 360);
+      // Immediate defeat — don't wait for wave end
+      if (state.hp <= 0) { setTimeout(finishBattle, 600); return; }
       checkWaveEnd();
     }
   }, def.speed * 1000);
@@ -218,8 +220,8 @@ function checkWaveEnd() {
     state.waitingForNextWave = true;
     state.enemiesInPlay = [];
 
-    // Award card if at most 1 enemy escaped this wave
-    const earnedCard = state.waveEscapes < 2;
+    // Award card only if no enemies escaped this wave
+    const earnedCard = state.waveEscapes === 0;
     if (earnedCard && wave.card) {
       state.cardsEarned.push(wave.card);
       persistCard(wave.card);
@@ -245,7 +247,11 @@ function finishBattle() {
   els['action-hint'].textContent = '— battle over —';
 
   let title, body;
-  if (state.hp >= 80 && state.cardsEarned.length === 3) {
+  const defeated = state.hp <= 0;
+  if (defeated) {
+    title = 'The Cowshed Falls';
+    body = '<p>The men drive the animals back into their stalls. Mr. Jones retakes the farmhouse. The rebellion is over — for now. <em>Napoleon, who took no part in the battle, watches from the loft window.</em></p><p><strong>The cowshed could not hold. Try again.</strong></p>';
+  } else if (state.hp >= 80 && state.cardsEarned.length === 3) {
     title = 'Famous Victory';
     body = '<p>The men have fled. Snowball is awarded "Animal Hero, First Class" for his wound and his strategy. Boxer wears a brass medallion. The Battle of the Cowshed enters the farm\'s mythology — for now, accurately.</p>';
   } else if (state.hp >= 50) {
@@ -253,19 +259,24 @@ function finishBattle() {
     body = '<p>The men retreat over the broken hedge. The cowshed door hangs by one hinge. A sheep lies dead on the dung-heap. The animals are victorious — but the victory feels narrower than Snowball will later remember it.</p>';
   } else {
     title = 'A Pyrrhic Defence';
-    body = '<p>The cowshed is half-burned. The men leave when they tire of it, not when the animals defeat them. Snowball is wounded; Boxer is exhausted. Napoleon, who took no part, watches from the loft window.</p>';
+    body = '<p>The cowshed holds — barely. The men leave when they tire of it, not when the animals defeat them. Snowball is wounded; Boxer is exhausted. Napoleon, who took no part, watches from the loft window.</p>';
   }
 
   els['outcome-title'].textContent = title;
   els['outcome-body'].innerHTML = body;
   els['outcome-stats'].innerHTML =
     `Kills: <strong>${state.totalKills}</strong> · ` +
-    `Cowshed integrity: <strong>${state.hp}%</strong> · ` +
+    `Cowshed integrity: <strong>${defeated ? 'FALLEN' : state.hp + '%'}</strong> · ` +
     `Cards earned: <strong>${state.cardsEarned.length}</strong>`;
 
-  const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
-  if (!completed.includes(3)) completed.push(3);
-  try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
+  if (!defeated) {
+    const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
+    if (!completed.includes(3)) completed.push(3);
+    try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
+  }
+
+  const continueBtn = document.getElementById('outcome-continue');
+  if (continueBtn) continueBtn.style.display = defeated ? 'none' : '';
 
   els['outcome-dialog'].showModal();
 }
