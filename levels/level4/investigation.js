@@ -92,7 +92,7 @@ function persistCard(card) {
   const deck = JSON.parse(localStorage.getItem('animalDeck') || '[]');
   if (deck.find(c => c.id === card.id)) return;
   deck.push({ id: card.id, level: 4, type: card.type, name: card.name, body: card.body });
-  localStorage.setItem('animalDeck', JSON.stringify(deck));
+  try { localStorage.setItem('animalDeck', JSON.stringify(deck)); } catch(e) {}
 }
 
 // === Tab switching =========================================================
@@ -157,7 +157,7 @@ function handleHotspot(btn) {
 function finish() {
   const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
   if (!completed.includes(4)) completed.push(4);
-  localStorage.setItem('completedLevels', JSON.stringify(completed));
+  try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
   window.location.href = '../level-select/index.html';
 }
 

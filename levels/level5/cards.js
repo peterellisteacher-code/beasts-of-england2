@@ -120,7 +120,7 @@ window.buildDeckFromStorage = function () {
     return [
       'starter-protest','starter-protest','starter-protest',
       'starter-listen','starter-listen','starter-listen',
-      'L2-1','L3-2','L4-1'  // a few default cards as a baseline
+      'starter-protest','starter-listen','starter-protest'
     ];
   }
 

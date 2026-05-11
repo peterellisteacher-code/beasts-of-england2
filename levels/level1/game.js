@@ -199,7 +199,7 @@ class BannerFragment extends EngineObject {
     // Save card to localStorage
     const deck = JSON.parse(localStorage.getItem('animalDeck') || '[]');
     deck.push({ id: `L1-${cardsCollected}`, level: 1, type: 'principle', text: this.text });
-    localStorage.setItem('animalDeck', JSON.stringify(deck));
+    try { localStorage.setItem('animalDeck', JSON.stringify(deck)); } catch(e) {}
     // Particle burst
     new ParticleEmitter(
       this.pos, 0,
@@ -296,7 +296,7 @@ function showCinematic() {
       // Persist completion + go to level select (or refresh for now)
       const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
       if (!completed.includes(1)) completed.push(1);
-      localStorage.setItem('completedLevels', JSON.stringify(completed));
+      try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
       // Go to level-select hub (or stub for now)
       window.location.href = '../level-select/index.html';
     });
@@ -341,8 +341,8 @@ function gameUpdate() {
     if (time - jones.fleeStart > 2) showCinematic();
   }
 
-  // Respawn if player falls off the left edge or below the level
-  if (player && (player.pos.x < -1 || player.pos.y < 0)) {
+  // Respawn if player falls out of level bounds
+  if (player && (player.pos.x < -1 || player.pos.x > 81 || player.pos.y < 0)) {
     player.pos = vec2(3, 5);
     player.velocity = vec2(0, 0);
   }
@@ -354,7 +354,7 @@ function gameUpdate() {
 function gameUpdatePost() {
   // Camera follows player horizontally; clamp at level bounds
   if (player) {
-    const target = vec2(clamp(player.pos.x, 12, 70), 6);
+    const target = vec2(clamp(player.pos.x, 12, 74), 6);
     setCameraPos(cameraPos.lerp(target, 0.08));
   }
 }

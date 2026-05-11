@@ -160,7 +160,7 @@ function persistCard(card) {
   // Only add if not already present
   if (deck.find(c => c.id === card.id)) return;
   deck.push({ id: card.id, level: 2, type: card.type, name: card.name, body: card.body });
-  localStorage.setItem('animalDeck', JSON.stringify(deck));
+  try { localStorage.setItem('animalDeck', JSON.stringify(deck)); } catch(e) {}
 }
 
 function advance() {
@@ -214,7 +214,7 @@ function boot() {
   els['finish-btn'].addEventListener('click', () => {
     const completed = JSON.parse(localStorage.getItem('completedLevels') || '[]');
     if (!completed.includes(2)) completed.push(2);
-    localStorage.setItem('completedLevels', JSON.stringify(completed));
+    try { localStorage.setItem('completedLevels', JSON.stringify(completed)); } catch(e) {}
     window.location.href = '../level-select/index.html';
   });
   renderTally();
