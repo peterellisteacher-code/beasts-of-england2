@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://act1_platformer"]
+
+[ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1_platformer"]
+[ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/act1/ui/hearts_hud.tscn" id="3_hud"]
+
+[node name="OldMajorPlatformer" type="Node2D"]
+script = ExtResource("1_platformer")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="World"]
+
+[node name="OldMajor" parent="World" instance=ExtResource("2_player")]
+position = Vector2(96, 400)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = true
+zoom = Vector2(2, 2)
+
+[node name="BarnDoor" type="Area2D" parent="World"]
+position = Vector2(2400, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/BarnDoor"]
+
+[node name="HeartsHUD" parent="." instance=ExtResource("3_hud")]
+
+[connection signal="body_entered" from="World/BarnDoor" to="." method="on_barn_reached"]

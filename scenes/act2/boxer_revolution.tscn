@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://boxer_revolution"]
+
+[ext_resource type="Script" path="res://scenes/act2/boxer_revolution.gd" id="1_revolution"]
+
+[node name="BoxerRevolution" type="Node2D"]
+script = ExtResource("1_revolution")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="World"]
+
+[node name="BoxerPlayer" type="CharacterBody2D" parent="."]
+
+[node name="JonesMen" type="Node2D" parent="."]
+
+[node name="GatekeeperQuiz" type="CanvasLayer" parent="."]
+
+[node name="CommandmentsReveal" type="CanvasLayer" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = true

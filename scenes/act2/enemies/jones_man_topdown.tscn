@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://jones_man_topdown"]
+
+[ext_resource type="Script" path="res://scenes/act2/enemies/jones_man_topdown.gd" id="1_jonesman"]
+
+[node name="JonesManTopdown" type="CharacterBody2D"]
+script = ExtResource("1_jonesman")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="DetectionZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionZone"]

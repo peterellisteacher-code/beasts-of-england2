@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=3 uid="uid://boe_seven_commandments"]
+
+[ext_resource type="Script" path="res://scenes/ui/seven_commandments.gd" id="1_cmdmts"]
+
+[node name="SevenCommandments" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_cmdmts")
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 460.0
+offset_bottom = 310.0
+
+[node name="CommandmentList" type="VBoxContainer" parent="Panel"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 452.0
+offset_bottom = 302.0
+theme_override_constants/separation = 4
+
+[node name="Header" type="Label" parent="Panel/CommandmentList"]
+text = "THE SEVEN COMMANDMENTS"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.545, 0.102, 0.102, 1)
+
+[node name="Commandment1" type="Label" parent="Panel/CommandmentList"]
+text = "1. Whatever goes upon two legs is an enemy."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2
+
+[node name="Commandment2" type="Label" parent="Panel/CommandmentList"]
+text = "2. Whatever goes upon four legs, or has wings, is a friend."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2
+
+[node name="Commandment3" type="Label" parent="Panel/CommandmentList"]
+text = "3. No animal shall wear clothes."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2
+
+[node name="Commandment4" type="Label" parent="Panel/CommandmentList"]
+text = "4. No animal shall sleep in a bed."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2
+
+[node name="Commandment5" type="Label" parent="Panel/CommandmentList"]
+text = "5. No animal shall drink alcohol."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2
+
+[node name="Commandment6" type="Label" parent="Panel/CommandmentList"]
+text = "6. No animal shall kill any other animal."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2
+
+[node name="Commandment7" type="Label" parent="Panel/CommandmentList"]
+text = "7. All animals are equal."
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.941, 0.910, 0.788, 1)
+autowrap_mode = 2

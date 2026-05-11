@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://act1_old_major"]
+
+[ext_resource type="Script" path="res://scenes/act1/player/old_major.gd" id="1_script"]
+
+[node name="OldMajor" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="HurtTimer" type="Timer" parent="."]
+one_shot = true
+wait_time = 1.0
+
+[node name="LanternArea" type="Area2D" parent="."]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LanternArea"]

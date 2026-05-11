@@ -1,0 +1,36 @@
+class_name SceneManager
+extends Node
+
+# =============================================================================
+# Constants
+# =============================================================================
+
+const ACT_SCENES: Dictionary = {
+	1: "res://scenes/act1/old_major_platformer.tscn",
+	2: "res://scenes/act2/boxer_revolution.tscn",
+	3: "res://scenes/act3/cowshed_overworld.tscn",
+	4: "res://scenes/act4/politics_tactics.tscn",
+}
+
+# =============================================================================
+# Public methods
+# =============================================================================
+
+func go_to_act(act_number: int) -> void:
+	if not ACT_SCENES.has(act_number):
+		push_error("SceneManager.go_to_act: act %d is not mapped" % act_number)
+		return
+	GameState.current_act = act_number
+	go_to_scene(ACT_SCENES[act_number])
+
+
+func go_to_scene(path: String) -> void:
+	if path.is_empty():
+		push_error("SceneManager.go_to_scene: path is empty")
+		return
+	# Use maaacks SceneLoader when available so its loading screen fires;
+	# fall back to the engine call if SceneLoader is somehow absent.
+	if Engine.has_singleton("SceneLoader"):
+		SceneLoader.load_scene(path)
+	else:
+		get_tree().change_scene_to_file(path)

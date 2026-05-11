@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://act1_jones_man"]
+
+[ext_resource type="Script" path="res://scenes/act1/enemies/jones_man.gd" id="1_script"]
+
+[node name="JonesMan" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="DetectionZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionZone"]
+
+[node name="LeftWallChecker" type="RayCast2D" parent="."]
+target_position = Vector2(-10, 0)
+enabled = true
+
+[node name="RightWallChecker" type="RayCast2D" parent="."]
+target_position = Vector2(10, 0)
+enabled = true

@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://commandments_reveal"]
+
+[ext_resource type="Script" path="res://scenes/act2/objects/commandments_reveal.gd" id="1_cmdreveal"]
+
+[node name="CommandmentsReveal" type="Control"]
+script = ExtResource("1_cmdreveal")
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 200.0
+offset_top = 50.0
+offset_right = 1080.0
+offset_bottom = 670.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0

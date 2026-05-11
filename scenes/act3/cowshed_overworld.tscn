@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/act3/cowshed_overworld.gd" id="1"]
+
+[node name="CowshedOverworld" type="Node2D"]
+script = ExtResource("1")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="World"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = true
+
+[node name="Player" type="Node2D" parent="."]
+
+[node name="BoxerOverworld" type="CharacterBody2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/BoxerOverworld"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player/BoxerOverworld"]
+
+[node name="EncounterZone1" type="Area2D" parent="."]
+position = Vector2(300, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone1"]
+
+[node name="EncounterZone2" type="Area2D" parent="."]
+position = Vector2(600, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone2"]
+
+[node name="EncounterZone3" type="Area2D" parent="."]
+position = Vector2(900, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone3"]
+
+[node name="EncounterZone4" type="Area2D" parent="."]
+position = Vector2(1150, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone4"]

@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3 uid="uid://gatekeeper_quiz"]
+
+[ext_resource type="Script" path="res://scenes/act2/objects/gatekeeper_quiz.gd" id="1_gkquiz"]
+
+[node name="GatekeeperQuiz" type="Control"]
+script = ExtResource("1_gkquiz")
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.8)
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+offset_left = 128.0
+offset_top = 72.0
+offset_right = -128.0
+offset_bottom = -72.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="QuoteLabel" type="RichTextLabel" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 100)
+bbcode_enabled = true
+
+[node name="SpeakerLabel" type="Label" parent="Panel/VBox"]
+
+[node name="Options" type="VBoxContainer" parent="Panel/VBox"]
+
+[node name="Option0" type="Button" parent="Panel/VBox/Options"]
+text = "Option A"
+
+[node name="Option1" type="Button" parent="Panel/VBox/Options"]
+text = "Option B"
+
+[node name="Option2" type="Button" parent="Panel/VBox/Options"]
+text = "Option C"
+
+[node name="Option3" type="Button" parent="Panel/VBox/Options"]
+text = "Option D"
+
+[node name="FeedbackLabel" type="Label" parent="Panel/VBox"]
