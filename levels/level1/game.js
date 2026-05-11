@@ -328,7 +328,7 @@ function gameUpdate() {
     if (d.length() < 2.5) {
       jones.flee();
       // Slight cam shake
-      cameraPos = cameraPos.add(vec2(randInRange(-0.1, 0.1), randInRange(-0.1, 0.1)));
+      setCameraPos(cameraPos.add(vec2(rand(0.1, -0.1), rand(0.1, -0.1))));
     }
   }
 
