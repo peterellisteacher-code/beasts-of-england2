@@ -1,17 +1,21 @@
 # Beasts of England — Web Export CI
-# Triggers on push to demo-version branch or manual dispatch.
-# Builds the Godot 4 web export and uploads it as a downloadable artifact.
+# Triggers on push to master or manual dispatch.
+# Builds the Godot 4 web export and deploys to Netlify.
 #
 # Required repo variables (Settings → Variables → Actions):
 #   GODOT_VERSION  →  4.6.2
 #   EXPORT_NAME    →  beasts-of-england
+#
+# Required repo secrets (Settings → Secrets → Actions):
+#   NETLIFY_AUTH_TOKEN  →  Netlify personal access token
+#   NETLIFY_SITE_ID     →  6f204921-9946-41a9-bb67-679da7423ee0
 
 name: "Build Web Demo"
 
 on:
   push:
     branches:
-      - 'demo-version'
+      - 'master'
   workflow_dispatch:
 
 env:
@@ -29,7 +33,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: 'demo-version'
           lfs: true
 
       - name: Setup export templates
@@ -47,15 +50,19 @@ jobs:
           cd $PROJECT_PATH
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
 
-      - name: Zip web build
-        run: |
-          cd build/web
-          zip -r ../${EXPORT_NAME}-web.zip .
-          echo "Build size: $(du -sh ../${EXPORT_NAME}-web.zip)"
-
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.EXPORT_NAME }}-web
-          path: build/${{ env.EXPORT_NAME }}-web.zip
+          path: build/web/
           retention-days: 90
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: build/web
+          production-branch: master
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
