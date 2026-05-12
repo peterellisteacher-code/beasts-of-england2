@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://act4_politics_tactics"]
+[gd_scene load_steps=9 format=3 uid="uid://act4_politics_tactics"]
 
 [ext_resource type="Script" path="res://scenes/act4/politics_tactics.gd" id="1_tactics"]
 [ext_resource type="Script" path="res://scenes/act4/units/unit_base.gd" id="2_unit"]
@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/snowball.png" id="4_snowball"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/dog_topdown.png" id="5_dog"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/squealer.png" id="6_squealer"]
+[ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="7_intro"]
+[ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="8_chud"]
 
 [node name="PoliticsTactics" type="Node2D"]
 script = ExtResource("1_tactics")
@@ -191,3 +193,14 @@ text = "Could Snowball ever have won? The mechanics say no..."
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="ControlsHUD" parent="." instance=ExtResource("8_chud")]
+controls = Array[String](["Click a green tile to move", "Click an action button (Battle Cry / Windmill / Wait)", "H: Hide controls"])
+
+[node name="ActIntro" parent="." instance=ExtResource("7_intro")]
+act_label_text = "ACT 4 — CHAPTER 5"
+title_text = "SNOWBALL'S EXPULSION"
+protagonist_text = "You are SNOWBALL — visionary, planner, builder of the windmill."
+story_text = "At every meeting Napoleon has set himself against you. Now he has unleashed nine fierce dogs, raised in secret. They mean to chase you off the farm — and Squealer's lies are turning the others against you too."
+goal_text = "Survive as long as you can. The grid shrinks every three rounds — there is no winning move, only how long you last."
+controls = Array[String](["Click a highlighted GREEN tile to move Snowball", "Then choose Battle Cry, Windmill Plans, or Wait", "Battle Cry: push a nearby dog away", "Windmill Plans: gain defence this round", "Wait: skip your action"])
