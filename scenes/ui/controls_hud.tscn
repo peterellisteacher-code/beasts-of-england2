@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://boe_controls_hud"]
+
+[ext_resource type="Script" path="res://scenes/ui/controls_hud.gd" id="1_controlshud"]
+
+[node name="ControlsHUD" type="CanvasLayer"]
+layer = 50
+script = ExtResource("1_controlshud")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 140.0
+modulate = Color(1, 1, 1, 0.92)
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 6
+
+[node name="ControlsList" type="VBoxContainer" parent="Panel/Margin"]
+theme_override_constants/separation = 2

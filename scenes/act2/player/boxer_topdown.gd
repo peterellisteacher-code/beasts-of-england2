@@ -9,6 +9,7 @@ const ACCELERATION: float = 600.0
 const MAX_SPEED: float = 120.0
 const FRICTION: float = 600.0
 const CHARGE_SPEED: float = 250.0
+const CHARGE_DURATION: float = 0.45
 
 # =============================================================================
 # Public variables
@@ -22,6 +23,7 @@ var can_move: bool = true
 
 var _is_charging: bool = false
 var _charge_direction: Vector2 = Vector2.ZERO
+var _charge_time_left: float = 0.0
 
 # =============================================================================
 # Onready references
@@ -47,12 +49,13 @@ func _physics_process(delta: float) -> void:
 	var input_vector: Vector2 = _get_input_vector()
 
 	if _is_charging:
+		_charge_time_left -= delta
 		velocity = velocity.move_toward(_charge_direction * CHARGE_SPEED, ACCELERATION * delta)
 		animated_sprite.play(&"attack")
-		# Charge ends once speed drops below half charge speed
-		if velocity.length() <= CHARGE_SPEED * 0.5:
-			_is_charging = false
-			charge_hitbox.monitoring = false
+		# Charge ends after a fixed duration OR if the player releases all
+		# direction keys (lets the player cancel a runaway charge).
+		if _charge_time_left <= 0.0 or input_vector == Vector2.ZERO:
+			_end_charge()
 	elif input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		_update_sprite_direction(input_vector)
@@ -61,11 +64,9 @@ func _physics_process(delta: float) -> void:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 		animated_sprite.play(&"idle")
 
-	# Charge attack (Space / ui_accept) — only when moving and not already charging
-	if Input.is_action_just_pressed("ui_accept") and not _is_charging and input_vector != Vector2.ZERO:
-		_is_charging = true
-		_charge_direction = input_vector
-		charge_hitbox.monitoring = true
+	# Charge attack (Space / Enter / E) — only when moving and not already charging
+	if Input.is_action_just_pressed("interact") and not _is_charging and input_vector != Vector2.ZERO:
+		_start_charge(input_vector)
 
 	move_and_slide()
 
@@ -83,3 +84,18 @@ func _get_input_vector() -> Vector2:
 func _update_sprite_direction(direction: Vector2) -> void:
 	if abs(direction.x) > abs(direction.y):
 		animated_sprite.flip_h = direction.x < 0
+
+
+func _start_charge(direction: Vector2) -> void:
+	_is_charging = true
+	_charge_direction = direction
+	_charge_time_left = CHARGE_DURATION
+	charge_hitbox.monitoring = true
+
+
+func _end_charge() -> void:
+	_is_charging = false
+	_charge_time_left = 0.0
+	charge_hitbox.monitoring = false
+	# Bleed off the charge velocity so the player isn't propelled after release.
+	velocity = velocity.move_toward(Vector2.ZERO, CHARGE_SPEED)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=14 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1_platformer"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2_player"]
@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_house_blue.png" id="9_castle"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="10_bush"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="11_tree"]
+[ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="12_intro"]
+[ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="13_chud"]
 
 [sub_resource type="RectangleShape2D" id="GroundShape"]
 size = Vector2(2800.0, 80.0)
@@ -219,5 +221,16 @@ color = Color(0.55, 0.28, 0.13, 1)
 polygon = PackedVector2Array(-40, -80, 40, -80, 0, -110)
 
 [node name="HeartsHUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="ControlsHUD" parent="." instance=ExtResource("13_chud")]
+controls = Array[String](["A / D or ← →: Walk", "Space / Enter / W / ↑: Jump", "E: Use lantern", "H: Hide controls"])
+
+[node name="ActIntro" parent="." instance=ExtResource("12_intro")]
+act_label_text = "ACT 1 — CHAPTER 1"
+title_text = "OLD MAJOR'S DREAM"
+protagonist_text = "You are OLD MAJOR — the prize Middle White boar."
+story_text = "Late one night, after Mr. Jones has stumbled to bed, the animals of Manor Farm creep into the great barn. Old Major has called them together to share a dream — a vision of an England without humans, where every beast is free."
+goal_text = "Make your way across the farmyard and reach the barn door on the right to deliver your speech."
+controls = Array[String](["Move: A / D  or  ← →", "Jump: Space / Enter  or  W / ↑", "Lantern: E (after picking it up)"])
 
 [connection signal="body_entered" from="World/BarnDoor" to="." method="on_barn_reached"]

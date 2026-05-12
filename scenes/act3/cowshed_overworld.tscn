@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://act3_cowshed"]
+[gd_scene load_steps=11 format=3 uid="uid://act3_cowshed"]
 
 [ext_resource type="Script" path="res://scenes/act3/cowshed_overworld.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://boxer_topdown" path="res://scenes/act2/player/boxer_topdown.tscn" id="2_boxer"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_house_blue.png" id="5_house"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="6_tree"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="7_bush"]
+[ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="8_intro"]
+[ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="9_chud"]
 
 [sub_resource type="CircleShape2D" id="ZoneShape"]
 radius = 40.0
@@ -158,3 +160,14 @@ theme_override_colors/font_color = Color(0.9, 0.1, 0.1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
+
+[node name="ControlsHUD" parent="." instance=ExtResource("9_chud")]
+controls = Array[String](["WASD / Arrows: Move", "Walk into a numbered marker to start a battle", "H: Hide controls"])
+
+[node name="ActIntro" parent="." instance=ExtResource("8_intro")]
+act_label_text = "ACT 3 — CHAPTER 4"
+title_text = "THE BATTLE OF THE COWSHED"
+protagonist_text = "You are BOXER — defender of Animal Farm."
+story_text = "News of the Rebellion has spread. Jones and his men are coming back, armed and angry. Squealer sends you to meet them at four points around the cowshed. Win, and the farm endures."
+goal_text = "Walk into each numbered marker (1 → 4) in order to enter a turn-based battle. Win all four to finish the act."
+controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Step onto a numbered marker to start that battle", "Battles use mouse / click — instructions appear on screen"])

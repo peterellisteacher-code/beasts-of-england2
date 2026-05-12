@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://boxer_revolution"]
+[gd_scene load_steps=12 format=3 uid="uid://boxer_revolution"]
 
 [ext_resource type="Script" path="res://scenes/act2/boxer_revolution.gd" id="1_revolution"]
 [ext_resource type="PackedScene" uid="uid://boxer_topdown" path="res://scenes/act2/player/boxer_topdown.tscn" id="2_boxer"]
@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="8_bushes"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/soil_fill.png" id="9_soil"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="10_tree"]
+[ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="11_intro"]
+[ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="12_chud"]
 
 [node name="BoxerRevolution" type="Node2D"]
 script = ExtResource("1_revolution")
@@ -107,3 +109,14 @@ position = Vector2(940.0, 520.0)
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640.0, 360.0)
 enabled = true
+
+[node name="ControlsHUD" parent="." instance=ExtResource("12_chud")]
+controls = Array[String](["WASD / Arrows: Move", "E: Charge (while moving)", "H: Hide controls"])
+
+[node name="ActIntro" parent="." instance=ExtResource("11_intro")]
+act_label_text = "ACT 2 — CHAPTERS 2-3"
+title_text = "THE REBELLION"
+protagonist_text = "You are BOXER — the great cart-horse, strong as any two horses."
+story_text = "Mr. Jones has forgotten to feed the animals. Hungry and furious, the beasts burst out of the stalls and turn on the men with whips. The Rebellion has come — drive the humans off Manor Farm and write the Seven Commandments on the barn wall."
+goal_text = "Charge the five Jones-men around the farmyard and drive them off the land before any of them regroup."
+controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Charge (while moving): E", "(The charge lasts a short burst, then you stop — no more runaway Boxer!)"])

@@ -81,10 +81,21 @@ flat = true
 
 [node name="PressAnyKey" type="Label" parent="."]
 offset_left = 100.0
-offset_top = 640.0
+offset_top = 590.0
 offset_right = 1180.0
-offset_bottom = 680.0
+offset_bottom = 620.0
 text = "— or press any key —"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.78, 0.55, 0.40, 1)
+
+[node name="ControlsHint" type="Label" parent="."]
+offset_left = 100.0
+offset_top = 640.0
+offset_right = 1180.0
+offset_bottom = 700.0
+text = "Each act opens with a story panel and its controls. Press H during play to toggle the controls reminder.
+Movement works with WASD or arrow keys. Space/Enter to confirm. E to interact."
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.62, 0.50, 0.38, 1)
