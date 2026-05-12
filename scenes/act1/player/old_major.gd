@@ -8,9 +8,9 @@ extends CharacterBody2D
 # Constants
 # =============================================================================
 
-const SPEED: float = 150.0
-const JUMP_VELOCITY: float = -380.0
-const DOUBLE_JUMP_VELOCITY: float = -320.0
+const SPEED: float = 220.0
+const JUMP_VELOCITY: float = -420.0
+const DOUBLE_JUMP_VELOCITY: float = -360.0
 const GRAVITY: float = 980.0
 const KNOCKBACK_FRICTION: float = 600.0
 

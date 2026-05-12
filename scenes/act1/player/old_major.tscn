@@ -1,176 +1,176 @@
-[gd_scene load_steps=30 format=3 uid="uid://act1_old_major"]
+[gd_scene load_steps=12 format=3 uid="uid://act1_old_major"]
 
 [ext_resource type="Script" path="res://scenes/act1/player/old_major.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_walk.png" id="2_walk"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_combat_idle.png" id="3_combat_idle"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_idle.png" id="2_idle"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_run.png" id="3_run"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_jump.png" id="4_jump"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_fall.png" id="5_fall"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_hit.png" id="6_hit"]
 
-;; Walk sheet: 384x192, 96x96 per frame, 4 cols x 2 rows = 8 frames
-[sub_resource type="AtlasTexture" id="AT_walk_0"]
-atlas = ExtResource("2_walk")
-region = Rect2(0, 0, 96, 96)
+;; idle sheet: 352x32, 32x32 per frame, 11 frames horizontal
+[sub_resource type="AtlasTexture" id="AT_idle_0"]
+atlas = ExtResource("2_idle")
+region = Rect2(0, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_1"]
+atlas = ExtResource("2_idle")
+region = Rect2(32, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_2"]
+atlas = ExtResource("2_idle")
+region = Rect2(64, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_3"]
+atlas = ExtResource("2_idle")
+region = Rect2(96, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_4"]
+atlas = ExtResource("2_idle")
+region = Rect2(128, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_5"]
+atlas = ExtResource("2_idle")
+region = Rect2(160, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_6"]
+atlas = ExtResource("2_idle")
+region = Rect2(192, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_7"]
+atlas = ExtResource("2_idle")
+region = Rect2(224, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_8"]
+atlas = ExtResource("2_idle")
+region = Rect2(256, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_9"]
+atlas = ExtResource("2_idle")
+region = Rect2(288, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_idle_10"]
+atlas = ExtResource("2_idle")
+region = Rect2(320, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AT_walk_1"]
-atlas = ExtResource("2_walk")
-region = Rect2(96, 0, 96, 96)
+;; run sheet: 384x32, 32x32 per frame, 12 frames horizontal
+[sub_resource type="AtlasTexture" id="AT_run_0"]
+atlas = ExtResource("3_run")
+region = Rect2(0, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_1"]
+atlas = ExtResource("3_run")
+region = Rect2(32, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_2"]
+atlas = ExtResource("3_run")
+region = Rect2(64, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_3"]
+atlas = ExtResource("3_run")
+region = Rect2(96, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_4"]
+atlas = ExtResource("3_run")
+region = Rect2(128, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_5"]
+atlas = ExtResource("3_run")
+region = Rect2(160, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_6"]
+atlas = ExtResource("3_run")
+region = Rect2(192, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_7"]
+atlas = ExtResource("3_run")
+region = Rect2(224, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_8"]
+atlas = ExtResource("3_run")
+region = Rect2(256, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_9"]
+atlas = ExtResource("3_run")
+region = Rect2(288, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_10"]
+atlas = ExtResource("3_run")
+region = Rect2(320, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_run_11"]
+atlas = ExtResource("3_run")
+region = Rect2(352, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AT_walk_2"]
-atlas = ExtResource("2_walk")
-region = Rect2(192, 0, 96, 96)
-
-[sub_resource type="AtlasTexture" id="AT_walk_3"]
-atlas = ExtResource("2_walk")
-region = Rect2(288, 0, 96, 96)
-
-[sub_resource type="AtlasTexture" id="AT_walk_4"]
-atlas = ExtResource("2_walk")
-region = Rect2(0, 96, 96, 96)
-
-[sub_resource type="AtlasTexture" id="AT_walk_5"]
-atlas = ExtResource("2_walk")
-region = Rect2(96, 96, 96, 96)
-
-[sub_resource type="AtlasTexture" id="AT_walk_6"]
-atlas = ExtResource("2_walk")
-region = Rect2(192, 96, 96, 96)
-
-[sub_resource type="AtlasTexture" id="AT_walk_7"]
-atlas = ExtResource("2_walk")
-region = Rect2(288, 96, 96, 96)
-
-;; Combat idle sheet: 512x256, 128x128 per frame, 4 cols x 2 rows = 8 frames
-[sub_resource type="AtlasTexture" id="AT_combat_0"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(0, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_1"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(128, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_2"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(256, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_3"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(384, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_4"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(0, 128, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_5"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(128, 128, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_6"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(256, 128, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AT_combat_7"]
-atlas = ExtResource("3_combat_idle")
-region = Rect2(384, 128, 128, 128)
+;; hit sheet: 224x32, 32x32 per frame, 7 frames horizontal
+[sub_resource type="AtlasTexture" id="AT_hit_0"]
+atlas = ExtResource("6_hit")
+region = Rect2(0, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_hit_1"]
+atlas = ExtResource("6_hit")
+region = Rect2(32, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_hit_2"]
+atlas = ExtResource("6_hit")
+region = Rect2(64, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_hit_3"]
+atlas = ExtResource("6_hit")
+region = Rect2(96, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_hit_4"]
+atlas = ExtResource("6_hit")
+region = Rect2(128, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_hit_5"]
+atlas = ExtResource("6_hit")
+region = Rect2(160, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AT_hit_6"]
+atlas = ExtResource("6_hit")
+region = Rect2(192, 0, 32, 32)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_om_body"]
-radius = 18.0
-height = 72.0
+radius = 10.0
+height = 32.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_om_lantern"]
 radius = 80.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_om"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AT_walk_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_3")
-}],
+"frames": [
+{"duration": 1.0, "texture": SubResource("AT_idle_0")},
+{"duration": 1.0, "texture": SubResource("AT_idle_1")},
+{"duration": 1.0, "texture": SubResource("AT_idle_2")},
+{"duration": 1.0, "texture": SubResource("AT_idle_3")},
+{"duration": 1.0, "texture": SubResource("AT_idle_4")},
+{"duration": 1.0, "texture": SubResource("AT_idle_5")},
+{"duration": 1.0, "texture": SubResource("AT_idle_6")},
+{"duration": 1.0, "texture": SubResource("AT_idle_7")},
+{"duration": 1.0, "texture": SubResource("AT_idle_8")},
+{"duration": 1.0, "texture": SubResource("AT_idle_9")},
+{"duration": 1.0, "texture": SubResource("AT_idle_10")}
+],
 "loop": true,
 "name": &"idle",
-"speed": 6.0
+"speed": 11.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AT_walk_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_walk_7")
-}],
+"frames": [
+{"duration": 1.0, "texture": SubResource("AT_run_0")},
+{"duration": 1.0, "texture": SubResource("AT_run_1")},
+{"duration": 1.0, "texture": SubResource("AT_run_2")},
+{"duration": 1.0, "texture": SubResource("AT_run_3")},
+{"duration": 1.0, "texture": SubResource("AT_run_4")},
+{"duration": 1.0, "texture": SubResource("AT_run_5")},
+{"duration": 1.0, "texture": SubResource("AT_run_6")},
+{"duration": 1.0, "texture": SubResource("AT_run_7")},
+{"duration": 1.0, "texture": SubResource("AT_run_8")},
+{"duration": 1.0, "texture": SubResource("AT_run_9")},
+{"duration": 1.0, "texture": SubResource("AT_run_10")},
+{"duration": 1.0, "texture": SubResource("AT_run_11")}
+],
 "loop": true,
 "name": &"run",
-"speed": 10.0
+"speed": 14.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AT_walk_4")
-}],
+"frames": [{"duration": 1.0, "texture": ExtResource("4_jump")}],
 "loop": false,
 "name": &"jump",
 "speed": 6.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AT_walk_5")
-}],
+"frames": [{"duration": 1.0, "texture": ExtResource("5_fall")}],
 "loop": false,
 "name": &"fall",
 "speed": 6.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AT_combat_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_combat_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_combat_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_combat_3")
-}],
+"frames": [
+{"duration": 1.0, "texture": SubResource("AT_hit_0")},
+{"duration": 1.0, "texture": SubResource("AT_hit_1")},
+{"duration": 1.0, "texture": SubResource("AT_hit_2")},
+{"duration": 1.0, "texture": SubResource("AT_hit_3")},
+{"duration": 1.0, "texture": SubResource("AT_hit_4")},
+{"duration": 1.0, "texture": SubResource("AT_hit_5")},
+{"duration": 1.0, "texture": SubResource("AT_hit_6")}
+],
 "loop": false,
 "name": &"hit",
-"speed": 8.0
+"speed": 10.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AT_combat_4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_combat_5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_combat_6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_combat_7")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("AT_hit_6")}],
 "loop": false,
 "name": &"dead",
 "speed": 6.0
@@ -180,11 +180,12 @@ animations = [{
 script = ExtResource("1_script")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2.0, 2.0)
 sprite_frames = SubResource("SpriteFrames_om")
 animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.0, -36.0)
+position = Vector2(0.0, 0.0)
 shape = SubResource("CapsuleShape2D_om_body")
 
 [node name="HurtTimer" type="Timer" parent="."]

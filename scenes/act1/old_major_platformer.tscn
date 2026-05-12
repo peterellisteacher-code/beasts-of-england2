@@ -103,8 +103,9 @@ position = Vector2(120.0, 450.0)
 
 [node name="Camera2D" type="Camera2D" parent="World/OldMajor"]
 enabled = true
-zoom = Vector2(1.4, 1.4)
+zoom = Vector2(2.0, 2.0)
 limit_left = -100
+limit_right = 2600
 limit_top = -200
 limit_bottom = 720
 position_smoothing_enabled = true

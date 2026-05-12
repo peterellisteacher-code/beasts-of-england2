@@ -6,18 +6,32 @@
 script = ExtResource("1")
 layer = 10
 
-[node name="HBox" type="HBoxContainer" parent="."]
-offset_left = 16.0
-offset_top = 14.0
-offset_right = 140.0
-offset_bottom = 54.0
+[node name="Heart1" type="Polygon2D" parent="."]
+position = Vector2(48.0, 48.0)
+color = Color(0.87, 0.07, 0.07, 1)
+polygon = PackedVector2Array(-14, -4, -13, -10, -9, -13, -5, -13, -2, -10, 0, -6, 2, -10, 5, -13, 9, -13, 13, -10, 14, -4, 10, 4, 4, 12, 0, 17, -4, 12, -10, 4)
 
-[node name="Heart1" type="Label" parent="HBox"]
-text = "♥"
-theme_override_font_sizes/font_size = 32
-[node name="Heart2" type="Label" parent="HBox"]
-text = "♥"
-theme_override_font_sizes/font_size = 32
-[node name="Heart3" type="Label" parent="HBox"]
-text = "♥"
-theme_override_font_sizes/font_size = 32
+[node name="Outline1" type="Line2D" parent="Heart1"]
+points = PackedVector2Array(-14, -4, -13, -10, -9, -13, -5, -13, -2, -10, 0, -6, 2, -10, 5, -13, 9, -13, 13, -10, 14, -4, 10, 4, 4, 12, 0, 17, -4, 12, -10, 4, -14, -4)
+width = 2.0
+default_color = Color(0.35, 0.04, 0.04, 1)
+
+[node name="Heart2" type="Polygon2D" parent="."]
+position = Vector2(96.0, 48.0)
+color = Color(0.87, 0.07, 0.07, 1)
+polygon = PackedVector2Array(-14, -4, -13, -10, -9, -13, -5, -13, -2, -10, 0, -6, 2, -10, 5, -13, 9, -13, 13, -10, 14, -4, 10, 4, 4, 12, 0, 17, -4, 12, -10, 4)
+
+[node name="Outline2" type="Line2D" parent="Heart2"]
+points = PackedVector2Array(-14, -4, -13, -10, -9, -13, -5, -13, -2, -10, 0, -6, 2, -10, 5, -13, 9, -13, 13, -10, 14, -4, 10, 4, 4, 12, 0, 17, -4, 12, -10, 4, -14, -4)
+width = 2.0
+default_color = Color(0.35, 0.04, 0.04, 1)
+
+[node name="Heart3" type="Polygon2D" parent="."]
+position = Vector2(144.0, 48.0)
+color = Color(0.87, 0.07, 0.07, 1)
+polygon = PackedVector2Array(-14, -4, -13, -10, -9, -13, -5, -13, -2, -10, 0, -6, 2, -10, 5, -13, 9, -13, 13, -10, 14, -4, 10, 4, 4, 12, 0, 17, -4, 12, -10, 4)
+
+[node name="Outline3" type="Line2D" parent="Heart3"]
+points = PackedVector2Array(-14, -4, -13, -10, -9, -13, -5, -13, -2, -10, 0, -6, 2, -10, 5, -13, 9, -13, 13, -10, 14, -4, 10, 4, 4, 12, 0, 17, -4, 12, -10, 4, -14, -4)
+width = 2.0
+default_color = Color(0.35, 0.04, 0.04, 1)

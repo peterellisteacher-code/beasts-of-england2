@@ -1,16 +1,15 @@
 extends CanvasLayer
 
-## Three-heart HUD for Act 1.
-## Listens to GameState.hearts_changed signal and dims/restores hearts.
+## Three-heart HUD for Act 1. Polygon2D hearts so no font/glyph dependency.
 
-const FULL_COLOR  := Color(0.87, 0.07, 0.07, 1.0)   # propaganda red
+const FULL_COLOR  := Color(0.87, 0.07, 0.07, 1.0)
 const EMPTY_COLOR := Color(0.25, 0.05, 0.05, 0.45)
 
-@onready var heart1: Label = $HBox/Heart1
-@onready var heart2: Label = $HBox/Heart2
-@onready var heart3: Label = $HBox/Heart3
+@onready var heart1: Polygon2D = $Heart1
+@onready var heart2: Polygon2D = $Heart2
+@onready var heart3: Polygon2D = $Heart3
 
-var _hearts: Array[Label] = []
+var _hearts: Array[Polygon2D] = []
 
 func _ready() -> void:
 	_hearts = [heart1, heart2, heart3]
