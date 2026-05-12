@@ -50,6 +50,10 @@ jobs:
           cd $PROJECT_PATH
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
 
+      - name: Add Netlify headers
+        run: |
+          printf "/*\n  Cross-Origin-Opener-Policy: same-origin\n  Cross-Origin-Embedder-Policy: require-corp\n" > build/web/_headers
+
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
         with:
