@@ -1,3 +1,4 @@
+## Ported from Lango-Zelda-RPG Levels/BossLevel.gd + GDQuest core/Game.gd
 class_name OldMajorPlatformer
 extends Node2D
 
@@ -21,17 +22,26 @@ var keys_collected: int = 0
 var doors_unlocked: int = 0
 
 # =============================================================================
+# Onready references
+# =============================================================================
+
+@onready var _hearts_hud: CanvasLayer = $HeartsHUD
+
+# =============================================================================
 # Built-in virtual methods
 # =============================================================================
 
 func _ready() -> void:
 	add_to_group(GROUP_SCENE_COORDINATOR)
-	GameState.hearts = 3
-	GameState.hearts_changed.emit(GameState.hearts)
-	$HeartsHUD.update_hearts(GameState.hearts)
+	# Read-and-restore: only reset to 3 on a fresh run (hearts exhausted or
+	# first play).  Reloading mid-run after taking damage preserves the count.
+	if GameState.hearts <= 0:
+		GameState.hearts = 3
+	_hearts_hud.update_hearts(GameState.hearts)
+	_connect_doors()
 
 # =============================================================================
-# Public methods
+# Public methods — called by child nodes / doors
 # =============================================================================
 
 func on_key_collected() -> void:
@@ -49,7 +59,6 @@ func on_lamb_rescued() -> void:
 
 func on_player_died() -> void:
 	GameState.hearts -= 1
-	GameState.hearts_changed.emit(GameState.hearts)
 	if GameState.hearts <= 0:
 		SceneManager.go_to_scene("res://scenes/act1/loss_screen.tscn")
 	else:
@@ -60,3 +69,16 @@ func on_barn_reached() -> void:
 	GameState.corrupt_commandment(0)
 	GameState.complete_act(1)
 	SceneManager.go_to_scene("res://scenes/act2/boxer_revolution.tscn")
+
+# =============================================================================
+# Private methods
+# =============================================================================
+
+func _connect_doors() -> void:
+	# GDQuest Game.gd wiring pattern: push key-count updates to doors so they
+	# can gate themselves without calling get_parent().  Doors that do not
+	# expose on_key_count_changed(count: int) are silently skipped.
+	var doors: Array[Node] = get_tree().get_nodes_in_group(&"door")
+	for door: Node in doors:
+		if door.has_method(&"on_key_count_changed"):
+			key_count_changed.connect(door.on_key_count_changed)

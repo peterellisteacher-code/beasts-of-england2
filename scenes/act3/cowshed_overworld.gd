@@ -1,3 +1,4 @@
+## Ported from Lango-Zelda-RPG Levels/DangeonEntrace.gd + GDQuest core/world/Door.gd
 class_name CowshedOverworld
 extends Node2D
 
@@ -27,19 +28,19 @@ func _ready() -> void:
 			push_error("CowshedOverworld: missing node " + zone_name)
 			continue
 		_encounter_zones.append(zone)
-		var idx: int = i
-		zone.body_entered.connect(func(body: Node2D) -> void:
-			if body.is_in_group("player"):
-				_try_start_battle(idx)
-		)
+		zone.body_entered.connect(_on_zone_body_entered.bind(i))
 
 	_update_encounter_zones()
 	_check_act_complete()
 
-
 # =============================================================================
 # Private methods
 # =============================================================================
+
+func _on_zone_body_entered(body: Node2D, battle_index: int) -> void:
+	if body.is_in_group("player"):
+		_try_start_battle(battle_index)
+
 
 func _try_start_battle(battle_index: int) -> void:
 	# Only allow entering the current (next unfinished) battle
@@ -47,7 +48,7 @@ func _try_start_battle(battle_index: int) -> void:
 		return
 	GameState.save_to_disk()
 	get_tree().set_meta("battle_index", battle_index)
-	get_tree().change_scene_to_file("res://scenes/act3/battle/battle_scene.tscn")
+	SceneManager.go_to_scene("res://scenes/act3/battle/battle_scene.tscn")
 
 
 func _update_encounter_zones() -> void:
@@ -62,4 +63,4 @@ func _check_act_complete() -> void:
 	if GameState.battle_wins >= TOTAL_BATTLES:
 		GameState.corrupt_commandment(2)
 		GameState.complete_act(3)
-		get_tree().change_scene_to_file("res://scenes/act4/politics_tactics.tscn")
+		SceneManager.go_to_scene("res://scenes/act4/politics_tactics.tscn")

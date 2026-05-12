@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://boxer_revolution"]
+[gd_scene load_steps=6 format=3 uid="uid://boxer_revolution"]
 
 [ext_resource type="Script" path="res://scenes/act2/boxer_revolution.gd" id="1_revolution"]
+[ext_resource type="PackedScene" uid="uid://boxer_topdown" path="res://scenes/act2/player/boxer_topdown.tscn" id="2_boxer"]
+[ext_resource type="PackedScene" uid="uid://jones_man_topdown" path="res://scenes/act2/enemies/jones_man_topdown.tscn" id="3_jones"]
+[ext_resource type="PackedScene" uid="uid://gatekeeper_quiz" path="res://scenes/act2/objects/gatekeeper_quiz.tscn" id="4_gkquiz"]
+[ext_resource type="PackedScene" uid="uid://commandments_reveal" path="res://scenes/act2/objects/commandments_reveal.tscn" id="5_cmdreveal"]
 
 [node name="BoxerRevolution" type="Node2D"]
 script = ExtResource("1_revolution")
@@ -9,13 +13,27 @@ script = ExtResource("1_revolution")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="World"]
 
-[node name="BoxerPlayer" type="CharacterBody2D" parent="."]
+[node name="BoxerPlayer" parent="." instance=ExtResource("2_boxer")]
+position = Vector2(200.0, 360.0)
 
-[node name="JonesMen" type="Node2D" parent="."]
+[node name="JonesMan1" parent="." instance=ExtResource("3_jones")]
+position = Vector2(850.0, 200.0)
 
-[node name="GatekeeperQuiz" type="CanvasLayer" parent="."]
+[node name="JonesMan2" parent="." instance=ExtResource("3_jones")]
+position = Vector2(620.0, 160.0)
 
-[node name="CommandmentsReveal" type="CanvasLayer" parent="."]
+[node name="JonesMan3" parent="." instance=ExtResource("3_jones")]
+position = Vector2(1020.0, 310.0)
+
+[node name="JonesMan4" parent="." instance=ExtResource("3_jones")]
+position = Vector2(730.0, 460.0)
+
+[node name="JonesMan5" parent="." instance=ExtResource("3_jones")]
+position = Vector2(940.0, 520.0)
+
+[node name="GatekeeperQuiz" parent="." instance=ExtResource("4_gkquiz")]
+
+[node name="CommandmentsReveal" parent="." instance=ExtResource("5_cmdreveal")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = true

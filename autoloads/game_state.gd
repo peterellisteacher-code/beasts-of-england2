@@ -1,4 +1,3 @@
-class_name GameState
 extends Node
 
 # =============================================================================
@@ -36,9 +35,14 @@ var commandments_corrupted: int = 0
 # Act 1 state
 # =============================================================================
 
-var hearts: int = 3
+var hearts: int = 3:
+	set(value):
+		hearts = value
+		hearts_changed.emit(hearts)
 var has_secret_scroll: bool = false
 var lamb_rescued: bool = false
+var collected_key_ids: Array[int] = []
+var opened_door_ids: Array[int] = []
 
 # =============================================================================
 # Act 2 state
@@ -46,6 +50,7 @@ var lamb_rescued: bool = false
 
 var has_gatekeeper_bonus: bool = false
 var jones_men_driven_off: bool = false
+var jones_men_driven: int = 0
 
 # =============================================================================
 # Act 3 state
@@ -95,9 +100,12 @@ func reset_act_state() -> void:
 			hearts = 3
 			has_secret_scroll = false
 			lamb_rescued = false
+			collected_key_ids = []
+			opened_door_ids = []
 		2:
 			has_gatekeeper_bonus = false
 			jones_men_driven_off = false
+			jones_men_driven = 0
 		3:
 			boxer_moves = ["charge", "brace"]
 			battle_wins = 0
@@ -112,8 +120,11 @@ func save_to_disk() -> void:
 		"hearts": hearts,
 		"has_secret_scroll": has_secret_scroll,
 		"lamb_rescued": lamb_rescued,
+		"collected_key_ids": collected_key_ids,
+		"opened_door_ids": opened_door_ids,
 		"has_gatekeeper_bonus": has_gatekeeper_bonus,
 		"jones_men_driven_off": jones_men_driven_off,
+		"jones_men_driven": jones_men_driven,
 		"boxer_moves": boxer_moves,
 		"battle_wins": battle_wins,
 		"snowball_expelled": snowball_expelled,
@@ -149,16 +160,19 @@ func load_from_disk() -> void:
 		return
 
 	var data: Dictionary = parsed as Dictionary
-	current_act          = _read_int(data, "current_act", 1)
-	commandments_corrupted = _read_int(data, "commandments_corrupted", 0)
-	hearts               = _read_int(data, "hearts", 3)
-	has_secret_scroll    = _read_bool(data, "has_secret_scroll", false)
-	lamb_rescued         = _read_bool(data, "lamb_rescued", false)
-	has_gatekeeper_bonus = _read_bool(data, "has_gatekeeper_bonus", false)
-	jones_men_driven_off = _read_bool(data, "jones_men_driven_off", false)
-	boxer_moves          = _read_string_array(data, "boxer_moves", ["charge", "brace"])
-	battle_wins          = _read_int(data, "battle_wins", 0)
-	snowball_expelled    = _read_bool(data, "snowball_expelled", false)
+	current_act              = _read_int(data, "current_act", 1)
+	commandments_corrupted   = _read_int(data, "commandments_corrupted", 0)
+	hearts                   = _read_int(data, "hearts", 3)
+	has_secret_scroll        = _read_bool(data, "has_secret_scroll", false)
+	lamb_rescued             = _read_bool(data, "lamb_rescued", false)
+	collected_key_ids        = _read_int_array(data, "collected_key_ids", [])
+	opened_door_ids          = _read_int_array(data, "opened_door_ids", [])
+	has_gatekeeper_bonus     = _read_bool(data, "has_gatekeeper_bonus", false)
+	jones_men_driven_off     = _read_bool(data, "jones_men_driven_off", false)
+	jones_men_driven         = _read_int(data, "jones_men_driven", 0)
+	boxer_moves              = _read_string_array(data, "boxer_moves", ["charge", "brace"])
+	battle_wins              = _read_int(data, "battle_wins", 0)
+	snowball_expelled        = _read_bool(data, "snowball_expelled", false)
 
 # =============================================================================
 # Private helpers — safe typed reads from an untyped JSON Dictionary
@@ -176,6 +190,20 @@ func _read_bool(data: Dictionary, key: String, default_value: bool) -> bool:
 	if data.has(key) and data[key] is bool:
 		return data[key]
 	return default_value
+
+
+func _read_int_array(data: Dictionary, key: String, default_value: Array[int]) -> Array[int]:
+	if not data.has(key):
+		return default_value
+	if not data[key] is Array:
+		return default_value
+	var result: Array[int] = []
+	for element: Variant in (data[key] as Array):
+		if element is float:
+			result.append(int(element))
+		elif element is int:
+			result.append(element)
+	return result
 
 
 func _read_string_array(data: Dictionary, key: String, default_value: Array[String]) -> Array[String]:

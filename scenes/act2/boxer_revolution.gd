@@ -1,3 +1,4 @@
+## Ported from Lango-Zelda-RPG Levels/Levels.gd
 class_name BoxerRevolution
 extends Node2D
 
@@ -12,7 +13,6 @@ const MAX_REGROUPED: int = 3
 # Private variables
 # =============================================================================
 
-var _jones_men_driven: int = 0
 var _jones_men_regrouped: int = 0
 
 # =============================================================================
@@ -36,8 +36,8 @@ func _ready() -> void:
 # =============================================================================
 
 func on_jones_man_driven_off() -> void:
-	_jones_men_driven += 1
-	if _jones_men_driven >= JONES_MEN_NEEDED:
+	GameState.jones_men_driven += 1
+	if GameState.jones_men_driven >= JONES_MEN_NEEDED:
 		_trigger_gatekeeper()
 
 
@@ -56,7 +56,7 @@ func on_gatekeeper_passed() -> void:
 func on_commandments_revealed() -> void:
 	GameState.corrupt_commandment(1)
 	GameState.complete_act(2)
-	get_tree().change_scene_to_file("res://scenes/act3/cowshed_overworld.tscn")
+	SceneManager.go_to_scene("res://scenes/act3/cowshed_overworld.tscn")
 
 # =============================================================================
 # Private methods
@@ -69,4 +69,4 @@ func _trigger_gatekeeper() -> void:
 
 
 func _trigger_loss() -> void:
-	get_tree().change_scene_to_file("res://scenes/act2/revolution_loss.tscn")
+	SceneManager.go_to_scene("res://scenes/act2/revolution_loss.tscn")

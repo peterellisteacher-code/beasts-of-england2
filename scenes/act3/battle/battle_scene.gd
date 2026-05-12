@@ -1,3 +1,7 @@
+## Battle system ported from PokemonUnity (reference-library/04-strategy/pokemon-unity/)
+## Damage formula: Gen 5/6 standard — (2L/5+2) × BP × Atk/Def ÷ 50 + 2
+## Stat stages: -6..+6 with canonical multiplier table
+## PP system, move unlocks, status effects all mirror PokemonUnity BattleSystem.cs patterns
 class_name BattleScene
 extends Node2D
 
@@ -5,13 +9,22 @@ extends Node2D
 # Enums
 # =============================================================================
 
-enum BattleState { PLAYER_TURN, ENEMY_TURN, ANIMATING, WIN, LOSE }
+enum BattlePhase {
+	IDLE,
+	AWAIT_PLAYER_INPUT,
+	PLAYER_MOVE,
+	ENEMY_MOVE,
+	ANIMATING,
+	WIN,
+	LOSE,
+}
 
 # =============================================================================
 # Private variables — battle state
 # =============================================================================
 
-var _battle_state: BattleState = BattleState.PLAYER_TURN
+var _phase: BattlePhase = BattlePhase.IDLE
+var _phase_entered: bool = false
 var _battle_index: int = 0
 
 # Boxer runtime stats
@@ -35,6 +48,9 @@ var _enemy_defense_stage: int = 0
 var _boxer_moves: Array[String] = []
 var _boxer_pp: Dictionary = {}
 
+# Move selected during AWAIT_PLAYER_INPUT (-1 = none yet)
+var _queued_move_index: int = -1
+
 # =============================================================================
 # Onready references
 # =============================================================================
@@ -47,6 +63,8 @@ var _boxer_pp: Dictionary = {}
 @onready var _enemy_name_label: Label = $UI/EnemyPanel/NameLabel
 @onready var _battle_log: RichTextLabel = $UI/BattleLog
 @onready var _move_buttons_container: GridContainer = $UI/MoveButtons
+@onready var _boxer_sprite: AnimatedSprite2D = $BoxerSprite
+@onready var _enemy_sprite: AnimatedSprite2D = $EnemySprite
 
 # =============================================================================
 # Built-in virtual methods
@@ -60,6 +78,51 @@ func _ready() -> void:
 	_update_hud()
 	_log("A battle begins! Boxer faces " + _enemy_data["name"] + "!")
 
+	# Wire animation_finished so BoxerSprite returns to idle after attack
+	_boxer_sprite.animation_finished.connect(_on_boxer_animation_finished)
+	_boxer_sprite.play("idle")
+	_enemy_sprite.play("idle")
+
+	_transition_to(BattlePhase.AWAIT_PLAYER_INPUT)
+
+
+func _physics_process(_delta: float) -> void:
+	if _phase_entered:
+		return
+	_phase_entered = true
+	_enter_phase(_phase)
+
+
+# =============================================================================
+# Phase state machine
+# =============================================================================
+
+func _transition_to(new_phase: BattlePhase) -> void:
+	_phase = new_phase
+	_phase_entered = false
+	# AWAIT_PLAYER_INPUT is driven by button callbacks, not physics_process
+	set_physics_process(new_phase != BattlePhase.AWAIT_PLAYER_INPUT)
+
+
+func _enter_phase(phase: BattlePhase) -> void:
+	match phase:
+		BattlePhase.AWAIT_PLAYER_INPUT:
+			_refresh_move_buttons()
+			_set_buttons_disabled(false)
+		BattlePhase.PLAYER_MOVE:
+			_set_buttons_disabled(true)
+			_run_player_move()
+		BattlePhase.ENEMY_MOVE:
+			_run_enemy_move()
+		BattlePhase.WIN:
+			_set_buttons_disabled(true)
+			_run_win()
+		BattlePhase.LOSE:
+			_set_buttons_disabled(true)
+			_run_lose()
+		BattlePhase.IDLE, BattlePhase.ANIMATING:
+			pass
+
 
 # =============================================================================
 # Private methods — setup
@@ -71,16 +134,13 @@ func _setup_boxer() -> void:
 	_boxer_attack_stage = 0
 	_boxer_enduring = false
 
-	# Copy move list from persistent state
 	_boxer_moves.clear()
 	for move_key: String in GameState.boxer_moves:
 		_boxer_moves.append(move_key)
 
-	# Inject solidarity if bonus is active and not already present
 	if GameState.has_gatekeeper_bonus and not ("solidarity" in _boxer_moves):
 		_boxer_moves.append("solidarity")
 
-	# Initialise PP from move definitions
 	_boxer_pp.clear()
 	for move_key: String in _boxer_moves:
 		_boxer_pp[move_key] = MoveData.MOVES[move_key]["max_pp"]
@@ -94,7 +154,6 @@ func _setup_enemy() -> void:
 
 
 func _setup_move_buttons() -> void:
-	# Connect each button once — idx captured by value in the lambda
 	for i: int in range(_move_buttons_container.get_child_count()):
 		var btn: Button = _move_buttons_container.get_child(i) as Button
 		if btn == null:
@@ -116,48 +175,93 @@ func _refresh_move_buttons() -> void:
 			var pp_now: int = _boxer_pp[move_key]
 			var pp_max: int = move["max_pp"]
 			btn.text = move["display"] + " (" + str(pp_now) + "/" + str(pp_max) + ")"
-			btn.disabled = (pp_now <= 0) or (_battle_state != BattleState.PLAYER_TURN)
+			btn.disabled = (pp_now <= 0)
 			btn.visible = true
 		else:
 			btn.visible = false
 
 
 # =============================================================================
-# Private methods — battle flow
+# Coroutines — player and enemy moves
 # =============================================================================
 
-func _on_move_button_pressed(move_index: int) -> void:
-	if _battle_state != BattleState.PLAYER_TURN:
-		return
-	if move_index >= _boxer_moves.size():
-		return
+func _run_player_move() -> void:
+	var move_index: int = _queued_move_index
+	_queued_move_index = -1
 
 	var move_key: String = _boxer_moves[move_index]
-	if _boxer_pp[move_key] <= 0:
-		return
-
 	_boxer_pp[move_key] -= 1
-	_battle_state = BattleState.ANIMATING
-	_set_buttons_disabled(true)
 
 	await _execute_move(move_key, MoveData.MOVES[move_key], true)
 
 	if _enemy_hp <= 0:
-		await _handle_win()
+		_transition_to(BattlePhase.WIN)
 		return
 
-	_battle_state = BattleState.ENEMY_TURN
 	await get_tree().create_timer(0.8).timeout
-	await _enemy_turn()
+	_transition_to(BattlePhase.ENEMY_MOVE)
+
+
+func _run_enemy_move() -> void:
+	var enemy_moves: Array = _enemy_data["moves"]
+	var move: Dictionary
+	if float(_enemy_hp) / float(_enemy_data["max_hp"]) < 0.3:
+		move = enemy_moves[0]
+	else:
+		move = enemy_moves[randi() % enemy_moves.size()]
+
+	await _execute_move(move["name"], move, false)
+	_update_hud()
 
 	if _boxer_hp <= 0:
-		await _handle_lose()
+		_transition_to(BattlePhase.LOSE)
 		return
 
 	_boxer_enduring = false
-	_battle_state = BattleState.PLAYER_TURN
-	_refresh_move_buttons()
 	_update_hud()
+	_transition_to(BattlePhase.AWAIT_PLAYER_INPUT)
+
+
+func _run_win() -> void:
+	_log("Boxer is victorious!")
+	GameState.battle_wins += 1
+
+	var unlock_key: String = MoveData.MOVE_UNLOCKS.get(_battle_index + 1, "")
+	if unlock_key != "" and not (unlock_key in GameState.boxer_moves):
+		GameState.boxer_moves.append(unlock_key)
+		GameState.save_to_disk()
+		await get_tree().create_timer(0.5).timeout
+		_log("Boxer learned: " + MoveData.MOVES[unlock_key]["display"] + "!")
+	else:
+		GameState.save_to_disk()
+
+	await get_tree().create_timer(2.0).timeout
+	get_tree().change_scene_to_file("res://scenes/act3/cowshed_overworld.tscn")
+
+
+func _run_lose() -> void:
+	_log("Boxer has fallen...")
+	await get_tree().create_timer(2.0).timeout
+	get_tree().change_scene_to_file("res://scenes/act3/battle/battle_loss.tscn")
+
+
+# =============================================================================
+# Private methods — move execution
+# =============================================================================
+
+func _on_move_button_pressed(move_index: int) -> void:
+	if _phase != BattlePhase.AWAIT_PLAYER_INPUT:
+		return
+	if move_index >= _boxer_moves.size():
+		return
+	var move_key: String = _boxer_moves[move_index]
+	if _boxer_pp[move_key] <= 0:
+		return
+
+	_queued_move_index = move_index
+	_transition_to(BattlePhase.PLAYER_MOVE)
+	# Re-enable physics_process so the state machine can enter PLAYER_MOVE
+	set_physics_process(true)
 
 
 func _execute_move(move_key: String, move: Dictionary, is_player: bool) -> void:
@@ -166,6 +270,12 @@ func _execute_move(move_key: String, move: Dictionary, is_player: bool) -> void:
 	await get_tree().create_timer(0.5).timeout
 
 	var effect: String = move.get("effect", "none")
+	var is_damage_move: bool = move.get("base_power", 0) > 0
+
+	# Play attack animation for Boxer on damage moves
+	if is_player and is_damage_move:
+		_boxer_sprite.play("attack")
+
 	match effect:
 		"none":
 			_deal_damage(move, is_player)
@@ -205,7 +315,6 @@ func _execute_move(move_key: String, move: Dictionary, is_player: bool) -> void:
 			_log("Solidarity restores Boxer's spirit! (+10 HP)")
 		"flinch_30pct":
 			_deal_damage(move, is_player)
-			# Flinch effect (visual flavour only — no skip mechanic needed here)
 		"double_next_turn":
 			_deal_damage(move, is_player)
 		"miss_20pct":
@@ -233,7 +342,6 @@ func _deal_damage(move: Dictionary, is_player: bool) -> void:
 		var atk: int = int(float(_enemy_data["attack"]) * _stage_multiplier(_enemy_attack_stage))
 		var def: int = int(float(_boxer_defense) * _stage_multiplier(_boxer_defense_stage))
 		var dmg: int = MoveData.calculate_damage(_enemy_data["level"], base_power, atk, def)
-		# Endure: survive with 1 HP if this hit would knock Boxer out
 		if _boxer_enduring and (_boxer_hp - dmg) <= 0:
 			dmg = _boxer_hp - 1
 			_log("Boxer endured the hit!")
@@ -241,47 +349,13 @@ func _deal_damage(move: Dictionary, is_player: bool) -> void:
 		_log(_enemy_data["name"] + " dealt " + str(dmg) + " damage to Boxer!")
 
 
-func _enemy_turn() -> void:
-	var enemy_moves: Array = _enemy_data["moves"]
-	# Simple AI: use the first (damage) move when at low HP, otherwise random
-	var move: Dictionary
-	if float(_enemy_hp) / float(_enemy_data["max_hp"]) < 0.3:
-		move = enemy_moves[0]
-	else:
-		move = enemy_moves[randi() % enemy_moves.size()]
+# =============================================================================
+# Sprite callbacks
+# =============================================================================
 
-	await _execute_move(move["name"], move, false)
-	_update_hud()
-
-
-func _handle_win() -> void:
-	_battle_state = BattleState.WIN
-	_set_buttons_disabled(true)
-	_log("Boxer is victorious!")
-
-	# Persist the win
-	GameState.battle_wins += 1
-
-	# Unlock next move if available
-	var unlock_key: String = MoveData.MOVE_UNLOCKS.get(_battle_index + 1, "")
-	if unlock_key != "" and not (unlock_key in GameState.boxer_moves):
-		GameState.boxer_moves.append(unlock_key)
-		GameState.save_to_disk()
-		await get_tree().create_timer(0.5).timeout
-		_log("Boxer learned: " + MoveData.MOVES[unlock_key]["display"] + "!")
-	else:
-		GameState.save_to_disk()
-
-	await get_tree().create_timer(2.0).timeout
-	get_tree().change_scene_to_file("res://scenes/act3/cowshed_overworld.tscn")
-
-
-func _handle_lose() -> void:
-	_battle_state = BattleState.LOSE
-	_set_buttons_disabled(true)
-	_log("Boxer has fallen...")
-	await get_tree().create_timer(2.0).timeout
-	get_tree().change_scene_to_file("res://scenes/act3/battle/battle_loss.tscn")
+func _on_boxer_animation_finished() -> void:
+	if _boxer_sprite.animation == "attack":
+		_boxer_sprite.play("idle")
 
 
 # =============================================================================
@@ -314,11 +388,10 @@ func _set_buttons_disabled(disabled: bool) -> void:
 
 
 # =============================================================================
-# Private methods — stat stage multiplier (Pokemon standard)
+# Private methods — stat stage multiplier (Pokémon standard)
 # =============================================================================
 
 func _stage_multiplier(stage: int) -> float:
-	# Stages -6 through +6, index 0..12
 	const STAGE_TABLE: Array[float] = [
 		0.25, 0.286, 0.333, 0.4, 0.5, 0.667,
 		1.0,

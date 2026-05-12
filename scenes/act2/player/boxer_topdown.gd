@@ -48,6 +48,7 @@ func _physics_process(delta: float) -> void:
 
 	if _is_charging:
 		velocity = velocity.move_toward(_charge_direction * CHARGE_SPEED, ACCELERATION * delta)
+		animated_sprite.play(&"attack")
 		# Charge ends once speed drops below half charge speed
 		if velocity.length() <= CHARGE_SPEED * 0.5:
 			_is_charging = false
@@ -55,10 +56,10 @@ func _physics_process(delta: float) -> void:
 	elif input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		_update_sprite_direction(input_vector)
-		animated_sprite.play("run")
+		animated_sprite.play(&"run")
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
-		animated_sprite.play("idle")
+		animated_sprite.play(&"idle")
 
 	# Charge attack (Space / ui_accept) — only when moving and not already charging
 	if Input.is_action_just_pressed("ui_accept") and not _is_charging and input_vector != Vector2.ZERO:

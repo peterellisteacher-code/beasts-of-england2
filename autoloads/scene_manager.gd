@@ -1,4 +1,3 @@
-class_name SceneManager
 extends Node
 
 # =============================================================================
@@ -28,9 +27,4 @@ func go_to_scene(path: String) -> void:
 	if path.is_empty():
 		push_error("SceneManager.go_to_scene: path is empty")
 		return
-	# Use maaacks SceneLoader when available so its loading screen fires;
-	# fall back to the engine call if SceneLoader is somehow absent.
-	if Engine.has_singleton("SceneLoader"):
-		SceneLoader.load_scene(path)
-	else:
-		get_tree().change_scene_to_file(path)
+	get_tree().change_scene_to_file(path)

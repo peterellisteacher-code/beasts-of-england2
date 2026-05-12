@@ -1,4 +1,5 @@
-class_name MoveData
+## Move definitions and damage formula ported from PokemonUnity (reference-library/04-strategy/pokemon-unity/)
+## calculate_damage() implements the Gen 5/6 formula verbatim from BattleSystem.cs
 extends Node
 
 # =============================================================================

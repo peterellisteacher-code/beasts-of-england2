@@ -1,3 +1,4 @@
+## Ported from gdquest-demos/godot-open-rpg src/combat/combat.gd
 class_name PoliticsTactics
 extends Node2D
 
@@ -16,6 +17,13 @@ const COLOR_VALID_MOVE: Color      = Color(0.3, 0.7, 0.3, 0.4)
 const COLOR_SELECTED_UNIT: Color   = Color(0.9, 0.9, 0.3, 0.5)
 
 # =============================================================================
+# Enums
+# =============================================================================
+
+## Combat phase tracker. Mirrors open-rpg combat.gd phase pattern.
+enum TacticsPhase { AWAIT_PLAYER_MOVE, AWAIT_PLAYER_ACTION, AI_TURN, ANIMATING }
+
+# =============================================================================
 # Signals
 # =============================================================================
 
@@ -27,9 +35,8 @@ signal game_over
 # =============================================================================
 
 var _grid_cols: int = INITIAL_COLS
-var _turn_number: int = 0
-var _player_turn: bool = true
-var _phase: String = "move"
+var _round_count: int = 0
+var _phase: TacticsPhase = TacticsPhase.AWAIT_PLAYER_MOVE
 var _valid_moves: Array[Vector2i] = []
 
 # Unit references
@@ -44,14 +51,14 @@ var _unit_positions: Dictionary = {}
 # @onready variables
 # =============================================================================
 
-@onready var _turn_label: Label              = %TurnLabel
-@onready var _hp_label: Label                = %SnowballHPLabel
-@onready var _action_panel: PanelContainer   = %ActionPanel
-@onready var _feedback_label: Label          = %FeedbackLabel
+@onready var _turn_label: Label               = %TurnLabel
+@onready var _hp_label: Label                 = %SnowballHPLabel
+@onready var _action_panel: PanelContainer    = %ActionPanel
+@onready var _feedback_label: Label           = %FeedbackLabel
 @onready var _game_over_panel: PanelContainer = %GameOverPanel
-@onready var _battle_cry_btn: Button         = %BattleCryBtn
-@onready var _windmill_btn: Button           = %WindmillBtn
-@onready var _wait_btn: Button               = %WaitBtn
+@onready var _battle_cry_btn: Button          = %BattleCryBtn
+@onready var _windmill_btn: Button            = %WindmillBtn
+@onready var _wait_btn: Button                = %WaitBtn
 
 # =============================================================================
 # Built-in virtual methods
@@ -61,7 +68,7 @@ func _ready() -> void:
 	_connect_buttons()
 	_setup_units()
 	_draw_grid_state()
-	_start_player_turn()
+	_next_round()
 
 
 func _draw() -> void:
@@ -71,7 +78,7 @@ func _draw() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if not _player_turn:
+	if _phase != TacticsPhase.AWAIT_PLAYER_MOVE:
 		return
 	if not event is InputEventMouseButton:
 		return
@@ -81,20 +88,58 @@ func _input(event: InputEvent) -> void:
 	_handle_click(get_local_mouse_position())
 
 # =============================================================================
-# Public methods
+# Public methods — coordinator API (called by action/AI nodes)
 # =============================================================================
 
 func get_grid_offset_x() -> int:
 	return 80 + (INITIAL_COLS - _grid_cols) * CELL_SIZE
+
+
+## Returns the living dogs array. Used by BattleCryAction.
+func get_dogs() -> Array[UnitBase]:
+	return _dogs
+
+
+## Moves unit to target cell if valid and unoccupied. Called by BattleCryAction.
+func push_unit(unit: UnitBase, target: Vector2i) -> void:
+	if _is_valid_cell(target) and not _unit_positions.has(target):
+		_move_unit(unit, target)
+
+
+## Writes to the feedback label. Called by action subclasses.
+func show_feedback(text: String) -> void:
+	_feedback_label.text = text
+
+
+## Moves dog one step toward Snowball. Called by TacticsAI.
+func move_dog_toward_snowball(dog: UnitBase) -> void:
+	var dir: Vector2i = _snowball.grid_pos - dog.grid_pos
+	var step: Vector2i
+	if abs(dir.x) >= abs(dir.y):
+		step = Vector2i(sign(dir.x), 0)
+	else:
+		step = Vector2i(0, sign(dir.y))
+	var target: Vector2i = dog.grid_pos + step
+	if _is_valid_cell(target) and not _unit_positions.has(target):
+		_move_unit(dog, target)
+
+
+## Attacks Snowball if dog is adjacent. Called by TacticsAI.
+func try_dog_attack(dog: UnitBase) -> void:
+	if _manhattan(dog.grid_pos, _snowball.grid_pos) != 1:
+		return
+	var dmg: int = maxi(1, dog.attack - _snowball.defense_bonus)
+	_snowball.take_damage(dmg)
+	_turn_label.text = "A dog attacks Snowball! (-%d HP)" % dmg
 
 # =============================================================================
 # Private methods — setup
 # =============================================================================
 
 func _connect_buttons() -> void:
-	_battle_cry_btn.pressed.connect(_on_action_battle_cry)
-	_windmill_btn.pressed.connect(_on_action_windmill)
-	_wait_btn.pressed.connect(_on_action_wait)
+	_battle_cry_btn.pressed.connect(_on_action_selected.bind(BattleCryAction.new()))
+	_windmill_btn.pressed.connect(_on_action_selected.bind(WindmillAction.new()))
+	_wait_btn.pressed.connect(_on_action_selected.bind(WaitAction.new()))
 
 
 func _setup_units() -> void:
@@ -104,6 +149,13 @@ func _setup_units() -> void:
 	var dog1: UnitBase = %Dog1 as UnitBase
 	var dog2: UnitBase = %Dog2 as UnitBase
 	_dogs = [dog1, dog2]
+
+	# Attach TacticsAI to each dog — required for _run_ai_turn() to drive them.
+	# Scene has no TacticsAI child nodes, so we add them here at runtime.
+	for dog: UnitBase in _dogs:
+		var ai := TacticsAI.new()
+		ai.name = "TacticsAI"
+		dog.add_child(ai)
 
 	# Place Snowball on the right side
 	_place_unit(_snowball, Vector2i(_grid_cols - 1, ROWS / 2))
@@ -207,14 +259,14 @@ func _draw_valid_move_highlights() -> void:
 		draw_rect(rect, COLOR_VALID_MOVE)
 
 # =============================================================================
-# Private methods — turn flow
+# Private methods — round / turn flow (mirrors open-rpg combat.gd)
 # =============================================================================
 
-func _start_player_turn() -> void:
-	_player_turn = true
-	_phase = "move"
+## Starts the player's move phase for a new round. Mirrors open-rpg next_round().
+func _next_round() -> void:
+	_phase = TacticsPhase.AWAIT_PLAYER_MOVE
 	_action_panel.hide()
-	_turn_label.text = "Turn %d — SNOWBALL'S MOVE" % (_turn_number + 1)
+	_turn_label.text = "Round %d — SNOWBALL'S MOVE" % (_round_count + 1)
 	_valid_moves = _compute_valid_moves(_snowball)
 	queue_redraw()
 
@@ -225,63 +277,55 @@ func _handle_click(click_pos: Vector2) -> void:
 	var row: int = int((click_pos.y - 80.0) / float(CELL_SIZE))
 	var clicked_cell: Vector2i = Vector2i(col, row)
 
-	if _phase == "move" and clicked_cell in _valid_moves:
+	if _phase == TacticsPhase.AWAIT_PLAYER_MOVE and clicked_cell in _valid_moves:
 		_move_unit(_snowball, clicked_cell)
-		_phase = "action"
+		_phase = TacticsPhase.AWAIT_PLAYER_ACTION
 		_feedback_label.text = ""
 		_action_panel.show()
 
 # =============================================================================
-# Private methods — player actions
+# Private methods — player action dispatch (mirrors open-rpg two-phase chain)
 # =============================================================================
 
-func _on_action_battle_cry() -> void:
-	# Push the nearest adjacent dog back 1 square in the direction away from Snowball
-	for dog: UnitBase in _dogs:
-		if dog.hp <= 0:
-			continue
-		if _manhattan(dog.grid_pos, _snowball.grid_pos) == 1:
-			var push_dir: Vector2i = dog.grid_pos - _snowball.grid_pos
-			var new_pos: Vector2i = dog.grid_pos + push_dir
-			if _is_valid_cell(new_pos) and not _unit_positions.has(new_pos):
-				_move_unit(dog, new_pos)
-			_feedback_label.text = "Snowball cries out — the dog recoils!"
-			break
-	_end_player_turn()
-
-
-func _on_action_windmill() -> void:
-	_snowball.defense_bonus = 2
-	_feedback_label.text = "Snowball shows his Windmill blueprints... (+2 Defence next turn)"
-	_end_player_turn()
-
-
-func _on_action_wait() -> void:
-	_end_player_turn()
-
-
-func _end_player_turn() -> void:
+## Unified action handler. Wired to all three buttons via BattleCryAction,
+## WindmillAction, WaitAction. Mirrors open-rpg combat.gd player→enemy chain.
+func _on_action_selected(action: TacticsAction) -> void:
+	_snowball.cached_action = action
+	_phase = TacticsPhase.ANIMATING
+	await _snowball.act(self)
 	_action_panel.hide()
-	_player_turn = false
-	_valid_moves.clear()
-	queue_redraw()
-	await get_tree().create_timer(0.5).timeout
-	_run_enemy_turn()
+	_phase = TacticsPhase.AI_TURN
+	await _run_ai_turn()
+	_update_hp_label()
+
+	if _snowball.hp <= 0:
+		await get_tree().create_timer(0.8).timeout
+		_trigger_game_over()
+		return
+
+	_round_count += 1
+	if _round_count % 3 == 0:
+		await _shrink_grid()
+		if _snowball.hp <= 0 or not _snowball.visible:
+			return
+
+	_next_round()
 
 # =============================================================================
-# Private methods — enemy AI
+# Private methods — AI turn (delegates to TacticsAI child nodes)
 # =============================================================================
 
-func _run_enemy_turn() -> void:
-	# Move each living dog toward Snowball, then attack if adjacent
+## Enemy turn loop. Each dog's TacticsAI node drives its own turn.
+## Mirrors open-rpg combat.gd enemy coroutine phase.
+func _run_ai_turn() -> void:
 	for dog: UnitBase in _dogs:
 		if dog.hp <= 0:
 			continue
-		await _move_dog_toward_snowball(dog)
-		await get_tree().create_timer(0.3).timeout
-		_try_dog_attack(dog)
+		var ai: TacticsAI = dog.get_node_or_null("TacticsAI") as TacticsAI
+		if ai:
+			await ai.take_turn(dog, self)
 
-	# Squealer propaganda: temporarily removes 1 move from Snowball (min 1)
+	# Squealer propaganda: reduce Snowball's move range each round
 	if _squealer.hp > 0 and _squealer.visible:
 		_snowball.move_range = maxi(1, _snowball.move_range - 1)
 		_turn_label.text = "Squealer spreads lies! Snowball feels confused..."
@@ -290,46 +334,9 @@ func _run_enemy_turn() -> void:
 	# Clear Snowball's defence bonus from Windmill Plans
 	_snowball.defense_bonus = 0
 
-	_update_hp_label()
-
-	# Check death from HP
-	if _snowball.hp <= 0:
-		await get_tree().create_timer(0.8).timeout
-		_trigger_game_over()
-		return
-
-	# Advance turn counter then check grid shrink
-	_turn_number += 1
-	if _turn_number % 3 == 0:
-		await _shrink_grid()
-		# _shrink_grid may trigger game over internally; check after
-		if _snowball.hp <= 0 or not _snowball.visible:
-			return
-
-	_start_player_turn()
-
-
-func _move_dog_toward_snowball(dog: UnitBase) -> void:
-	var dir: Vector2i = _snowball.grid_pos - dog.grid_pos
-	# Move along the axis with greater distance (x preferred on ties)
-	var step: Vector2i
-	if abs(dir.x) >= abs(dir.y):
-		step = Vector2i(sign(dir.x), 0)
-	else:
-		step = Vector2i(0, sign(dir.y))
-	var target: Vector2i = dog.grid_pos + step
-	if _is_valid_cell(target) and not _unit_positions.has(target):
-		_move_unit(dog, target)
-
-
-func _try_dog_attack(dog: UnitBase) -> void:
-	if _manhattan(dog.grid_pos, _snowball.grid_pos) != 1:
-		return
-	var dmg: int = maxi(1, dog.attack - _snowball.defense_bonus)
-	_snowball.hp -= dmg
-	_snowball.hp = maxi(0, _snowball.hp)
-	_turn_label.text = "A dog attacks Snowball! (-%d HP)" % dmg
-
+# =============================================================================
+# Private methods — grid shrink
+# =============================================================================
 
 func _shrink_grid() -> void:
 	_grid_cols -= 1
@@ -337,10 +344,8 @@ func _shrink_grid() -> void:
 	queue_redraw()
 	await get_tree().create_timer(0.6).timeout
 
-	# Re-position all visible units to account for the new grid offset
 	_reposition_all_units()
 
-	# Check if Snowball is now off the grid (expelled)
 	if _snowball.grid_pos.x >= _grid_cols:
 		await get_tree().create_timer(0.5).timeout
 		_turn_label.text = "Snowball is pushed off the farm!"
@@ -348,7 +353,6 @@ func _shrink_grid() -> void:
 		_trigger_game_over()
 		return
 
-	# Remove any enemy units pushed off-grid
 	var all_enemies: Array[UnitBase] = []
 	for dog: UnitBase in _dogs:
 		all_enemies.append(dog)
@@ -383,6 +387,5 @@ func _trigger_game_over() -> void:
 	GameState.snowball_expelled = true
 	GameState.complete_act(4)
 	_game_over_panel.show()
-	# Brief pause before transitioning to the corruption scene
 	await get_tree().create_timer(2.5).timeout
 	SceneManager.go_to_scene("res://scenes/act4/commandments_corruption.tscn")
