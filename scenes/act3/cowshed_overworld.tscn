@@ -7,6 +7,13 @@ script = ExtResource("1")
 
 [node name="World" type="Node2D" parent="."]
 
+[node name="Background" type="ColorRect" parent="World"]
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 1380.0
+offset_bottom = 820.0
+color = Color(0.31, 0.40, 0.22, 1)
+
 [node name="TileMapLayer" type="TileMapLayer" parent="World"]
 
 [node name="Camera2D" type="Camera2D" parent="."]

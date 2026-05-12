@@ -11,6 +11,13 @@ script = ExtResource("1_revolution")
 
 [node name="World" type="Node2D" parent="."]
 
+[node name="Background" type="ColorRect" parent="World"]
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 1380.0
+offset_bottom = 820.0
+color = Color(0.42, 0.36, 0.24, 1)
+
 [node name="TileMapLayer" type="TileMapLayer" parent="World"]
 
 [node name="BoxerPlayer" parent="." instance=ExtResource("2_boxer")]

@@ -1,27 +1,127 @@
-[gd_scene load_steps=4 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=8 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1_platformer"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/act1/ui/hearts_hud.tscn" id="3_hud"]
+
+[sub_resource type="RectangleShape2D" id="GroundShape"]
+size = Vector2(2800.0, 80.0)
+
+[sub_resource type="RectangleShape2D" id="PlatformShape"]
+size = Vector2(220.0, 24.0)
+
+[sub_resource type="RectangleShape2D" id="BarnDoorShape"]
+size = Vector2(80.0, 160.0)
+
+[sub_resource type="RectangleShape2D" id="WallShape"]
+size = Vector2(40.0, 600.0)
 
 [node name="OldMajorPlatformer" type="Node2D"]
 script = ExtResource("1_platformer")
 
 [node name="World" type="Node2D" parent="."]
 
-[node name="TileMapLayer" type="TileMapLayer" parent="World"]
+[node name="Sky" type="ColorRect" parent="World"]
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 2800.0
+offset_bottom = 720.0
+color = Color(0.318, 0.451, 0.557, 1)
+
+[node name="Ground" type="StaticBody2D" parent="World"]
+position = Vector2(1200.0, 560.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Ground"]
+shape = SubResource("GroundShape")
+
+[node name="GroundVisual" type="Polygon2D" parent="World/Ground"]
+color = Color(0.27, 0.39, 0.18, 1)
+polygon = PackedVector2Array(-1400, -40, 1400, -40, 1400, 40, -1400, 40)
+
+[node name="GroundTop" type="Polygon2D" parent="World/Ground"]
+color = Color(0.42, 0.56, 0.27, 1)
+polygon = PackedVector2Array(-1400, -40, 1400, -40, 1400, -34, -1400, -34)
+
+[node name="LeftWall" type="StaticBody2D" parent="World"]
+position = Vector2(-220.0, 280.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LeftWall"]
+shape = SubResource("WallShape")
+
+[node name="Platform1" type="StaticBody2D" parent="World"]
+position = Vector2(420.0, 430.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform1"]
+shape = SubResource("PlatformShape")
+
+[node name="Visual" type="Polygon2D" parent="World/Platform1"]
+color = Color(0.4, 0.27, 0.16, 1)
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+
+[node name="Platform2" type="StaticBody2D" parent="World"]
+position = Vector2(820.0, 360.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform2"]
+shape = SubResource("PlatformShape")
+
+[node name="Visual" type="Polygon2D" parent="World/Platform2"]
+color = Color(0.4, 0.27, 0.16, 1)
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+
+[node name="Platform3" type="StaticBody2D" parent="World"]
+position = Vector2(1240.0, 430.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform3"]
+shape = SubResource("PlatformShape")
+
+[node name="Visual" type="Polygon2D" parent="World/Platform3"]
+color = Color(0.4, 0.27, 0.16, 1)
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+
+[node name="Platform4" type="StaticBody2D" parent="World"]
+position = Vector2(1680.0, 360.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform4"]
+shape = SubResource("PlatformShape")
+
+[node name="Visual" type="Polygon2D" parent="World/Platform4"]
+color = Color(0.4, 0.27, 0.16, 1)
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+
+[node name="Platform5" type="StaticBody2D" parent="World"]
+position = Vector2(2080.0, 430.0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform5"]
+shape = SubResource("PlatformShape")
+
+[node name="Visual" type="Polygon2D" parent="World/Platform5"]
+color = Color(0.4, 0.27, 0.16, 1)
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
 
 [node name="OldMajor" parent="World" instance=ExtResource("2_player")]
-position = Vector2(96, 400)
+position = Vector2(120.0, 450.0)
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="World/OldMajor"]
 enabled = true
-zoom = Vector2(2, 2)
+zoom = Vector2(1.4, 1.4)
+limit_left = -100
+limit_top = -200
+limit_bottom = 720
+position_smoothing_enabled = true
 
 [node name="BarnDoor" type="Area2D" parent="World"]
-position = Vector2(2400, 400)
+position = Vector2(2400.0, 440.0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/BarnDoor"]
+shape = SubResource("BarnDoorShape")
+
+[node name="Visual" type="Polygon2D" parent="World/BarnDoor"]
+color = Color(0.35, 0.18, 0.08, 1)
+polygon = PackedVector2Array(-40, -80, 40, -80, 40, 80, -40, 80)
+
+[node name="DoorTop" type="Polygon2D" parent="World/BarnDoor"]
+color = Color(0.55, 0.28, 0.13, 1)
+polygon = PackedVector2Array(-40, -80, 40, -80, 0, -110)
 
 [node name="HeartsHUD" parent="." instance=ExtResource("3_hud")]
 
