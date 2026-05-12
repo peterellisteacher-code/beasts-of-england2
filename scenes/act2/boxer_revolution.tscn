@@ -1,22 +1,84 @@
-[gd_scene load_steps=6 format=3 uid="uid://boxer_revolution"]
+[gd_scene load_steps=10 format=3 uid="uid://boxer_revolution"]
 
 [ext_resource type="Script" path="res://scenes/act2/boxer_revolution.gd" id="1_revolution"]
 [ext_resource type="PackedScene" uid="uid://boxer_topdown" path="res://scenes/act2/player/boxer_topdown.tscn" id="2_boxer"]
 [ext_resource type="PackedScene" uid="uid://jones_man_topdown" path="res://scenes/act2/enemies/jones_man_topdown.tscn" id="3_jones"]
 [ext_resource type="PackedScene" uid="uid://gatekeeper_quiz" path="res://scenes/act2/objects/gatekeeper_quiz.tscn" id="4_gkquiz"]
 [ext_resource type="PackedScene" uid="uid://commandments_reveal" path="res://scenes/act2/objects/commandments_reveal.tscn" id="5_cmdreveal"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_grass_fill.png" id="6_grass"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_house_blue.png" id="7_house"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="8_bushes"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/soil_fill.png" id="9_soil"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="10_tree"]
 
 [node name="BoxerRevolution" type="Node2D"]
 script = ExtResource("1_revolution")
 
 [node name="World" type="Node2D" parent="."]
 
-[node name="Background" type="ColorRect" parent="World"]
+[node name="Background" type="TextureRect" parent="World"]
 offset_left = -100.0
 offset_top = -100.0
 offset_right = 1380.0
 offset_bottom = 820.0
-color = Color(0.42, 0.36, 0.24, 1)
+texture = ExtResource("6_grass")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="DirtPatch" type="TextureRect" parent="World"]
+offset_left = 380.0
+offset_top = 180.0
+offset_right = 1140.0
+offset_bottom = 560.0
+texture = ExtResource("9_soil")
+expand_mode = 1
+stretch_mode = 1
+modulate = Color(0.85, 0.78, 0.70, 0.55)
+
+[node name="Farmhouse" type="Sprite2D" parent="World"]
+position = Vector2(1180.0, 140.0)
+texture = ExtResource("7_house")
+scale = Vector2(0.95, 0.95)
+
+[node name="TreeTopLeft" type="Sprite2D" parent="World"]
+position = Vector2(80.0, 110.0)
+texture = ExtResource("10_tree")
+scale = Vector2(1.0, 1.0)
+
+[node name="TreeTopRight" type="Sprite2D" parent="World"]
+position = Vector2(60.0, 480.0)
+texture = ExtResource("10_tree")
+scale = Vector2(0.95, 0.95)
+
+[node name="TreeRightTop" type="Sprite2D" parent="World"]
+position = Vector2(1320.0, 540.0)
+texture = ExtResource("10_tree")
+scale = Vector2(1.0, 1.0)
+
+[node name="BushLeftTop" type="Sprite2D" parent="World"]
+position = Vector2(220.0, 60.0)
+texture = ExtResource("8_bushes")
+scale = Vector2(1.1, 1.1)
+
+[node name="BushLeftMid" type="Sprite2D" parent="World"]
+position = Vector2(150.0, 380.0)
+texture = ExtResource("8_bushes")
+scale = Vector2(0.95, 0.95)
+
+[node name="BushLeftBottom" type="Sprite2D" parent="World"]
+position = Vector2(280.0, 680.0)
+texture = ExtResource("8_bushes")
+scale = Vector2(1.05, 1.05)
+
+[node name="BushRightTop" type="Sprite2D" parent="World"]
+position = Vector2(1220.0, 380.0)
+texture = ExtResource("8_bushes")
+scale = Vector2(0.9, 0.9)
+
+[node name="BushRightBottom" type="Sprite2D" parent="World"]
+position = Vector2(1100.0, 700.0)
+texture = ExtResource("8_bushes")
+scale = Vector2(1.0, 1.0)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="World"]
 
@@ -43,4 +105,5 @@ position = Vector2(940.0, 520.0)
 [node name="CommandmentsReveal" parent="." instance=ExtResource("5_cmdreveal")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640.0, 360.0)
 enabled = true

@@ -1,8 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=12 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1_platformer"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/act1/ui/hearts_hud.tscn" id="3_hud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/sky_yellow_tile.png" id="4_sky"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/grass_top.png" id="5_grass"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/soil_fill.png" id="6_soil"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/soil_fill.png" id="7_platform"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_clouds.png" id="8_clouds"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_house_blue.png" id="9_castle"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="10_bush"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="11_tree"]
 
 [sub_resource type="RectangleShape2D" id="GroundShape"]
 size = Vector2(2800.0, 80.0)
@@ -19,14 +27,50 @@ size = Vector2(40.0, 600.0)
 [node name="OldMajorPlatformer" type="Node2D"]
 script = ExtResource("1_platformer")
 
-[node name="World" type="Node2D" parent="."]
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
-[node name="Sky" type="ColorRect" parent="World"]
-offset_left = -200.0
-offset_top = -200.0
-offset_right = 2800.0
+[node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.0, 0.0)
+motion_mirroring = Vector2(1280.0, 720.0)
+
+[node name="SkyTile" type="TextureRect" parent="ParallaxBackground/SkyLayer"]
+offset_right = 1280.0
 offset_bottom = 720.0
-color = Color(0.318, 0.451, 0.557, 1)
+texture = ExtResource("4_sky")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="CloudsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.25, 0.0)
+motion_mirroring = Vector2(2304.0, 0.0)
+
+[node name="Clouds1" type="Sprite2D" parent="ParallaxBackground/CloudsLayer"]
+position = Vector2(420.0, 90.0)
+texture = ExtResource("8_clouds")
+scale = Vector2(0.7, 0.7)
+
+[node name="Clouds2" type="Sprite2D" parent="ParallaxBackground/CloudsLayer"]
+position = Vector2(1500.0, 130.0)
+texture = ExtResource("8_clouds")
+scale = Vector2(0.55, 0.55)
+modulate = Color(1, 1, 1, 0.78)
+
+[node name="DistantLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.55, 0.0)
+
+[node name="Farmhouse1" type="Sprite2D" parent="ParallaxBackground/DistantLayer"]
+position = Vector2(880.0, 420.0)
+texture = ExtResource("9_castle")
+scale = Vector2(1.0, 1.0)
+modulate = Color(0.85, 0.82, 0.78, 0.95)
+
+[node name="Farmhouse2" type="Sprite2D" parent="ParallaxBackground/DistantLayer"]
+position = Vector2(1620.0, 430.0)
+texture = ExtResource("9_castle")
+scale = Vector2(0.85, 0.85)
+modulate = Color(0.80, 0.78, 0.72, 0.92)
+
+[node name="World" type="Node2D" parent="."]
 
 [node name="Ground" type="StaticBody2D" parent="World"]
 position = Vector2(1200.0, 560.0)
@@ -34,13 +78,38 @@ position = Vector2(1200.0, 560.0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Ground"]
 shape = SubResource("GroundShape")
 
-[node name="GroundVisual" type="Polygon2D" parent="World/Ground"]
-color = Color(0.27, 0.39, 0.18, 1)
-polygon = PackedVector2Array(-1400, -40, 1400, -40, 1400, 40, -1400, 40)
+[node name="GrassTop" type="TextureRect" parent="World/Ground"]
+offset_left = -1400.0
+offset_top = -40.0
+offset_right = 1400.0
+offset_bottom = -24.0
+texture = ExtResource("5_grass")
+expand_mode = 1
+stretch_mode = 1
 
-[node name="GroundTop" type="Polygon2D" parent="World/Ground"]
-color = Color(0.42, 0.56, 0.27, 1)
-polygon = PackedVector2Array(-1400, -40, 1400, -40, 1400, -34, -1400, -34)
+[node name="SoilFill" type="TextureRect" parent="World/Ground"]
+offset_left = -1400.0
+offset_top = -24.0
+offset_right = 1400.0
+offset_bottom = 200.0
+texture = ExtResource("6_soil")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Bush1" type="Sprite2D" parent="World/Ground"]
+position = Vector2(-1000.0, -60.0)
+texture = ExtResource("10_bush")
+scale = Vector2(0.9, 0.9)
+
+[node name="Bush2" type="Sprite2D" parent="World/Ground"]
+position = Vector2(40.0, -60.0)
+texture = ExtResource("10_bush")
+scale = Vector2(1.1, 1.1)
+
+[node name="Bush3" type="Sprite2D" parent="World/Ground"]
+position = Vector2(1000.0, -60.0)
+texture = ExtResource("10_bush")
+scale = Vector2(1.0, 1.0)
 
 [node name="LeftWall" type="StaticBody2D" parent="World"]
 position = Vector2(-220.0, 280.0)
@@ -54,9 +123,14 @@ position = Vector2(420.0, 430.0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform1"]
 shape = SubResource("PlatformShape")
 
-[node name="Visual" type="Polygon2D" parent="World/Platform1"]
-color = Color(0.4, 0.27, 0.16, 1)
-polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+[node name="Visual" type="TextureRect" parent="World/Platform1"]
+offset_left = -110.0
+offset_top = -12.0
+offset_right = 110.0
+offset_bottom = 12.0
+texture = ExtResource("7_platform")
+expand_mode = 1
+stretch_mode = 1
 
 [node name="Platform2" type="StaticBody2D" parent="World"]
 position = Vector2(820.0, 360.0)
@@ -64,9 +138,14 @@ position = Vector2(820.0, 360.0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform2"]
 shape = SubResource("PlatformShape")
 
-[node name="Visual" type="Polygon2D" parent="World/Platform2"]
-color = Color(0.4, 0.27, 0.16, 1)
-polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+[node name="Visual" type="TextureRect" parent="World/Platform2"]
+offset_left = -110.0
+offset_top = -12.0
+offset_right = 110.0
+offset_bottom = 12.0
+texture = ExtResource("7_platform")
+expand_mode = 1
+stretch_mode = 1
 
 [node name="Platform3" type="StaticBody2D" parent="World"]
 position = Vector2(1240.0, 430.0)
@@ -74,9 +153,14 @@ position = Vector2(1240.0, 430.0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform3"]
 shape = SubResource("PlatformShape")
 
-[node name="Visual" type="Polygon2D" parent="World/Platform3"]
-color = Color(0.4, 0.27, 0.16, 1)
-polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+[node name="Visual" type="TextureRect" parent="World/Platform3"]
+offset_left = -110.0
+offset_top = -12.0
+offset_right = 110.0
+offset_bottom = 12.0
+texture = ExtResource("7_platform")
+expand_mode = 1
+stretch_mode = 1
 
 [node name="Platform4" type="StaticBody2D" parent="World"]
 position = Vector2(1680.0, 360.0)
@@ -84,9 +168,14 @@ position = Vector2(1680.0, 360.0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform4"]
 shape = SubResource("PlatformShape")
 
-[node name="Visual" type="Polygon2D" parent="World/Platform4"]
-color = Color(0.4, 0.27, 0.16, 1)
-polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+[node name="Visual" type="TextureRect" parent="World/Platform4"]
+offset_left = -110.0
+offset_top = -12.0
+offset_right = 110.0
+offset_bottom = 12.0
+texture = ExtResource("7_platform")
+expand_mode = 1
+stretch_mode = 1
 
 [node name="Platform5" type="StaticBody2D" parent="World"]
 position = Vector2(2080.0, 430.0)
@@ -94,9 +183,14 @@ position = Vector2(2080.0, 430.0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Platform5"]
 shape = SubResource("PlatformShape")
 
-[node name="Visual" type="Polygon2D" parent="World/Platform5"]
-color = Color(0.4, 0.27, 0.16, 1)
-polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+[node name="Visual" type="TextureRect" parent="World/Platform5"]
+offset_left = -110.0
+offset_top = -12.0
+offset_right = 110.0
+offset_bottom = 12.0
+texture = ExtResource("7_platform")
+expand_mode = 1
+stretch_mode = 1
 
 [node name="OldMajor" parent="World" instance=ExtResource("2_player")]
 position = Vector2(120.0, 450.0)
