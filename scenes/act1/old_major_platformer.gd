@@ -1,4 +1,7 @@
-## Ported from Lango-Zelda-RPG Levels/BossLevel.gd + GDQuest core/Game.gd
+## Act 1 coordinator. The night walk: Old Major carries his lantern across
+## Manor Farm at night with Moses circling overhead. On reaching the barn
+## door, the camera locks, player input freezes, and Moses lands to deliver
+## a 3-from-8 question quiz before the act-2 transition.
 class_name OldMajorPlatformer
 extends Node2D
 
@@ -7,25 +10,20 @@ extends Node2D
 # =============================================================================
 
 const GROUP_SCENE_COORDINATOR: StringName = &"act1_coordinator"
+const MOSES_QUIZ_SCENE: PackedScene = preload("res://scenes/act1/objects/moses_quiz.tscn")
 
 # =============================================================================
 # Signals
 # =============================================================================
 
+@warning_ignore("unused_signal")
 signal key_count_changed(new_count: int)
 
 # =============================================================================
-# Public variables
+# Private variables
 # =============================================================================
 
-var keys_collected: int = 0
-var doors_unlocked: int = 0
-
-# =============================================================================
-# Onready references
-# =============================================================================
-
-@onready var _hearts_hud: CanvasLayer = $HeartsHUD
+var _quiz_triggered: bool = false
 
 # =============================================================================
 # Built-in virtual methods
@@ -33,56 +31,58 @@ var doors_unlocked: int = 0
 
 func _ready() -> void:
 	add_to_group(GROUP_SCENE_COORDINATOR)
-	# Read-and-restore: only reset to 3 on a fresh run (hearts exhausted or
-	# first play).  Reloading mid-run after taking damage preserves the count.
 	if GameState.hearts <= 0:
 		GameState.hearts = 3
-	_hearts_hud.update_hearts(GameState.hearts)
-	_connect_doors()
 
 # =============================================================================
-# Public methods — called by child nodes / doors
+# Public methods — coordinator API (called by Old Major)
 # =============================================================================
 
 func on_key_collected() -> void:
-	keys_collected += 1
-	key_count_changed.emit(keys_collected)
+	pass
 
 
 func on_door_unlocked() -> void:
-	doors_unlocked += 1
+	pass
 
 
 func on_lamb_rescued() -> void:
-	GameState.lamb_rescued = true
+	pass
 
 
 func on_player_died() -> void:
-	GameState.hearts -= 1
-	if GameState.hearts <= 0:
-		SceneManager.go_to_scene("res://scenes/act1/loss_screen.tscn")
-	else:
-		get_tree().reload_current_scene()
+	# No-fail walk: damage is a no-op.
+	pass
 
+# =============================================================================
+# Barn-door signal handler
+# =============================================================================
 
+## Connected to BarnDoor.body_entered. Spawns the Moses quiz on first valid
+## entry; subsequent triggers are ignored.
 func on_barn_reached(body: Node2D) -> void:
-	# BarnDoor's Area2D detection layer also intersects the Ground StaticBody2D.
-	# Only progress when the player itself enters.
+	if _quiz_triggered:
+		return
 	if not body is OldMajor:
 		return
+	_quiz_triggered = true
+	_spawn_moses_quiz(body as OldMajor)
+
+
+func _spawn_moses_quiz(player: OldMajor) -> void:
+	player.can_move = false
+
+	var layer: CanvasLayer = CanvasLayer.new()
+	layer.name = "MosesQuizLayer"
+	layer.layer = 10
+	add_child(layer)
+
+	var quiz: Control = MOSES_QUIZ_SCENE.instantiate()
+	quiz.quiz_passed.connect(_on_quiz_passed)
+	layer.add_child(quiz)
+
+
+func _on_quiz_passed() -> void:
 	GameState.corrupt_commandment(0)
 	GameState.complete_act(1)
 	SceneManager.go_to_scene("res://scenes/act2/boxer_revolution.tscn")
-
-# =============================================================================
-# Private methods
-# =============================================================================
-
-func _connect_doors() -> void:
-	# GDQuest Game.gd wiring pattern: push key-count updates to doors so they
-	# can gate themselves without calling get_parent().  Doors that do not
-	# expose on_key_count_changed(count: int) are silently skipped.
-	var doors: Array[Node] = get_tree().get_nodes_in_group(&"door")
-	for door: Node in doors:
-		if door.has_method(&"on_key_count_changed"):
-			key_count_changed.connect(door.on_key_count_changed)
