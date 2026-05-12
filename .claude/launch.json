@@ -1,0 +1,41 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Quiz Adventure (Python)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "quiz-adventure"],
+      "port": 8080
+    },
+    {
+      "name": "Quiz Quest",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8090", "--directory", "quiz-game"],
+      "port": 8090
+    },
+    {
+      "name": "Concept Bridge",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8095", "--directory", "concept-bridge"],
+      "port": 8095
+    },
+    {
+      "name": "Skill Verification",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8100", "--directory", "skill-verification"],
+      "port": 8100
+    },
+    {
+      "name": "Manor House Files",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "C:/Users/Peter Ellis/OneDrive/Teaching/2026/10ESH - 2026/Semester 1/Novel Study/Animal Farm/The Manor House Files"],
+      "port": 8765
+    },
+    {
+      "name": "Beasts of England",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8770", "--bind", "127.0.0.1", "--directory", "C:/Users/Peter Ellis/OneDrive/Teaching/2026/10ESH - 2026/Semester 1/Novel Study/Animal Farm/Beasts of England"],
+      "port": 8770
+    }
+  ]
+}

@@ -12,7 +12,6 @@ const TOTAL_BATTLES: int = 4
 # Onready references
 # =============================================================================
 
-@onready var _boxer_player: CharacterBody2D = $Player/BoxerOverworld
 @onready var _encounter_zones: Array[Area2D] = []
 
 # =============================================================================

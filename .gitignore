@@ -25,3 +25,10 @@ Exports/
 
 # Plugin specific
 addons/script-ide/*
+
+# Claude Code Game Studios — local-only files
+.claude/settings.local.json
+.claude/agent-memory/
+
+# Debug screenshots
+screenshot-*.png

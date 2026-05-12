@@ -27,6 +27,7 @@ enum TacticsPhase { AWAIT_PLAYER_MOVE, AWAIT_PLAYER_ACTION, AI_TURN, ANIMATING }
 # Signals
 # =============================================================================
 
+@warning_ignore("unused_signal")
 signal turn_ended
 signal game_over
 
@@ -158,6 +159,7 @@ func _setup_units() -> void:
 		dog.add_child(ai)
 
 	# Place Snowball on the right side
+	@warning_ignore("integer_division")
 	_place_unit(_snowball, Vector2i(_grid_cols - 1, ROWS / 2))
 
 	# Dogs start on the left
@@ -179,9 +181,10 @@ func _place_unit(unit: UnitBase, cell: Vector2i) -> void:
 
 func _apply_visual_position(unit: UnitBase) -> void:
 	var offset_x: int = get_grid_offset_x()
+	var half_cell: float = CELL_SIZE / 2.0
 	unit.position = Vector2(
-		float(offset_x + unit.grid_pos.x * CELL_SIZE + CELL_SIZE / 2),
-		float(80 + unit.grid_pos.y * CELL_SIZE + CELL_SIZE / 2)
+		float(offset_x + unit.grid_pos.x * CELL_SIZE) + half_cell,
+		float(80 + unit.grid_pos.y * CELL_SIZE) + half_cell
 	)
 
 
@@ -292,7 +295,7 @@ func _handle_click(click_pos: Vector2) -> void:
 func _on_action_selected(action: TacticsAction) -> void:
 	_snowball.cached_action = action
 	_phase = TacticsPhase.ANIMATING
-	await _snowball.act(self)
+	_snowball.act(self)
 	_action_panel.hide()
 	_phase = TacticsPhase.AI_TURN
 	await _run_ai_turn()

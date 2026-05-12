@@ -65,7 +65,11 @@ func on_player_died() -> void:
 		get_tree().reload_current_scene()
 
 
-func on_barn_reached() -> void:
+func on_barn_reached(body: Node2D) -> void:
+	# BarnDoor's Area2D detection layer also intersects the Ground StaticBody2D.
+	# Only progress when the player itself enters.
+	if not body is OldMajor:
+		return
 	GameState.corrupt_commandment(0)
 	GameState.complete_act(1)
 	SceneManager.go_to_scene("res://scenes/act2/boxer_revolution.tscn")

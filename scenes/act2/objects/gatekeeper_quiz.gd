@@ -51,6 +51,7 @@ const SECRET_QUESTION: Dictionary = {
 # =============================================================================
 
 signal quiz_passed
+@warning_ignore("unused_signal")
 signal quiz_failed
 
 # =============================================================================

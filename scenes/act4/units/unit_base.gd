@@ -58,5 +58,5 @@ func take_damage(amount: int) -> void:
 func act(coordinator: Node) -> void:
 	if cached_action == null:
 		return
-	await cached_action.execute(self, coordinator)
+	cached_action.execute(self, coordinator)
 	cached_action = null

@@ -27,4 +27,6 @@ func go_to_scene(path: String) -> void:
 	if path.is_empty():
 		push_error("SceneManager.go_to_scene: path is empty")
 		return
-	get_tree().change_scene_to_file(path)
+	# Deferred so signal-handler callers (body_entered, etc.) don't tear down
+	# CollisionObjects during a physics callback.
+	get_tree().call_deferred("change_scene_to_file", path)

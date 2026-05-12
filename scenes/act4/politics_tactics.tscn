@@ -1,15 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://act4_politics_tactics"]
+[gd_scene load_steps=7 format=3 uid="uid://act4_politics_tactics"]
 
 [ext_resource type="Script" path="res://scenes/act4/politics_tactics.gd" id="1_tactics"]
 [ext_resource type="Script" path="res://scenes/act4/units/unit_base.gd" id="2_unit"]
+[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/act4_interior.png" id="3_bg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/snowball.png" id="4_snowball"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/dog_topdown.png" id="5_dog"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/squealer.png" id="6_squealer"]
 
 [node name="PoliticsTactics" type="Node2D"]
 script = ExtResource("1_tactics")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 offset_right = 1280.0
 offset_bottom = 720.0
-color = Color(0.067, 0.004, 0.004, 1)
+texture = ExtResource("3_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.04, 0.01, 0.01, 0.74)
 
 [node name="GridLayer" type="Node2D" parent="."]
 
@@ -23,12 +34,9 @@ max_hp = 8
 attack = 3
 move_range = 3
 
-[node name="Sprite" type="ColorRect" parent="Units/Snowball"]
-offset_left = -30.0
-offset_top = -30.0
-offset_right = 30.0
-offset_bottom = 30.0
-color = Color(0.9, 0.9, 0.9, 1)
+[node name="Sprite" type="Sprite2D" parent="Units/Snowball"]
+texture = ExtResource("4_snowball")
+scale = Vector2(0.27, 0.27)
 
 [node name="NameLabel" type="Label" parent="Units/Snowball"]
 offset_left = -35.0
@@ -47,12 +55,9 @@ max_hp = 6
 attack = 4
 move_range = 2
 
-[node name="Sprite" type="ColorRect" parent="Units/Dog1"]
-offset_left = -25.0
-offset_top = -25.0
-offset_right = 25.0
-offset_bottom = 25.0
-color = Color(0.3, 0.2, 0.1, 1)
+[node name="Sprite" type="Sprite2D" parent="Units/Dog1"]
+texture = ExtResource("5_dog")
+scale = Vector2(0.6, 0.6)
 
 [node name="NameLabel" type="Label" parent="Units/Dog1"]
 offset_left = -30.0
@@ -71,12 +76,9 @@ max_hp = 6
 attack = 4
 move_range = 2
 
-[node name="Sprite" type="ColorRect" parent="Units/Dog2"]
-offset_left = -25.0
-offset_top = -25.0
-offset_right = 25.0
-offset_bottom = 25.0
-color = Color(0.3, 0.2, 0.1, 1)
+[node name="Sprite" type="Sprite2D" parent="Units/Dog2"]
+texture = ExtResource("5_dog")
+scale = Vector2(0.6, 0.6)
 
 [node name="NameLabel" type="Label" parent="Units/Dog2"]
 offset_left = -30.0
@@ -95,12 +97,9 @@ max_hp = 4
 attack = 0
 move_range = 1
 
-[node name="Sprite" type="ColorRect" parent="Units/Squealer"]
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-color = Color(0.6, 0.3, 0.0, 1)
+[node name="Sprite" type="Sprite2D" parent="Units/Squealer"]
+texture = ExtResource("6_squealer")
+scale = Vector2(0.22, 0.22)
 
 [node name="NameLabel" type="Label" parent="Units/Squealer"]
 offset_left = -32.0
