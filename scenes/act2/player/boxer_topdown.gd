@@ -38,6 +38,9 @@ var _charge_time_left: float = 0.0
 
 func _ready() -> void:
 	add_to_group("player")
+	# FIX: connect ChargeHitbox so charging actually affects jones men.
+	# body_entered fires whenever a CharacterBody2D overlaps while monitoring=true.
+	charge_hitbox.body_entered.connect(_on_charge_hit_body)
 
 
 func _physics_process(delta: float) -> void:
@@ -99,3 +102,10 @@ func _end_charge() -> void:
 	charge_hitbox.monitoring = false
 	# Bleed off the charge velocity so the player isn't propelled after release.
 	velocity = velocity.move_toward(Vector2.ZERO, CHARGE_SPEED)
+
+
+func _on_charge_hit_body(body: Node2D) -> void:
+	# FIX: when the charge hitbox contacts a jones man, force them into FLEE
+	# state immediately — the charge now has a real gameplay effect.
+	if body.is_in_group("jones_man") and body.has_method("force_flee"):
+		body.force_flee()

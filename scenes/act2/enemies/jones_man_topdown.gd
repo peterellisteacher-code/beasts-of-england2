@@ -50,6 +50,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# FIX: if the player wasn't in the group when _ready() ran (scene-load order
+	# race), retry the lookup each frame until we find it.  This prevents the
+	# enemies from being permanently blind to Boxer.
+	if _player == null or not is_instance_valid(_player):
+		_player = get_tree().get_first_node_in_group("player")
+
 	match _state:
 		State.WANDER:
 			_wander_behavior(delta)
@@ -95,9 +101,14 @@ func _flee_behavior(delta: float) -> void:
 	if animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation(&"run"):
 		animated_sprite.play(&"run")
 
-	# Driven off when the node leaves the visible viewport rect
+	# FIX: convert world position to screen space before comparing to viewport
+	# rect.  get_visible_rect() is always in screen coordinates (origin 0,0),
+	# but global_position is in world coordinates — they only match when the
+	# camera is at the origin.  Using get_canvas_transform() gives the correct
+	# world→screen mapping regardless of camera position.
+	var screen_pos: Vector2 = get_canvas_transform() * global_position
 	var screen_rect: Rect2 = get_viewport().get_visible_rect()
-	if not screen_rect.has_point(global_position):
+	if not screen_rect.has_point(screen_pos):
 		_state = State.DRIVEN_OFF
 		_notify_driven_off()
 		_schedule_regroup()
@@ -118,6 +129,14 @@ func _regroup_behavior(delta: float) -> void:
 	if global_position.x > REGROUP_THRESHOLD_X:
 		_state = State.WANDER
 		_notify_regrouped()
+
+
+func force_flee() -> void:
+	# FIX: called by BoxerTopdown charge hitbox — immediately push this enemy
+	# into FLEE state so the charge attack has a real gameplay effect.
+	if _state == State.DRIVEN_OFF or _state == State.REGROUPING:
+		return
+	_state = State.FLEE
 
 
 func _notify_driven_off() -> void:

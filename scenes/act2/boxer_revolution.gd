@@ -14,6 +14,10 @@ const MAX_REGROUPED: int = 3
 # =============================================================================
 
 var _jones_men_regrouped: int = 0
+# FIX: one-shot guard so simultaneous driven-off events cannot re-trigger the
+# gatekeeper quiz or fire the loss scene while the quiz / reveal is active.
+var _gatekeeper_triggered: bool = false
+var _act_locked: bool = false  # true once gatekeeper fires; blocks loss trigger
 
 # =============================================================================
 # Onready references
@@ -28,6 +32,8 @@ var _jones_men_regrouped: int = 0
 # =============================================================================
 
 func _ready() -> void:
+	# FIX: reset the persistent counter so retries start clean.
+	GameState.jones_men_driven = 0
 	gatekeeper_quiz.hide()
 	commandments_reveal.hide()
 
@@ -36,12 +42,20 @@ func _ready() -> void:
 # =============================================================================
 
 func on_jones_man_driven_off() -> void:
+	# FIX: ignore once gatekeeper is already active (prevents double-trigger from
+	# simultaneous boundary crossings in the same physics frame).
+	if _gatekeeper_triggered:
+		return
 	GameState.jones_men_driven += 1
 	if GameState.jones_men_driven >= JONES_MEN_NEEDED:
 		_trigger_gatekeeper()
 
 
 func on_jones_man_regrouped() -> void:
+	# FIX: ignore regrouped notifications once the quiz / reveal is active so
+	# slow-reading students cannot be kicked back to the loss screen mid-quiz.
+	if _act_locked:
+		return
 	_jones_men_regrouped += 1
 	if _jones_men_regrouped >= MAX_REGROUPED:
 		_trigger_loss()
@@ -63,6 +77,8 @@ func on_commandments_revealed() -> void:
 # =============================================================================
 
 func _trigger_gatekeeper() -> void:
+	_gatekeeper_triggered = true
+	_act_locked = true
 	boxer_player.can_move = false
 	gatekeeper_quiz.show()
 	gatekeeper_quiz.start_quiz()

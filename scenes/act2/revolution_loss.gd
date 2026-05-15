@@ -19,4 +19,6 @@ func _ready() -> void:
 # =============================================================================
 
 func _on_retry() -> void:
-	get_tree().change_scene_to_file("res://scenes/act2/boxer_revolution.tscn")
+	# FIX: use SceneManager (deferred change_scene_to_file) for consistency with
+	# all other scene transitions in the game.
+	SceneManager.go_to_scene("res://scenes/act2/boxer_revolution.tscn")
