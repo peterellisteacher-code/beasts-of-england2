@@ -37,9 +37,8 @@ var commandments_corrupted: int = 0
 
 var hearts: int = 3:
 	set(value):
-		# Use the implicit backing field keyword so the setter does not recurse.
-		field = value
-		hearts_changed.emit(field)
+		hearts = value
+		hearts_changed.emit(hearts)
 var has_secret_scroll: bool = false
 var lamb_rescued: bool = false
 var collected_key_ids: Array[int] = []
