@@ -66,7 +66,10 @@ func collect_lantern() -> void:
 
 
 func collect_key() -> void:
-	pass
+	# Notify the level coordinator so it can track key count for door logic.
+	var coordinator: Node = get_tree().get_first_node_in_group(&"act1_coordinator")
+	if coordinator != null and coordinator.has_method(&"on_key_collected"):
+		coordinator.on_key_collected()
 
 
 func collect_secret_scroll() -> void:

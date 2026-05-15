@@ -37,8 +37,9 @@ var commandments_corrupted: int = 0
 
 var hearts: int = 3:
 	set(value):
-		hearts = value
-		hearts_changed.emit(hearts)
+		# Use the implicit backing field keyword so the setter does not recurse.
+		field = value
+		hearts_changed.emit(field)
 var has_secret_scroll: bool = false
 var lamb_rescued: bool = false
 var collected_key_ids: Array[int] = []
@@ -90,6 +91,8 @@ func complete_act(act: int) -> void:
 	if act < 1 or act > 4:
 		push_error("GameState.complete_act: act %d is not valid (expected 1-4)" % act)
 		return
+	# Advance the persistent act pointer so save/load stays consistent.
+	current_act = mini(act + 1, 4)
 	act_completed.emit(act)
 	save_to_disk()
 

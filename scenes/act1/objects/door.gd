@@ -44,8 +44,15 @@ func _process(_delta: float) -> void:
 	if is_open:
 		return
 	if Input.is_action_just_pressed("interact") and prompt_label.visible:
-		var parent: Node = get_parent()
-		if parent.has_method("on_key_collected") and parent.keys_collected >= required_keys:
+		# Read key count from the coordinator's public property (or fall back to
+		# GameState if the coordinator isn't available).
+		var coordinator: Node = get_tree().get_first_node_in_group(&"act1_coordinator")
+		var key_count: int = 0
+		if coordinator != null and "keys_collected" in coordinator:
+			key_count = coordinator.keys_collected
+		else:
+			key_count = GameState.collected_key_ids.size()
+		if key_count >= required_keys:
 			_open()
 		else:
 			_rattle()
@@ -62,7 +69,9 @@ func _open() -> void:
 	GameState.save_to_disk()
 	var tween: Tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 0), 0.4)
-	get_parent().on_door_unlocked()
+	var p: Node = get_parent()
+	if p != null and p.has_method(&"on_door_unlocked"):
+		p.on_door_unlocked()
 
 
 func _rattle() -> void:
