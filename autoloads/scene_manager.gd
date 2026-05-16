@@ -20,6 +20,9 @@ func go_to_act(act_number: int) -> void:
 		push_error("SceneManager.go_to_act: act %d is not mapped" % act_number)
 		return
 	GameState.current_act = act_number
+	# Persist immediately so that a browser tab refresh/close between acts does
+	# not roll current_act back to the previously-saved value.
+	GameState.save_to_disk()
 	go_to_scene(ACT_SCENES[act_number])
 
 

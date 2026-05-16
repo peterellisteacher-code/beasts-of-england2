@@ -54,8 +54,12 @@ func _build_label_references() -> void:
 
 
 func _refresh_display() -> void:
+	# Use the per-index array rather than a count so the correct commandments are
+	# highlighted after a save/load round-trip (the old count-based check assumed
+	# the first N were always corrupted, which was wrong when a later commandment
+	# was corrupted before earlier ones).
 	for i: int in range(commandment_labels.size()):
-		_apply_commandment_style(i, i < GameState.commandments_corrupted)
+		_apply_commandment_style(i, GameState.corrupted_commandment_indices.has(i))
 
 
 func _apply_commandment_style(index: int, corrupted: bool) -> void:

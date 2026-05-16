@@ -33,6 +33,10 @@ signal dismissed
 # the instant it appears.
 var _ready_to_dismiss: bool = false
 var _dismissed: bool = false
+# Track whether THIS node set the pause so _exit_tree can clean up if the node
+# is removed by an external scene change before _dismiss() is called (which
+# would otherwise leave the tree permanently paused — a hard softlock).
+var _paused_by_intro: bool = false
 
 # =============================================================================
 # @onready references
@@ -54,6 +58,7 @@ func _ready() -> void:
 	# Pause the rest of the scene tree while the intro is visible.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
+	_paused_by_intro = true
 
 	_apply_text()
 	_apply_controls()
@@ -108,10 +113,21 @@ func _on_begin_pressed() -> void:
 	_dismiss()
 
 
+func _exit_tree() -> void:
+	# Safety net: if this node is removed from the tree by any means other than
+	# _dismiss() (e.g. an external scene change), ensure the global pause is
+	# cleared so the next scene is not permanently frozen.
+	if _paused_by_intro:
+		get_tree().paused = false
+		_paused_by_intro = false
+
+
 func _dismiss() -> void:
 	if _dismissed:
 		return
 	_dismissed = true
-	get_tree().paused = false
+	if _paused_by_intro:
+		get_tree().paused = false
+		_paused_by_intro = false
 	dismissed.emit()
 	queue_free()

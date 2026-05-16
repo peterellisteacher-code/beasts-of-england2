@@ -30,6 +30,12 @@ signal hearts_changed(new_hearts: int)
 
 var current_act: int = 1
 var commandments_corrupted: int = 0
+# Tracks WHICH commandments are corrupted by index (0-based).  The integer
+# count above is kept for backward-compat with any act code that reads it, but
+# the display layer (seven_commandments.gd) now reads this array so it can show
+# the correct commandments after a save/load round-trip regardless of the order
+# in which they were corrupted.
+var corrupted_commandment_indices: Array[int] = []
 
 # =============================================================================
 # Act 1 state
@@ -80,8 +86,12 @@ func corrupt_commandment(index: int) -> void:
 	if index < 0 or index >= COMMANDMENTS.size():
 		push_error("GameState.corrupt_commandment: index %d out of range" % index)
 		return
-	# Track the total count, clamped to 7
-	commandments_corrupted = mini(commandments_corrupted + 1, COMMANDMENTS.size())
+	# Record the specific index so save/load can restore exactly which
+	# commandments were corrupted (not just how many).
+	if not corrupted_commandment_indices.has(index):
+		corrupted_commandment_indices.append(index)
+	# Keep the integer count in sync for any act code that reads it.
+	commandments_corrupted = corrupted_commandment_indices.size()
 	commandment_corrupted.emit(index)
 	save_to_disk()
 
@@ -113,12 +123,15 @@ func reset_act_state() -> void:
 			battle_wins = 0
 		4:
 			snowball_expelled = false
+	# Persist immediately so a browser refresh/close doesn't roll back the reset.
+	save_to_disk()
 
 
 func save_to_disk() -> void:
 	var data: Dictionary = {
 		"current_act": current_act,
 		"commandments_corrupted": commandments_corrupted,
+		"corrupted_commandment_indices": corrupted_commandment_indices,
 		"hearts": hearts,
 		"has_secret_scroll": has_secret_scroll,
 		"lamb_rescued": lamb_rescued,
@@ -162,19 +175,26 @@ func load_from_disk() -> void:
 		return
 
 	var data: Dictionary = parsed as Dictionary
-	current_act              = _read_int(data, "current_act", 1)
-	commandments_corrupted   = _read_int(data, "commandments_corrupted", 0)
-	hearts                   = _read_int(data, "hearts", 3)
-	has_secret_scroll        = _read_bool(data, "has_secret_scroll", false)
-	lamb_rescued             = _read_bool(data, "lamb_rescued", false)
-	collected_key_ids        = _read_int_array(data, "collected_key_ids", [])
-	opened_door_ids          = _read_int_array(data, "opened_door_ids", [])
-	has_gatekeeper_bonus     = _read_bool(data, "has_gatekeeper_bonus", false)
-	jones_men_driven_off     = _read_bool(data, "jones_men_driven_off", false)
-	jones_men_driven         = _read_int(data, "jones_men_driven", 0)
-	boxer_moves              = _read_string_array(data, "boxer_moves", ["charge", "brace"])
-	battle_wins              = _read_int(data, "battle_wins", 0)
-	snowball_expelled        = _read_bool(data, "snowball_expelled", false)
+	current_act                    = _read_int(data, "current_act", 1)
+	commandments_corrupted         = _read_int(data, "commandments_corrupted", 0)
+	corrupted_commandment_indices  = _read_int_array(data, "corrupted_commandment_indices", [])
+	# If a save from before this fix exists, it won't have the indices array.
+	# Reconstruct it from the count by assuming the first N were corrupted —
+	# which matches the old (buggy) display assumption and is the best we can do.
+	if corrupted_commandment_indices.is_empty() and commandments_corrupted > 0:
+		for i: int in range(commandments_corrupted):
+			corrupted_commandment_indices.append(i)
+	hearts                         = _read_int(data, "hearts", 3)
+	has_secret_scroll              = _read_bool(data, "has_secret_scroll", false)
+	lamb_rescued                   = _read_bool(data, "lamb_rescued", false)
+	collected_key_ids              = _read_int_array(data, "collected_key_ids", [])
+	opened_door_ids                = _read_int_array(data, "opened_door_ids", [])
+	has_gatekeeper_bonus           = _read_bool(data, "has_gatekeeper_bonus", false)
+	jones_men_driven_off           = _read_bool(data, "jones_men_driven_off", false)
+	jones_men_driven               = _read_int(data, "jones_men_driven", 0)
+	boxer_moves                    = _read_string_array(data, "boxer_moves", ["charge", "brace"])
+	battle_wins                    = _read_int(data, "battle_wins", 0)
+	snowball_expelled              = _read_bool(data, "snowball_expelled", false)
 
 # =============================================================================
 # Private helpers — safe typed reads from an untyped JSON Dictionary

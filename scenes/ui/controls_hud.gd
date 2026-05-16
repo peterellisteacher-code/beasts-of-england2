@@ -50,8 +50,13 @@ func set_controls(lines: Array[String]) -> void:
 # =============================================================================
 
 func _rebuild() -> void:
+	# Use immediate free() rather than queue_free() so the old labels are
+	# removed synchronously before new ones are added.  queue_free() is deferred
+	# to the end of the frame, which means add_child() below would see the old
+	# children still present and render duplicate control-hint rows until the
+	# next frame.
 	for child: Node in _list.get_children():
-		child.queue_free()
+		child.free()
 
 	var header: Label = Label.new()
 	header.text = "CONTROLS  (H to hide)"
