@@ -106,6 +106,24 @@ func complete_act(act: int) -> void:
 	save_to_disk()
 
 
+func reset_all() -> void:
+	current_act = 1
+	commandments_corrupted = 0
+	corrupted_commandment_indices = []
+	hearts = 3
+	has_secret_scroll = false
+	lamb_rescued = false
+	collected_key_ids = []
+	opened_door_ids = []
+	has_gatekeeper_bonus = false
+	jones_men_driven_off = false
+	jones_men_driven = 0
+	boxer_moves = ["charge", "brace"]
+	battle_wins = 0
+	snowball_expelled = false
+	save_to_disk()
+
+
 func reset_act_state() -> void:
 	match current_act:
 		1:

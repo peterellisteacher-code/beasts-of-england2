@@ -19,4 +19,4 @@ func _ready() -> void:
 # =============================================================================
 
 func _on_retry_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/act3/cowshed_overworld.tscn")
+	SceneManager.go_to_scene("res://scenes/act3/cowshed_overworld.tscn")

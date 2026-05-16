@@ -148,10 +148,14 @@ func _setup_boxer() -> void:
 
 	_boxer_moves.clear()
 	for move_key: String in GameState.boxer_moves:
-		_boxer_moves.append(move_key)
+		if MoveData.MOVES.has(move_key):
+			_boxer_moves.append(move_key)
+		else:
+			push_warning("_setup_boxer: unknown move key '%s' in GameState.boxer_moves — skipped" % move_key)
 
 	if GameState.has_gatekeeper_bonus and not ("solidarity" in _boxer_moves):
-		_boxer_moves.append("solidarity")
+		if MoveData.MOVES.has("solidarity"):
+			_boxer_moves.append("solidarity")
 
 	_boxer_pp.clear()
 	for move_key: String in _boxer_moves:
@@ -274,13 +278,13 @@ func _run_win() -> void:
 		GameState.save_to_disk()
 
 	await get_tree().create_timer(2.0).timeout
-	get_tree().change_scene_to_file("res://scenes/act3/cowshed_overworld.tscn")
+	SceneManager.go_to_scene("res://scenes/act3/cowshed_overworld.tscn")
 
 
 func _run_lose() -> void:
 	await _log("Boxer has fallen...")
 	await get_tree().create_timer(2.0).timeout
-	get_tree().change_scene_to_file("res://scenes/act3/battle/battle_loss.tscn")
+	SceneManager.go_to_scene("res://scenes/act3/battle/battle_loss.tscn")
 
 
 # =============================================================================
