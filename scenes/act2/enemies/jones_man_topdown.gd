@@ -139,13 +139,24 @@ func force_flee() -> void:
 	_state = State.FLEE
 
 
+func _find_scene_controller(method_name: String) -> Node:
+	# Climb ancestors until we reach the node exposing the callback. Robust no
+	# matter where this enemy sits in the tree (root child, or under World).
+	var n: Node = get_parent()
+	while n != null:
+		if n.has_method(method_name):
+			return n
+		n = n.get_parent()
+	return null
+
+
 func _notify_driven_off() -> void:
-	var scene_root: Node = get_parent()
-	if scene_root != null and scene_root.has_method("on_jones_man_driven_off"):
-		scene_root.on_jones_man_driven_off()
+	var controller: Node = _find_scene_controller("on_jones_man_driven_off")
+	if controller != null:
+		controller.on_jones_man_driven_off()
 
 
 func _notify_regrouped() -> void:
-	var scene_root: Node = get_parent()
-	if scene_root != null and scene_root.has_method("on_jones_man_regrouped"):
-		scene_root.on_jones_man_regrouped()
+	var controller: Node = _find_scene_controller("on_jones_man_regrouped")
+	if controller != null:
+		controller.on_jones_man_regrouped()

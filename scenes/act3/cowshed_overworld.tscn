@@ -1,162 +1,449 @@
-[gd_scene load_steps=10 format=3 uid="uid://act3_cowshed"]
+[gd_scene load_steps=30 format=3 uid="uid://act3_cowshed"]
 
-[ext_resource type="Script" path="res://scenes/act3/cowshed_overworld.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://boxer_topdown" path="res://scenes/act2/player/boxer_topdown.tscn" id="2_boxer"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_house_blue.png" id="5_house"]
-[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/act3_ground.png" id="10_ground"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="6_tree"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="7_bush"]
-[ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="8_intro"]
-[ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="9_chud"]
+[ext_resource type="Script" path="res://scenes/act3/cowshed_overworld.gd" id="scn_root"]
+[ext_resource type="Script" path="res://scripts/world/ground_builder.gd" id="scn_ground"]
+[ext_resource type="Script" path="res://scripts/world/ambient_life.gd" id="scn_ambient"]
+[ext_resource type="PackedScene" path="res://scenes/props/prop.tscn" id="ps_prop"]
+[ext_resource type="PackedScene" path="res://scenes/act2/player/boxer_topdown.tscn" id="ps_boxer"]
+[ext_resource type="PackedScene" path="res://scenes/ui/act_intro.tscn" id="ps_actintro"]
+[ext_resource type="PackedScene" path="res://scenes/ui/controls_hud.tscn" id="ps_chud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/vignette.png" id="tex_vignette"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/dirt_patch_act3.png" id="tex_dirt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shadow.png" id="tex_shadow"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/signpost.png" id="tex_signpost"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/cowshed.png" id="tex_cowshed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/barrel.png" id="tex_barrel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/bush.png" id="tex_bush"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/crate.png" id="tex_crate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/farm_gate.png" id="tex_farm_gate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/feed_trough.png" id="tex_feed_trough"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/flowers_orange.png" id="tex_flowers_orange"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/flowers_pink.png" id="tex_flowers_pink"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/hay_bales.png" id="tex_hay_bales"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/logs.png" id="tex_logs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/rock_brown.png" id="tex_rock_brown"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/rock_grey.png" id="tex_rock_grey"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/stump.png" id="tex_stump"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tall_grass.png" id="tex_tall_grass"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tree_autumn.png" id="tex_tree_autumn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tree_green.png" id="tex_tree_green"]
+
+[sub_resource type="RectangleShape2D" id="col_cowshed"]
+size = Vector2(210, 26)
 
 [sub_resource type="CircleShape2D" id="ZoneShape"]
 radius = 40.0
 
 [node name="CowshedOverworld" type="Node2D"]
-script = ExtResource("1")
+script = ExtResource("scn_root")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(1, 0.87, 0.68, 1)
 
 [node name="World" type="Node2D" parent="."]
+y_sort_enabled = true
 
-[node name="Background" type="TextureRect" parent="World"]
-offset_left = -100.0
-offset_top = -100.0
-offset_right = 1380.0
-offset_bottom = 820.0
-texture = ExtResource("10_ground")
-expand_mode = 1
-stretch_mode = 6
+[node name="Ground" type="TileMapLayer" parent="World"]
+script = ExtResource("scn_ground")
 
-[node name="Cowshed" type="Sprite2D" parent="World"]
-position = Vector2(640.0, 100.0)
-texture = ExtResource("5_house")
-scale = Vector2(1.4, 1.4)
+[node name="DirtPatch" type="Sprite2D" parent="World/Ground"]
+centered = false
+texture = ExtResource("tex_dirt")
 
-[node name="TreeFarLeft" type="Sprite2D" parent="World"]
-position = Vector2(80.0, 180.0)
-texture = ExtResource("6_tree")
-scale = Vector2(1.0, 1.0)
+[node name="Cowshed" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(640, 150)
 
-[node name="TreeFarRight" type="Sprite2D" parent="World"]
-position = Vector2(1220.0, 200.0)
-texture = ExtResource("6_tree")
-scale = Vector2(0.95, 0.95)
+[node name="Shadow" parent="World/Cowshed"]
+scale = Vector2(0.810, 0.340)
 
-[node name="TreeBottomLeft" type="Sprite2D" parent="World"]
-position = Vector2(60.0, 620.0)
-texture = ExtResource("6_tree")
-scale = Vector2(0.9, 0.9)
+[node name="Sprite" parent="World/Cowshed"]
+texture = ExtResource("tex_cowshed")
+offset = Vector2(-122, -164)
 
-[node name="TreeBottomRight" type="Sprite2D" parent="World"]
-position = Vector2(1240.0, 640.0)
-texture = ExtResource("6_tree")
-scale = Vector2(1.0, 1.0)
+[node name="Body" type="StaticBody2D" parent="World/Cowshed"]
 
-[node name="BushBL" type="Sprite2D" parent="World"]
-position = Vector2(220.0, 540.0)
-texture = ExtResource("7_bush")
-scale = Vector2(1.1, 1.1)
+[node name="Col" type="CollisionShape2D" parent="World/Cowshed/Body"]
+position = Vector2(0, -14)
+shape = SubResource("col_cowshed")
 
-[node name="BushBR" type="Sprite2D" parent="World"]
-position = Vector2(1080.0, 560.0)
-texture = ExtResource("7_bush")
-scale = Vector2(1.0, 1.0)
+[node name="TreeGreenA" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(90, 182)
 
-[node name="BushTL" type="Sprite2D" parent="World"]
-position = Vector2(180.0, 240.0)
-texture = ExtResource("7_bush")
-scale = Vector2(0.95, 0.95)
+[node name="Shadow" parent="World/TreeGreenA"]
+scale = Vector2(0.319, 0.319)
 
-[node name="BushTR" type="Sprite2D" parent="World"]
-position = Vector2(1100.0, 260.0)
-texture = ExtResource("7_bush")
-scale = Vector2(0.9, 0.9)
+[node name="Sprite" parent="World/TreeGreenA"]
+texture = ExtResource("tex_tree_green")
+offset = Vector2(-48, -192)
+
+[node name="TreeAutumnA" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(232, 144)
+
+[node name="Shadow" parent="World/TreeAutumnA"]
+scale = Vector2(0.299, 0.299)
+
+[node name="Sprite" parent="World/TreeAutumnA"]
+texture = ExtResource("tex_tree_autumn")
+offset = Vector2(-45, -151)
+
+[node name="TreeAutumnB" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1048, 144)
+
+[node name="Shadow" parent="World/TreeAutumnB"]
+scale = Vector2(0.299, 0.299)
+
+[node name="Sprite" parent="World/TreeAutumnB"]
+texture = ExtResource("tex_tree_autumn")
+offset = Vector2(-45, -151)
+
+[node name="TreeGreenB" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1192, 182)
+
+[node name="Shadow" parent="World/TreeGreenB"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/TreeGreenB"]
+texture = ExtResource("tex_tree_green")
+offset = Vector2(-48, -192)
+
+[node name="BushA" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(442, 214)
+
+[node name="Shadow" parent="World/BushA"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/BushA"]
+texture = ExtResource("tex_bush")
+offset = Vector2(-31, -78)
+
+[node name="BushB" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(842, 214)
+
+[node name="Shadow" parent="World/BushB"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/BushB"]
+texture = ExtResource("tex_bush")
+offset = Vector2(-31, -78)
+
+[node name="HayBales" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(506, 256)
+
+[node name="Shadow" parent="World/HayBales"]
+scale = Vector2(0.392, 0.340)
+
+[node name="Sprite" parent="World/HayBales"]
+texture = ExtResource("tex_hay_bales")
+offset = Vector2(-59, -103)
+
+[node name="FeedTrough" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(778, 252)
+
+[node name="Shadow" parent="World/FeedTrough"]
+scale = Vector2(0.485, 0.340)
+
+[node name="Sprite" parent="World/FeedTrough"]
+texture = ExtResource("tex_feed_trough")
+offset = Vector2(-73, -35)
+
+[node name="FlowersPink" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(336, 276)
+
+[node name="Shadow" parent="World/FlowersPink"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/FlowersPink"]
+texture = ExtResource("tex_flowers_pink")
+offset = Vector2(-48, -95)
+
+[node name="FlowersOrange" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(946, 276)
+
+[node name="Shadow" parent="World/FlowersOrange"]
+scale = Vector2(0.312, 0.312)
+
+[node name="Sprite" parent="World/FlowersOrange"]
+texture = ExtResource("tex_flowers_orange")
+offset = Vector2(-47, -63)
+
+[node name="TreeGreenC" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(104, 566)
+
+[node name="Shadow" parent="World/TreeGreenC"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/TreeGreenC"]
+texture = ExtResource("tex_tree_green")
+offset = Vector2(-48, -192)
+
+[node name="TreeGreenD" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1176, 566)
+
+[node name="Shadow" parent="World/TreeGreenD"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/TreeGreenD"]
+texture = ExtResource("tex_tree_green")
+offset = Vector2(-48, -192)
+
+[node name="TreeAutumnC" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(252, 648)
+
+[node name="Shadow" parent="World/TreeAutumnC"]
+scale = Vector2(0.299, 0.299)
+
+[node name="Sprite" parent="World/TreeAutumnC"]
+texture = ExtResource("tex_tree_autumn")
+offset = Vector2(-45, -151)
+
+[node name="TreeAutumnD" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1034, 648)
+
+[node name="Shadow" parent="World/TreeAutumnD"]
+scale = Vector2(0.299, 0.299)
+
+[node name="Sprite" parent="World/TreeAutumnD"]
+texture = ExtResource("tex_tree_autumn")
+offset = Vector2(-45, -151)
+
+[node name="BushC" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(372, 692)
+
+[node name="Shadow" parent="World/BushC"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/BushC"]
+texture = ExtResource("tex_bush")
+offset = Vector2(-31, -78)
+
+[node name="BushD" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(916, 692)
+
+[node name="Shadow" parent="World/BushD"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/BushD"]
+texture = ExtResource("tex_bush")
+offset = Vector2(-31, -78)
+
+[node name="Logs1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(470, 708)
+
+[node name="Shadow" parent="World/Logs1"]
+scale = Vector2(0.315, 0.315)
+
+[node name="Sprite" parent="World/Logs1"]
+texture = ExtResource("tex_logs")
+offset = Vector2(-47, -96)
+
+[node name="Stump1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(824, 712)
+
+[node name="Shadow" parent="World/Stump1"]
+scale = Vector2(0.289, 0.289)
+
+[node name="Sprite" parent="World/Stump1"]
+texture = ExtResource("tex_stump")
+offset = Vector2(-43, -51)
+
+[node name="RockBrown1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(312, 712)
+
+[node name="Shadow" parent="World/RockBrown1"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/RockBrown1"]
+texture = ExtResource("tex_rock_brown")
+offset = Vector2(-31, -50)
+
+[node name="RockGrey1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1002, 706)
+
+[node name="Shadow" parent="World/RockGrey1"]
+scale = Vector2(0.296, 0.296)
+
+[node name="Sprite" parent="World/RockGrey1"]
+texture = ExtResource("tex_rock_grey")
+offset = Vector2(-44, -94)
+
+[node name="TallGrass1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1116, 700)
+
+[node name="Shadow" parent="World/TallGrass1"]
+scale = Vector2(0.212, 0.212)
+
+[node name="Sprite" parent="World/TallGrass1"]
+texture = ExtResource("tex_tall_grass")
+offset = Vector2(-32, -95)
+
+[node name="Crate1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(742, 702)
+
+[node name="Shadow" parent="World/Crate1"]
+scale = Vector2(0.206, 0.206)
+
+[node name="Sprite" parent="World/Crate1"]
+texture = ExtResource("tex_crate")
+offset = Vector2(-31, -63)
+
+[node name="Barrel1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(540, 702)
+
+[node name="Shadow" parent="World/Barrel1"]
+scale = Vector2(0.206, 0.206)
+
+[node name="Sprite" parent="World/Barrel1"]
+texture = ExtResource("tex_barrel")
+offset = Vector2(-31, -61)
+
+[node name="FarmGate" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(96, 668)
+
+[node name="Shadow" parent="World/FarmGate"]
+scale = Vector2(0.445, 0.340)
+
+[node name="Sprite" parent="World/FarmGate"]
+texture = ExtResource("tex_farm_gate")
+offset = Vector2(-67, -67)
+
+[node name="BoxerPlayer" parent="World" instance=ExtResource("ps_boxer")]
+position = Vector2(640, 580)
+
+[node name="EncounterZone1" type="Area2D" parent="World"]
+position = Vector2(300, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone1"]
+shape = SubResource("ZoneShape")
+
+[node name="Shadow" type="Sprite2D" parent="World/EncounterZone1"]
+texture = ExtResource("tex_shadow")
+modulate = Color(1, 1, 1, 0.32)
+scale = Vector2(0.179, 0.179)
+
+[node name="Signpost" type="Sprite2D" parent="World/EncounterZone1"]
+centered = false
+texture = ExtResource("tex_signpost")
+offset = Vector2(-27, -115)
+
+[node name="Number" type="Label" parent="World/EncounterZone1"]
+offset_left = -18.0
+offset_top = -98.6
+offset_right = 18.0
+offset_bottom = -64.6
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 6
+
+[node name="EncounterZone2" type="Area2D" parent="World"]
+position = Vector2(540, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone2"]
+shape = SubResource("ZoneShape")
+
+[node name="Shadow" type="Sprite2D" parent="World/EncounterZone2"]
+texture = ExtResource("tex_shadow")
+modulate = Color(1, 1, 1, 0.32)
+scale = Vector2(0.179, 0.179)
+
+[node name="Signpost" type="Sprite2D" parent="World/EncounterZone2"]
+centered = false
+texture = ExtResource("tex_signpost")
+offset = Vector2(-27, -115)
+
+[node name="Number" type="Label" parent="World/EncounterZone2"]
+offset_left = -18.0
+offset_top = -98.6
+offset_right = 18.0
+offset_bottom = -64.6
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 6
+
+[node name="EncounterZone3" type="Area2D" parent="World"]
+position = Vector2(780, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone3"]
+shape = SubResource("ZoneShape")
+
+[node name="Shadow" type="Sprite2D" parent="World/EncounterZone3"]
+texture = ExtResource("tex_shadow")
+modulate = Color(1, 1, 1, 0.32)
+scale = Vector2(0.179, 0.179)
+
+[node name="Signpost" type="Sprite2D" parent="World/EncounterZone3"]
+centered = false
+texture = ExtResource("tex_signpost")
+offset = Vector2(-27, -115)
+
+[node name="Number" type="Label" parent="World/EncounterZone3"]
+offset_left = -18.0
+offset_top = -98.6
+offset_right = 18.0
+offset_bottom = -64.6
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 6
+
+[node name="EncounterZone4" type="Area2D" parent="World"]
+position = Vector2(1020, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone4"]
+shape = SubResource("ZoneShape")
+
+[node name="Shadow" type="Sprite2D" parent="World/EncounterZone4"]
+texture = ExtResource("tex_shadow")
+modulate = Color(1, 1, 1, 0.32)
+scale = Vector2(0.179, 0.179)
+
+[node name="Signpost" type="Sprite2D" parent="World/EncounterZone4"]
+centered = false
+texture = ExtResource("tex_signpost")
+offset = Vector2(-27, -115)
+
+[node name="Number" type="Label" parent="World/EncounterZone4"]
+offset_left = -18.0
+offset_top = -98.6
+offset_right = 18.0
+offset_bottom = -64.6
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 6
+
+[node name="AmbientLife" type="Node2D" parent="World"]
+script = ExtResource("scn_ambient")
+area = Rect2(120, 470, 1040, 210)
+spawn_seed = 2
+
+[node name="Vignette" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = ExtResource("tex_vignette")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(640.0, 360.0)
-enabled = true
+position = Vector2(640, 360)
 
-[node name="BoxerPlayer" parent="." instance=ExtResource("2_boxer")]
-position = Vector2(640.0, 580.0)
+[node name="ControlsHUD" parent="." instance=ExtResource("ps_chud")]
+controls = Array[String](["WASD / Arrows: Move", "Walk onto a signpost to fight", "H: Hide controls"])
 
-[node name="EncounterZone1" type="Area2D" parent="."]
-position = Vector2(300.0, 360.0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone1"]
-shape = SubResource("ZoneShape")
-
-[node name="Marker1" type="Label" parent="EncounterZone1"]
-offset_left = -10.0
-offset_top = -16.0
-offset_right = 10.0
-offset_bottom = 8.0
-text = "1"
-theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.9, 0.1, 0.1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-
-[node name="EncounterZone2" type="Area2D" parent="."]
-position = Vector2(540.0, 360.0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone2"]
-shape = SubResource("ZoneShape")
-
-[node name="Marker2" type="Label" parent="EncounterZone2"]
-offset_left = -10.0
-offset_top = -16.0
-offset_right = 10.0
-offset_bottom = 8.0
-text = "2"
-theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.9, 0.1, 0.1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-
-[node name="EncounterZone3" type="Area2D" parent="."]
-position = Vector2(780.0, 360.0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone3"]
-shape = SubResource("ZoneShape")
-
-[node name="Marker3" type="Label" parent="EncounterZone3"]
-offset_left = -10.0
-offset_top = -16.0
-offset_right = 10.0
-offset_bottom = 8.0
-text = "3"
-theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.9, 0.1, 0.1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-
-[node name="EncounterZone4" type="Area2D" parent="."]
-position = Vector2(1020.0, 360.0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZone4"]
-shape = SubResource("ZoneShape")
-
-[node name="Marker4" type="Label" parent="EncounterZone4"]
-offset_left = -10.0
-offset_top = -16.0
-offset_right = 10.0
-offset_bottom = 8.0
-text = "4"
-theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.9, 0.1, 0.1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-
-[node name="ControlsHUD" parent="." instance=ExtResource("9_chud")]
-controls = Array[String](["WASD / Arrows: Move", "Walk into a numbered marker to start a battle", "H: Hide controls"])
-
-[node name="ActIntro" parent="." instance=ExtResource("8_intro")]
+[node name="ActIntro" parent="." instance=ExtResource("ps_actintro")]
 act_label_text = "ACT 3 — CHAPTER 4"
 title_text = "THE BATTLE OF THE COWSHED"
 protagonist_text = "You are BOXER — defender of Animal Farm."
 story_text = "News of the Rebellion has spread. Jones and his men are coming back, armed and angry. Squealer sends you to meet them at four points around the cowshed. Win, and the farm endures."
-goal_text = "Walk into each numbered marker (1 → 4) in order to enter a turn-based battle. Win all four to finish the act."
-controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Step onto a numbered marker to start that battle", "Battles use mouse / click — instructions appear on screen"])
+goal_text = "Walk into each numbered signpost (1 → 4) in order to enter a turn-based battle. Win all four to finish the act."
+controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Step onto a numbered signpost to start that battle", "Battles use mouse / click — instructions appear on screen"])

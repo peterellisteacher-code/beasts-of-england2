@@ -23,9 +23,9 @@ var _act_locked: bool = false  # true once gatekeeper fires; blocks loss trigger
 # Onready references
 # =============================================================================
 
-@onready var boxer_player: CharacterBody2D = $BoxerPlayer
-@onready var gatekeeper_quiz: Control = $GatekeeperQuiz
-@onready var commandments_reveal: Control = $CommandmentsReveal
+@onready var boxer_player: CharacterBody2D = %BoxerPlayer
+@onready var gatekeeper_quiz: Control = %GatekeeperQuiz
+@onready var commandments_reveal: Control = %CommandmentsReveal
 
 # =============================================================================
 # Built-in virtual methods
@@ -36,6 +36,10 @@ func _ready() -> void:
 	GameState.jones_men_driven = 0
 	gatekeeper_quiz.hide()
 	commandments_reveal.hide()
+	# The UI overlays sit under a CanvasLayer (isolated from CanvasModulate), so
+	# they can no longer reach this controller via get_parent() — wire via signals.
+	gatekeeper_quiz.quiz_passed.connect(on_gatekeeper_passed)
+	commandments_reveal.reveal_complete.connect(on_commandments_revealed)
 
 # =============================================================================
 # Public methods — called by child nodes

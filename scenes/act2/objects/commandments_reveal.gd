@@ -52,5 +52,5 @@ func start_reveal() -> void:
 	await get_tree().create_timer(HOLD_AFTER_REVEAL).timeout
 	if not is_instance_valid(self):
 		return
+	# reveal_complete is connected by the scene controller — depth-independent.
 	reveal_complete.emit()
-	get_parent().on_commandments_revealed()

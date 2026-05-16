@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://boxer_topdown"]
+[gd_scene load_steps=21 format=3 uid="uid://boxer_topdown"]
 
 [ext_resource type="Script" path="res://scenes/act2/player/boxer_topdown.gd" id="1_boxertopdown"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/boxer_walk.png" id="2_tex_walk"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/boxer_battle_attack.png" id="3_tex_attack"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shadow.png" id="4_shadow"]
 
 [sub_resource type="AtlasTexture" id="AT_walk_0"]
 atlas = ExtResource("2_tex_walk")
@@ -155,9 +156,15 @@ animations = [{
 [node name="BoxerTopdown" type="CharacterBody2D"]
 script = ExtResource("1_boxertopdown")
 
+[node name="Shadow" type="Sprite2D" parent="."]
+scale = Vector2(0.42, 0.22)
+modulate = Color(1, 1, 1, 0.4)
+texture = ExtResource("4_shadow")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_boxer")
 animation = &"idle"
+offset = Vector2(0, -46)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_boxer_body")

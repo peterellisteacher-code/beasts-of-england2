@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://boe_controls_hud"]
+[gd_scene load_steps=3 format=3 uid="uid://boe_controls_hud"]
 
 [ext_resource type="Script" path="res://scenes/ui/controls_hud.gd" id="1_controlshud"]
+
+[sub_resource type="StyleBoxFlat" id="hud_panel"]
+bg_color = Color(0.1, 0.07, 0.05, 0.93)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.43, 0.18, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="ControlsHUD" type="CanvasLayer"]
 layer = 50
@@ -9,17 +21,17 @@ script = ExtResource("1_controlshud")
 [node name="Panel" type="PanelContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -260.0
+offset_left = -286.0
 offset_top = 12.0
 offset_right = -12.0
-offset_bottom = 140.0
-modulate = Color(1, 1, 1, 0.92)
+offset_bottom = 134.0
+theme_override_styles/panel = SubResource("hud_panel")
 
 [node name="Margin" type="MarginContainer" parent="Panel"]
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 7
 
 [node name="ControlsList" type="VBoxContainer" parent="Panel/Margin"]
-theme_override_constants/separation = 2
+theme_override_constants/separation = 3

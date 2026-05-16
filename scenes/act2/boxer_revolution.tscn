@@ -1,109 +1,389 @@
-[gd_scene load_steps=12 format=3 uid="uid://boxer_revolution"]
+[gd_scene load_steps=37 format=3 uid="uid://boxer_revolution"]
 
-[ext_resource type="Script" path="res://scenes/act2/boxer_revolution.gd" id="1_revolution"]
-[ext_resource type="PackedScene" uid="uid://boxer_topdown" path="res://scenes/act2/player/boxer_topdown.tscn" id="2_boxer"]
-[ext_resource type="PackedScene" uid="uid://jones_man_topdown" path="res://scenes/act2/enemies/jones_man_topdown.tscn" id="3_jones"]
-[ext_resource type="PackedScene" uid="uid://gatekeeper_quiz" path="res://scenes/act2/objects/gatekeeper_quiz.tscn" id="4_gkquiz"]
-[ext_resource type="PackedScene" uid="uid://commandments_reveal" path="res://scenes/act2/objects/commandments_reveal.tscn" id="5_cmdreveal"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_house_blue.png" id="7_house"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_bush.png" id="8_bushes"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/ts_tree.png" id="10_tree"]
-[ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="11_intro"]
-[ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="12_chud"]
-[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/act2_ground.png" id="13_ground"]
+[ext_resource type="Script" path="res://scenes/act2/boxer_revolution.gd" id="scn_root"]
+[ext_resource type="Script" path="res://scripts/world/ground_builder.gd" id="scn_ground"]
+[ext_resource type="Script" path="res://scripts/world/ambient_life.gd" id="scn_ambient"]
+[ext_resource type="PackedScene" path="res://scenes/props/prop.tscn" id="ps_prop"]
+[ext_resource type="PackedScene" path="res://scenes/act2/player/boxer_topdown.tscn" id="ps_boxer"]
+[ext_resource type="PackedScene" path="res://scenes/act2/enemies/jones_man_topdown.tscn" id="ps_jones"]
+[ext_resource type="PackedScene" path="res://scenes/act2/objects/gatekeeper_quiz.tscn" id="ps_gkquiz"]
+[ext_resource type="PackedScene" path="res://scenes/act2/objects/commandments_reveal.tscn" id="ps_cmdreveal"]
+[ext_resource type="PackedScene" path="res://scenes/ui/act_intro.tscn" id="ps_actintro"]
+[ext_resource type="PackedScene" path="res://scenes/ui/controls_hud.tscn" id="ps_chud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/vignette.png" id="tex_vignette"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/dirt_patch.png" id="tex_dirt_patch"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/barrel.png" id="tex_barrel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/bush.png" id="tex_bush"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/crate.png" id="tex_crate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/fence.png" id="tex_fence"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/flowers_orange.png" id="tex_flowers_orange"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/flowers_pink.png" id="tex_flowers_pink"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/grass_tuft.png" id="tex_grass_tuft"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/logs.png" id="tex_logs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/mushroom.png" id="tex_mushroom"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/rock_brown.png" id="tex_rock_brown"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/rock_grey.png" id="tex_rock_grey"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/sapling.png" id="tex_sapling"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/stump.png" id="tex_stump"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tall_grass.png" id="tex_tall_grass"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tree_autumn.png" id="tex_tree_autumn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tree_green.png" id="tex_tree_green"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/weeds.png" id="tex_weeds"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/farm_gate.png" id="tex_farm_gate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/hay_bales.png" id="tex_hay_bales"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/feed_trough.png" id="tex_feed_trough"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/barn.png" id="tex_barn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/farmhouse.png" id="tex_farmhouse"]
+
+[sub_resource type="RectangleShape2D" id="col_Barn"]
+size = Vector2(320, 28)
+
+[sub_resource type="RectangleShape2D" id="col_Farmhouse"]
+size = Vector2(162, 26)
 
 [node name="BoxerRevolution" type="Node2D"]
-script = ExtResource("1_revolution")
+script = ExtResource("scn_root")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(1, 0.87, 0.68, 1)
 
 [node name="World" type="Node2D" parent="."]
+y_sort_enabled = true
 
-[node name="Background" type="TextureRect" parent="World"]
-offset_left = -100.0
-offset_top = -100.0
-offset_right = 1380.0
-offset_bottom = 820.0
-texture = ExtResource("13_ground")
-expand_mode = 1
-stretch_mode = 6
+[node name="Ground" type="TileMapLayer" parent="World"]
+script = ExtResource("scn_ground")
 
-[node name="Farmhouse" type="Sprite2D" parent="World"]
-position = Vector2(1180.0, 140.0)
-texture = ExtResource("7_house")
-scale = Vector2(0.95, 0.95)
+[node name="DirtPatch" type="Sprite2D" parent="World/Ground"]
+centered = false
+texture = ExtResource("tex_dirt_patch")
 
-[node name="TreeTopLeft" type="Sprite2D" parent="World"]
-position = Vector2(80.0, 110.0)
-texture = ExtResource("10_tree")
-scale = Vector2(1.0, 1.0)
+[node name="TreeAutumn1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(868, 98)
 
-[node name="TreeTopRight" type="Sprite2D" parent="World"]
-position = Vector2(60.0, 480.0)
-texture = ExtResource("10_tree")
-scale = Vector2(0.95, 0.95)
+[node name="Shadow" parent="World/TreeAutumn1"]
+scale = Vector2(0.299, 0.299)
 
-[node name="TreeRightTop" type="Sprite2D" parent="World"]
-position = Vector2(1320.0, 540.0)
-texture = ExtResource("10_tree")
-scale = Vector2(1.0, 1.0)
+[node name="Sprite" parent="World/TreeAutumn1"]
+texture = ExtResource("tex_tree_autumn")
+offset = Vector2(-45, -151)
 
-[node name="BushLeftTop" type="Sprite2D" parent="World"]
-position = Vector2(220.0, 60.0)
-texture = ExtResource("8_bushes")
-scale = Vector2(1.1, 1.1)
+[node name="Bush1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(150, 86)
 
-[node name="BushLeftMid" type="Sprite2D" parent="World"]
-position = Vector2(150.0, 380.0)
-texture = ExtResource("8_bushes")
-scale = Vector2(0.95, 0.95)
+[node name="Shadow" parent="World/Bush1"]
+scale = Vector2(0.209, 0.209)
 
-[node name="BushLeftBottom" type="Sprite2D" parent="World"]
-position = Vector2(280.0, 680.0)
-texture = ExtResource("8_bushes")
-scale = Vector2(1.05, 1.05)
+[node name="Sprite" parent="World/Bush1"]
+texture = ExtResource("tex_bush")
+offset = Vector2(-31, -78)
 
-[node name="BushRightTop" type="Sprite2D" parent="World"]
-position = Vector2(1220.0, 380.0)
-texture = ExtResource("8_bushes")
-scale = Vector2(0.9, 0.9)
+[node name="TallGrass1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(86, 96)
 
-[node name="BushRightBottom" type="Sprite2D" parent="World"]
-position = Vector2(1100.0, 700.0)
-texture = ExtResource("8_bushes")
-scale = Vector2(1.0, 1.0)
+[node name="Shadow" parent="World/TallGrass1"]
+scale = Vector2(0.212, 0.212)
 
-[node name="BoxerPlayer" parent="." instance=ExtResource("2_boxer")]
-position = Vector2(200.0, 360.0)
+[node name="Sprite" parent="World/TallGrass1"]
+texture = ExtResource("tex_tall_grass")
+offset = Vector2(-32, -95)
 
-[node name="JonesMan1" parent="." instance=ExtResource("3_jones")]
-position = Vector2(850.0, 200.0)
+[node name="TreeGreen1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1232, 214)
 
-[node name="JonesMan2" parent="." instance=ExtResource("3_jones")]
-position = Vector2(620.0, 160.0)
+[node name="Shadow" parent="World/TreeGreen1"]
+scale = Vector2(0.319, 0.319)
 
-[node name="JonesMan3" parent="." instance=ExtResource("3_jones")]
-position = Vector2(1020.0, 310.0)
+[node name="Sprite" parent="World/TreeGreen1"]
+texture = ExtResource("tex_tree_green")
+offset = Vector2(-48, -192)
 
-[node name="JonesMan4" parent="." instance=ExtResource("3_jones")]
-position = Vector2(730.0, 460.0)
+[node name="Crate1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(958, 178)
 
-[node name="JonesMan5" parent="." instance=ExtResource("3_jones")]
-position = Vector2(940.0, 520.0)
+[node name="Shadow" parent="World/Crate1"]
+scale = Vector2(0.206, 0.206)
 
-[node name="GatekeeperQuiz" parent="." instance=ExtResource("4_gkquiz")]
+[node name="Sprite" parent="World/Crate1"]
+texture = ExtResource("tex_crate")
+offset = Vector2(-31, -63)
 
-[node name="CommandmentsReveal" parent="." instance=ExtResource("5_cmdreveal")]
+[node name="Barrel1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1014, 236)
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(640.0, 360.0)
-enabled = true
+[node name="Shadow" parent="World/Barrel1"]
+scale = Vector2(0.206, 0.206)
 
-[node name="ControlsHUD" parent="." instance=ExtResource("12_chud")]
+[node name="Sprite" parent="World/Barrel1"]
+texture = ExtResource("tex_barrel")
+offset = Vector2(-31, -61)
+
+[node name="Sapling1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(286, 150)
+
+[node name="Shadow" parent="World/Sapling1"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/Sapling1"]
+texture = ExtResource("tex_sapling")
+offset = Vector2(-48, -78)
+
+[node name="RockGrey1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(305, 130)
+
+[node name="Shadow" parent="World/RockGrey1"]
+scale = Vector2(0.296, 0.296)
+
+[node name="Sprite" parent="World/RockGrey1"]
+texture = ExtResource("tex_rock_grey")
+offset = Vector2(-44, -94)
+
+[node name="FlowersOrange1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(455, 545)
+
+[node name="Shadow" parent="World/FlowersOrange1"]
+scale = Vector2(0.312, 0.312)
+
+[node name="Sprite" parent="World/FlowersOrange1"]
+texture = ExtResource("tex_flowers_orange")
+offset = Vector2(-47, -63)
+
+[node name="FlowersPink1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1128, 422)
+
+[node name="Shadow" parent="World/FlowersPink1"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/FlowersPink1"]
+texture = ExtResource("tex_flowers_pink")
+offset = Vector2(-48, -95)
+
+[node name="TreeGreen2" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1232, 700)
+
+[node name="Shadow" parent="World/TreeGreen2"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/TreeGreen2"]
+texture = ExtResource("tex_tree_green")
+offset = Vector2(-48, -192)
+
+[node name="TallGrass2" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1035, 706)
+
+[node name="Shadow" parent="World/TallGrass2"]
+scale = Vector2(0.212, 0.212)
+
+[node name="Sprite" parent="World/TallGrass2"]
+texture = ExtResource("tex_tall_grass")
+offset = Vector2(-32, -95)
+
+[node name="Weeds1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1142, 716)
+
+[node name="Shadow" parent="World/Weeds1"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/Weeds1"]
+texture = ExtResource("tex_weeds")
+offset = Vector2(-48, -94)
+
+[node name="TreeAutumn2" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(486, 706)
+
+[node name="Shadow" parent="World/TreeAutumn2"]
+scale = Vector2(0.299, 0.299)
+
+[node name="Sprite" parent="World/TreeAutumn2"]
+texture = ExtResource("tex_tree_autumn")
+offset = Vector2(-45, -151)
+
+[node name="Fence1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(392, 700)
+
+[node name="Shadow" parent="World/Fence1"]
+scale = Vector2(0.206, 0.206)
+
+[node name="Sprite" parent="World/Fence1"]
+texture = ExtResource("tex_fence")
+offset = Vector2(-31, -64)
+
+[node name="Fence2" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(454, 704)
+
+[node name="Shadow" parent="World/Fence2"]
+scale = Vector2(0.206, 0.206)
+
+[node name="Sprite" parent="World/Fence2"]
+texture = ExtResource("tex_fence")
+offset = Vector2(-31, -64)
+
+[node name="Logs1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(540, 712)
+
+[node name="Shadow" parent="World/Logs1"]
+scale = Vector2(0.315, 0.315)
+
+[node name="Sprite" parent="World/Logs1"]
+texture = ExtResource("tex_logs")
+offset = Vector2(-47, -96)
+
+[node name="Mushroom1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(588, 716)
+
+[node name="Shadow" parent="World/Mushroom1"]
+scale = Vector2(0.096, 0.096)
+
+[node name="Sprite" parent="World/Mushroom1"]
+texture = ExtResource("tex_mushroom")
+offset = Vector2(-14, -88)
+
+[node name="Bush2" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(690, 716)
+
+[node name="Shadow" parent="World/Bush2"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/Bush2"]
+texture = ExtResource("tex_bush")
+offset = Vector2(-31, -78)
+
+[node name="GrassTuft1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(836, 718)
+
+[node name="Shadow" parent="World/GrassTuft1"]
+scale = Vector2(0.319, 0.319)
+
+[node name="Sprite" parent="World/GrassTuft1"]
+texture = ExtResource("tex_grass_tuft")
+offset = Vector2(-48, -96)
+
+[node name="RockBrown1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(116, 710)
+
+[node name="Shadow" parent="World/RockBrown1"]
+scale = Vector2(0.209, 0.209)
+
+[node name="Sprite" parent="World/RockBrown1"]
+texture = ExtResource("tex_rock_brown")
+offset = Vector2(-31, -50)
+
+[node name="Stump1" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(188, 716)
+
+[node name="Shadow" parent="World/Stump1"]
+scale = Vector2(0.289, 0.289)
+
+[node name="Sprite" parent="World/Stump1"]
+texture = ExtResource("tex_stump")
+offset = Vector2(-43, -51)
+
+[node name="FarmGate" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(300, 690)
+
+[node name="Shadow" parent="World/FarmGate"]
+scale = Vector2(0.445, 0.340)
+
+[node name="Sprite" parent="World/FarmGate"]
+texture = ExtResource("tex_farm_gate")
+offset = Vector2(-67, -67)
+
+[node name="HayBales" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1196, 648)
+
+[node name="Shadow" parent="World/HayBales"]
+scale = Vector2(0.392, 0.340)
+
+[node name="Sprite" parent="World/HayBales"]
+texture = ExtResource("tex_hay_bales")
+offset = Vector2(-59, -103)
+
+[node name="FeedTrough" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1068, 584)
+
+[node name="Shadow" parent="World/FeedTrough"]
+scale = Vector2(0.485, 0.340)
+
+[node name="Sprite" parent="World/FeedTrough"]
+texture = ExtResource("tex_feed_trough")
+offset = Vector2(-73, -35)
+
+[node name="Barn" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(560, 138)
+
+[node name="Shadow" parent="World/Barn"]
+scale = Vector2(1.195, 0.340)
+
+[node name="Sprite" parent="World/Barn"]
+texture = ExtResource("tex_barn")
+offset = Vector2(-180, -162)
+
+[node name="Body" type="StaticBody2D" parent="World/Barn"]
+
+[node name="Col" type="CollisionShape2D" parent="World/Barn/Body"]
+position = Vector2(0, -16)
+shape = SubResource("col_Barn")
+
+[node name="Farmhouse" parent="World" instance=ExtResource("ps_prop")]
+position = Vector2(1090, 165)
+
+[node name="Shadow" parent="World/Farmhouse"]
+scale = Vector2(0.631, 0.340)
+
+[node name="Sprite" parent="World/Farmhouse"]
+texture = ExtResource("tex_farmhouse")
+offset = Vector2(-95, -189)
+
+[node name="Body" type="StaticBody2D" parent="World/Farmhouse"]
+
+[node name="Col" type="CollisionShape2D" parent="World/Farmhouse/Body"]
+position = Vector2(0, -14)
+shape = SubResource("col_Farmhouse")
+
+[node name="BoxerPlayer" parent="World" instance=ExtResource("ps_boxer")]
+unique_name_in_owner = true
+position = Vector2(200, 360)
+
+[node name="JonesMan1" parent="World" instance=ExtResource("ps_jones")]
+position = Vector2(850, 200)
+
+[node name="JonesMan2" parent="World" instance=ExtResource("ps_jones")]
+position = Vector2(620, 160)
+
+[node name="JonesMan3" parent="World" instance=ExtResource("ps_jones")]
+position = Vector2(1020, 310)
+
+[node name="JonesMan4" parent="World" instance=ExtResource("ps_jones")]
+position = Vector2(730, 460)
+
+[node name="JonesMan5" parent="World" instance=ExtResource("ps_jones")]
+position = Vector2(940, 520)
+
+[node name="AmbientLife" type="Node2D" parent="World"]
+script = ExtResource("scn_ambient")
+
+[node name="Vignette" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = ExtResource("tex_vignette")
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="GatekeeperQuiz" parent="UI" instance=ExtResource("ps_gkquiz")]
+unique_name_in_owner = true
+
+[node name="CommandmentsReveal" parent="UI" instance=ExtResource("ps_cmdreveal")]
+unique_name_in_owner = true
+
+[node name="ControlsHUD" parent="." instance=ExtResource("ps_chud")]
 controls = Array[String](["WASD / Arrows: Move", "E: Charge (while moving)", "H: Hide controls"])
 
-[node name="ActIntro" parent="." instance=ExtResource("11_intro")]
+[node name="ActIntro" parent="." instance=ExtResource("ps_actintro")]
 act_label_text = "ACT 2 — CHAPTERS 2-3"
 title_text = "THE REBELLION"
 protagonist_text = "You are BOXER — the great cart-horse, strong as any two horses."
 story_text = "Mr. Jones has forgotten to feed the animals. Hungry and furious, the beasts burst out of the stalls and turn on the men with whips. The Rebellion has come — drive the humans off Manor Farm and write the Seven Commandments on the barn wall."
 goal_text = "Charge the five Jones-men around the farmyard and drive them off the land before any of them regroup."
 controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Charge (while moving): E", "(The charge lasts a short burst, then you stop — no more runaway Boxer!)"])
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)

@@ -60,13 +60,15 @@ func _rebuild() -> void:
 
 	var header: Label = Label.new()
 	header.text = "CONTROLS  (H to hide)"
-	header.add_theme_font_size_override("font_size", 12)
+	header.add_theme_font_size_override("font_size", 14)
 	header.add_theme_color_override("font_color", Color(0.545, 0.102, 0.102, 1))
 	_list.add_child(header)
 
 	for line: String in controls:
 		var label: Label = Label.new()
 		label.text = line
-		label.add_theme_font_size_override("font_size", 12)
+		label.add_theme_font_size_override("font_size", 14)
 		label.add_theme_color_override("font_color", Color(0.941, 0.910, 0.788, 1))
+		# Wrap rather than clip if an act sets a long control line.
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_list.add_child(label)

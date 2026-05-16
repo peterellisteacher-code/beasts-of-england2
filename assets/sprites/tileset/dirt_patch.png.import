@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pjtwveyg5yyx"
-path="res://.godot/imported/act3_ground.png-fe730cddcfeae89e6bdb4122f78b2615.ctex"
+uid="uid://d0at1j5vh51rw"
+path="res://.godot/imported/dirt_patch.png-89e057af1c9ac1f2b7e0d08cec5a7727.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/backgrounds/act3_ground.png"
-dest_files=["res://.godot/imported/act3_ground.png-fe730cddcfeae89e6bdb4122f78b2615.ctex"]
+source_file="res://assets/sprites/tileset/dirt_patch.png"
+dest_files=["res://.godot/imported/dirt_patch.png-89e057af1c9ac1f2b7e0d08cec5a7727.ctex"]
 
 [params]
 

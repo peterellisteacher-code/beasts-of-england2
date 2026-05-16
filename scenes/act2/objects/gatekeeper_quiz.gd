@@ -102,8 +102,10 @@ func start_quiz() -> void:
 
 func _show_question(index: int) -> void:
 	if index >= _questions_to_ask.size():
+		# quiz_passed is connected by the scene controller — depth-independent.
+		# This Control sits under a UI CanvasLayer, so get_parent() is no longer
+		# the scene controller.
 		quiz_passed.emit()
-		get_parent().on_gatekeeper_passed()
 		return
 
 	var q: Dictionary = _questions_to_ask[index]

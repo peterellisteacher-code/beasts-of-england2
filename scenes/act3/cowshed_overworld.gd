@@ -25,7 +25,7 @@ var _battle_starting: bool = false
 func _ready() -> void:
 	# Collect and wire the four encounter zones
 	for i: int in range(TOTAL_BATTLES):
-		var zone_name: String = "EncounterZone" + str(i + 1)
+		var zone_name: String = "World/EncounterZone" + str(i + 1)
 		var zone: Area2D = get_node_or_null(zone_name) as Area2D
 		if zone == null:
 			push_error("CowshedOverworld: missing node " + zone_name)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd5q1sajtdu2r"
-path="res://.godot/imported/act2_ground.png-e9fb26401b0ff63a1705b3b4c2ecda9d.ctex"
+uid="uid://bm0me21rmxhfs"
+path="res://.godot/imported/hen.png-13a2c183de38252df3d1bb2da63b17a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/backgrounds/act2_ground.png"
-dest_files=["res://.godot/imported/act2_ground.png-e9fb26401b0ff63a1705b3b4c2ecda9d.ctex"]
+source_file="res://assets/sprites/critters/hen.png"
+dest_files=["res://.godot/imported/hen.png-13a2c183de38252df3d1bb2da63b17a3.ctex"]
 
 [params]
 
