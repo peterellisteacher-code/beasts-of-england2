@@ -22,6 +22,11 @@ func execute(actor: UnitBase, coordinator: Node) -> void:
 		if dist == 1:
 			var push_dir: Vector2i = dog.grid_pos - actor.grid_pos
 			var new_pos: Vector2i = dog.grid_pos + push_dir
-			politics.push_unit(dog, new_pos)
-			politics.show_feedback("Snowball cries out — the dog recoils!")
-			break
+			# push_unit returns true only if the push actually succeeded.
+			if politics.push_unit(dog, new_pos):
+				politics.show_feedback("Snowball cries out — the dog recoils!")
+			else:
+				politics.show_feedback("Snowball cries out — but the dog holds its ground!")
+			return
+	# No adjacent dog found.
+	politics.show_feedback("Battle Cry: no enemy close enough to push.")

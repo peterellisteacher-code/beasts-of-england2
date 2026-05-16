@@ -69,6 +69,7 @@ func _ready() -> void:
 	_connect_buttons()
 	_setup_units()
 	_draw_grid_state()
+	_update_hp_label()
 	_next_round()
 
 
@@ -102,9 +103,12 @@ func get_dogs() -> Array[UnitBase]:
 
 
 ## Moves unit to target cell if valid and unoccupied. Called by BattleCryAction.
-func push_unit(unit: UnitBase, target: Vector2i) -> void:
+## Returns true if the push succeeded, false if blocked.
+func push_unit(unit: UnitBase, target: Vector2i) -> bool:
 	if _is_valid_cell(target) and not _unit_positions.has(target):
 		_move_unit(unit, target)
+		return true
+	return false
 
 
 ## Writes to the feedback label. Called by action subclasses.
@@ -207,6 +211,9 @@ func _compute_valid_moves(unit: UnitBase) -> Array[Vector2i]:
 	var pos: Vector2i = unit.grid_pos
 	for dx: int in range(-range_val, range_val + 1):
 		for dy: int in range(-range_val, range_val + 1):
+			# Exclude standing cell (dx==0, dy==0): moving there wastes the turn.
+			if dx == 0 and dy == 0:
+				continue
 			if abs(dx) + abs(dy) <= range_val:
 				var target: Vector2i = Vector2i(pos.x + dx, pos.y + dy)
 				if _is_valid_cell(target) and not _unit_positions.has(target):
@@ -266,12 +273,19 @@ func _draw_valid_move_highlights() -> void:
 # =============================================================================
 
 ## Starts the player's move phase for a new round. Mirrors open-rpg next_round().
+## If Snowball is completely boxed in (no valid moves), auto-advances to the
+## action phase so the player can still act — prevents a permanent softlock.
 func _next_round() -> void:
 	_phase = TacticsPhase.AWAIT_PLAYER_MOVE
 	_action_panel.hide()
 	_turn_label.text = "Round %d — SNOWBALL'S MOVE" % (_round_count + 1)
 	_valid_moves = _compute_valid_moves(_snowball)
 	queue_redraw()
+	if _valid_moves.is_empty():
+		_turn_label.text = "Round %d — Snowball is surrounded! Choose an action." % (_round_count + 1)
+		_phase = TacticsPhase.AWAIT_PLAYER_ACTION
+		_feedback_label.text = ""
+		_action_panel.show()
 
 
 func _handle_click(click_pos: Vector2) -> void:
@@ -293,6 +307,10 @@ func _handle_click(click_pos: Vector2) -> void:
 ## Unified action handler. Wired to all three buttons via BattleCryAction,
 ## WindmillAction, WaitAction. Mirrors open-rpg combat.gd player→enemy chain.
 func _on_action_selected(action: TacticsAction) -> void:
+	# Guard: only accept actions during the player-action phase.
+	# Prevents re-entrant coroutine launches from rapid double-press.
+	if _phase != TacticsPhase.AWAIT_PLAYER_ACTION:
+		return
 	_snowball.cached_action = action
 	_phase = TacticsPhase.ANIMATING
 	_snowball.act(self)
@@ -352,6 +370,10 @@ func _shrink_grid() -> void:
 	if _snowball.grid_pos.x >= _grid_cols:
 		await get_tree().create_timer(0.5).timeout
 		_turn_label.text = "Snowball is pushed off the farm!"
+		# Hide Snowball BEFORE the next await so the post-shrink visibility
+		# check in _on_action_selected (`not _snowball.visible`) fires correctly
+		# and stops progression to _next_round() before the scene changes.
+		_snowball.visible = false
 		await get_tree().create_timer(0.8).timeout
 		_trigger_game_over()
 		return
