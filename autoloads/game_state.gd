@@ -214,6 +214,12 @@ func load_from_disk() -> void:
 	battle_wins                    = _read_int(data, "battle_wins", 0)
 	snowball_expelled              = _read_bool(data, "snowball_expelled", false)
 
+	# Clamp loaded values so a corrupt or stale browser save cannot route to an
+	# invalid act, over/underflow hearts, or disable every encounter zone.
+	current_act = clampi(current_act, 1, 4)
+	hearts = clampi(hearts, 0, 3)
+	battle_wins = clampi(battle_wins, 0, 4)
+
 # =============================================================================
 # Private helpers — safe typed reads from an untyped JSON Dictionary
 # =============================================================================

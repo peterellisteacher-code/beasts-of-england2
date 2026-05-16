@@ -77,6 +77,10 @@ func on_commandments_revealed() -> void:
 # =============================================================================
 
 func _trigger_gatekeeper() -> void:
+	# _act_locked is set by whichever resolution (gatekeeper or loss) fires
+	# first this frame, so a same-frame counter race cannot trigger both.
+	if _act_locked:
+		return
 	_gatekeeper_triggered = true
 	_act_locked = true
 	boxer_player.can_move = false
@@ -85,4 +89,7 @@ func _trigger_gatekeeper() -> void:
 
 
 func _trigger_loss() -> void:
+	if _act_locked:
+		return
+	_act_locked = true
 	SceneManager.go_to_scene("res://scenes/act2/revolution_loss.tscn")

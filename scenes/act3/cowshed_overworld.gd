@@ -14,6 +14,10 @@ const TOTAL_BATTLES: int = 4
 
 @onready var _encounter_zones: Array[Area2D] = []
 
+# One-shot guard — repeated body_entered events must not queue duplicate battle
+# loads. The scene is re-instantiated on each return, so it never needs resetting.
+var _battle_starting: bool = false
+
 # =============================================================================
 # Built-in virtual methods
 # =============================================================================
@@ -42,9 +46,12 @@ func _on_zone_body_entered(body: Node2D, battle_index: int) -> void:
 
 
 func _try_start_battle(battle_index: int) -> void:
+	if _battle_starting:
+		return
 	# Only allow entering the current (next unfinished) battle
 	if battle_index != GameState.battle_wins:
 		return
+	_battle_starting = true
 	GameState.save_to_disk()
 	get_tree().set_meta("battle_index", battle_index)
 	SceneManager.go_to_scene("res://scenes/act3/battle/battle_scene.tscn")

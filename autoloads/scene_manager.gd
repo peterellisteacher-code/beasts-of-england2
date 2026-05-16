@@ -26,10 +26,24 @@ func go_to_act(act_number: int) -> void:
 	go_to_scene(ACT_SCENES[act_number])
 
 
+# Guards against two same-frame callers (e.g. overlapping body_entered signals)
+# each queueing a scene change — the second would fire into an already-freed tree.
+var _is_changing: bool = false
+
+
 func go_to_scene(path: String) -> void:
 	if path.is_empty():
 		push_error("SceneManager.go_to_scene: path is empty")
 		return
+	if _is_changing:
+		return
+	_is_changing = true
 	# Deferred so signal-handler callers (body_entered, etc.) don't tear down
 	# CollisionObjects during a physics callback.
-	get_tree().call_deferred("change_scene_to_file", path)
+	_deferred_change_scene.call_deferred(path)
+
+
+func _deferred_change_scene(path: String) -> void:
+	get_tree().change_scene_to_file(path)
+	# Clear the guard once the change is initiated so later transitions work.
+	_is_changing = false

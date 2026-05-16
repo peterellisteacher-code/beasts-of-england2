@@ -39,6 +39,9 @@ var _grid_cols: int = INITIAL_COLS
 var _round_count: int = 0
 var _phase: TacticsPhase = TacticsPhase.AWAIT_PLAYER_MOVE
 var _valid_moves: Array[Vector2i] = []
+# One-shot guard — two coroutine paths (Snowball HP<=0, Snowball pushed off the
+# grid) can both reach _trigger_game_over in the same round.
+var _game_over_triggered: bool = false
 
 # Unit references
 var _snowball: UnitBase = null
@@ -408,6 +411,9 @@ func _update_hp_label() -> void:
 
 
 func _trigger_game_over() -> void:
+	if _game_over_triggered:
+		return
+	_game_over_triggered = true
 	game_over.emit()
 	GameState.snowball_expelled = true
 	GameState.complete_act(4)
