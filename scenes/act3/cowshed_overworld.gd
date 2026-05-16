@@ -59,7 +59,9 @@ func _update_encounter_zones() -> void:
 
 
 func _check_act_complete() -> void:
-	if GameState.battle_wins >= TOTAL_BATTLES:
+	# Guard: only run act-complete logic once — if current_act has already advanced
+	# past 3, corrupt_commandment and complete_act have already fired.
+	if GameState.battle_wins >= TOTAL_BATTLES and GameState.current_act <= 3:
 		GameState.corrupt_commandment(2)
 		GameState.complete_act(3)
 		SceneManager.go_to_scene("res://scenes/act4/politics_tactics.tscn")

@@ -55,12 +55,12 @@ var _queued_move_index: int = -1
 # Onready references
 # =============================================================================
 
-@onready var _boxer_hp_bar: ProgressBar = $UI/BoxerPanel/HPBar
-@onready var _enemy_hp_bar: ProgressBar = $UI/EnemyPanel/HPBar
-@onready var _boxer_hp_label: Label = $UI/BoxerPanel/HPLabel
-@onready var _enemy_hp_label: Label = $UI/EnemyPanel/HPLabel
-@onready var _boxer_name_label: Label = $UI/BoxerPanel/NameLabel
-@onready var _enemy_name_label: Label = $UI/EnemyPanel/NameLabel
+@onready var _boxer_hp_bar: ProgressBar = $UI/BoxerPanel/VBoxContainer/HPBar
+@onready var _enemy_hp_bar: ProgressBar = $UI/EnemyPanel/VBoxContainer/HPBar
+@onready var _boxer_hp_label: Label = $UI/BoxerPanel/VBoxContainer/HPLabel
+@onready var _enemy_hp_label: Label = $UI/EnemyPanel/VBoxContainer/HPLabel
+@onready var _boxer_name_label: Label = $UI/BoxerPanel/VBoxContainer/NameLabel
+@onready var _enemy_name_label: Label = $UI/EnemyPanel/VBoxContainer/NameLabel
 @onready var _battle_log: RichTextLabel = $UI/BattleLog
 @onready var _move_buttons_container: GridContainer = $UI/MoveButtons
 @onready var _boxer_sprite: AnimatedSprite2D = $BoxerSprite
@@ -71,11 +71,17 @@ var _queued_move_index: int = -1
 # =============================================================================
 
 func _ready() -> void:
-	_battle_index = get_tree().get_meta("battle_index", 0)
+	_battle_index = clampi(
+		get_tree().get_meta("battle_index", 0) as int,
+		0, MoveData.ENEMIES.size() - 1
+	)
 	_setup_boxer()
 	_setup_enemy()
 	_setup_move_buttons()
 	_update_hud()
+	# _log is a coroutine; fire-and-forget here is fine for the opening message
+	# because _transition_to follows immediately and buttons are disabled until
+	# _enter_phase enables them on the next frame.
 	_log("A battle begins! Boxer faces " + _enemy_data["name"] + "!")
 
 	# Wire animation_finished so BoxerSprite returns to idle after attack
@@ -99,9 +105,15 @@ func _physics_process(_delta: float) -> void:
 
 func _transition_to(new_phase: BattlePhase) -> void:
 	_phase = new_phase
-	_phase_entered = false
-	# AWAIT_PLAYER_INPUT is driven by button callbacks, not physics_process
-	set_physics_process(new_phase != BattlePhase.AWAIT_PLAYER_INPUT)
+	_phase_entered = true
+	# AWAIT_PLAYER_INPUT entry is called directly here — physics_process is disabled for it
+	# so we must call _enter_phase ourselves instead of waiting for the next physics frame.
+	if new_phase == BattlePhase.AWAIT_PLAYER_INPUT:
+		set_physics_process(false)
+		_enter_phase(new_phase)
+	else:
+		set_physics_process(true)
+		_phase_entered = false  # let _physics_process trigger _enter_phase normally
 
 
 func _enter_phase(phase: BattlePhase) -> void:
@@ -165,11 +177,25 @@ func _setup_move_buttons() -> void:
 
 
 func _refresh_move_buttons() -> void:
+	# Check whether all moves are out of PP — if so show Struggle fallback on slot 0
+	var all_pp_empty: bool = true
+	for move_key: String in _boxer_moves:
+		if _boxer_pp.get(move_key, 0) > 0:
+			all_pp_empty = false
+			break
+
 	for i: int in range(_move_buttons_container.get_child_count()):
 		var btn: Button = _move_buttons_container.get_child(i) as Button
 		if btn == null:
 			continue
-		if i < _boxer_moves.size():
+		if all_pp_empty and i == 0:
+			# Struggle: always usable, index -1 signals special handling
+			btn.text = "STRUGGLE"
+			btn.disabled = false
+			btn.visible = true
+		elif all_pp_empty:
+			btn.visible = false
+		elif i < _boxer_moves.size():
 			var move_key: String = _boxer_moves[i]
 			var move: Dictionary = MoveData.MOVES[move_key]
 			var pp_now: int = _boxer_pp[move_key]
@@ -189,10 +215,22 @@ func _run_player_move() -> void:
 	var move_index: int = _queued_move_index
 	_queued_move_index = -1
 
-	var move_key: String = _boxer_moves[move_index]
-	_boxer_pp[move_key] -= 1
-
-	await _execute_move(move_key, MoveData.MOVES[move_key], true)
+	if move_index == -1:
+		# Struggle fallback — 50 base power, no PP cost, bypasses MoveData
+		var struggle_move: Dictionary = {
+			"name": "Struggle",
+			"display": "STRUGGLE",
+			"base_power": 50,
+			"type": "Normal",
+			"pp": 0,
+			"max_pp": 0,
+			"effect": "none",
+		}
+		await _execute_move("struggle", struggle_move, true)
+	else:
+		var move_key: String = _boxer_moves[move_index]
+		_boxer_pp[move_key] -= 1
+		await _execute_move(move_key, MoveData.MOVES[move_key], true)
 
 	if _enemy_hp <= 0:
 		_transition_to(BattlePhase.WIN)
@@ -223,7 +261,7 @@ func _run_enemy_move() -> void:
 
 
 func _run_win() -> void:
-	_log("Boxer is victorious!")
+	await _log("Boxer is victorious!")
 	GameState.battle_wins += 1
 
 	var unlock_key: String = MoveData.MOVE_UNLOCKS.get(_battle_index + 1, "")
@@ -231,7 +269,7 @@ func _run_win() -> void:
 		GameState.boxer_moves.append(unlock_key)
 		GameState.save_to_disk()
 		await get_tree().create_timer(0.5).timeout
-		_log("Boxer learned: " + MoveData.MOVES[unlock_key]["display"] + "!")
+		await _log("Boxer learned: " + MoveData.MOVES[unlock_key]["display"] + "!")
 	else:
 		GameState.save_to_disk()
 
@@ -240,7 +278,7 @@ func _run_win() -> void:
 
 
 func _run_lose() -> void:
-	_log("Boxer has fallen...")
+	await _log("Boxer has fallen...")
 	await get_tree().create_timer(2.0).timeout
 	get_tree().change_scene_to_file("res://scenes/act3/battle/battle_loss.tscn")
 
@@ -252,6 +290,21 @@ func _run_lose() -> void:
 func _on_move_button_pressed(move_index: int) -> void:
 	if _phase != BattlePhase.AWAIT_PLAYER_INPUT:
 		return
+
+	# Check if we are in Struggle mode (all moves at 0 PP)
+	var all_pp_empty: bool = true
+	for move_key: String in _boxer_moves:
+		if _boxer_pp.get(move_key, 0) > 0:
+			all_pp_empty = false
+			break
+
+	if all_pp_empty:
+		# Struggle is shown on button 0; use sentinel -1 to signal it
+		if move_index == 0:
+			_queued_move_index = -1  # -1 = Struggle
+			_transition_to(BattlePhase.PLAYER_MOVE)
+		return
+
 	if move_index >= _boxer_moves.size():
 		return
 	var move_key: String = _boxer_moves[move_index]
@@ -260,13 +313,11 @@ func _on_move_button_pressed(move_index: int) -> void:
 
 	_queued_move_index = move_index
 	_transition_to(BattlePhase.PLAYER_MOVE)
-	# Re-enable physics_process so the state machine can enter PLAYER_MOVE
-	set_physics_process(true)
 
 
 func _execute_move(move_key: String, move: Dictionary, is_player: bool) -> void:
 	var attacker_name: String = "Boxer" if is_player else _enemy_data["name"]
-	_log(attacker_name + " uses " + move["name"] + "!")
+	await _log(attacker_name + " uses " + move["name"] + "!")
 	await get_tree().create_timer(0.5).timeout
 
 	var effect: String = move.get("effect", "none")
@@ -278,50 +329,50 @@ func _execute_move(move_key: String, move: Dictionary, is_player: bool) -> void:
 
 	match effect:
 		"none":
-			_deal_damage(move, is_player)
+			await _deal_damage(move, is_player)
 		"raise_defense":
 			if is_player:
 				_boxer_defense_stage = mini(_boxer_defense_stage + 1, 6)
-				_log("Boxer's defence rose!")
+				await _log("Boxer's defence rose!")
 			else:
 				_enemy_defense_stage = mini(_enemy_defense_stage + 1, 6)
-				_log(_enemy_data["name"] + "'s defence rose!")
+				await _log(_enemy_data["name"] + "'s defence rose!")
 		"raise_attack":
 			if is_player:
 				_boxer_attack_stage = mini(_boxer_attack_stage + 1, 6)
-				_log("Boxer's attack rose!")
+				await _log("Boxer's attack rose!")
 			else:
 				_enemy_attack_stage = mini(_enemy_attack_stage + 1, 6)
-				_log(_enemy_data["name"] + "'s attack rose!")
+				await _log(_enemy_data["name"] + "'s attack rose!")
 		"raise_defense_2":
 			if is_player:
 				_boxer_defense_stage = mini(_boxer_defense_stage + 2, 6)
-				_log("Boxer's defence sharply rose!")
+				await _log("Boxer's defence sharply rose!")
 			else:
 				_enemy_defense_stage = mini(_enemy_defense_stage + 2, 6)
-				_log(_enemy_data["name"] + "'s defence sharply rose!")
+				await _log(_enemy_data["name"] + "'s defence sharply rose!")
 		"lower_attack":
 			if is_player:
 				_enemy_attack_stage = maxi(_enemy_attack_stage - 1, -6)
-				_log(_enemy_data["name"] + "'s attack fell!")
+				await _log(_enemy_data["name"] + "'s attack fell!")
 			else:
 				_boxer_attack_stage = maxi(_boxer_attack_stage - 1, -6)
-				_log("Boxer's attack fell!")
+				await _log("Boxer's attack fell!")
 		"survive_one_hit":
 			_boxer_enduring = true
-			_log("Boxer braces — he will endure this turn!")
+			await _log("Boxer braces — he will endure this turn!")
 		"heal_10hp":
 			_boxer_hp = mini(_boxer_max_hp, _boxer_hp + 10)
-			_log("Solidarity restores Boxer's spirit! (+10 HP)")
+			await _log("Solidarity restores Boxer's spirit! (+10 HP)")
 		"flinch_30pct":
-			_deal_damage(move, is_player)
+			await _deal_damage(move, is_player)
 		"double_next_turn":
-			_deal_damage(move, is_player)
+			await _deal_damage(move, is_player)
 		"miss_20pct":
 			if randf() < 0.2:
-				_log("But it missed!")
+				await _log("But it missed!")
 			else:
-				_deal_damage(move, is_player)
+				await _deal_damage(move, is_player)
 
 	_update_hud()
 	await get_tree().create_timer(0.3).timeout
@@ -337,16 +388,16 @@ func _deal_damage(move: Dictionary, is_player: bool) -> void:
 		var def: int = int(float(_enemy_data["defense"]) * _stage_multiplier(_enemy_defense_stage))
 		var dmg: int = MoveData.calculate_damage(_boxer_level, base_power, atk, def)
 		_enemy_hp = maxi(0, _enemy_hp - dmg)
-		_log("Boxer dealt " + str(dmg) + " damage!")
+		await _log("Boxer dealt " + str(dmg) + " damage!")
 	else:
 		var atk: int = int(float(_enemy_data["attack"]) * _stage_multiplier(_enemy_attack_stage))
 		var def: int = int(float(_boxer_defense) * _stage_multiplier(_boxer_defense_stage))
 		var dmg: int = MoveData.calculate_damage(_enemy_data["level"], base_power, atk, def)
 		if _boxer_enduring and (_boxer_hp - dmg) <= 0:
 			dmg = _boxer_hp - 1
-			_log("Boxer endured the hit!")
+			await _log("Boxer endured the hit!")
 		_boxer_hp = maxi(0, _boxer_hp - dmg)
-		_log(_enemy_data["name"] + " dealt " + str(dmg) + " damage to Boxer!")
+		await _log(_enemy_data["name"] + " dealt " + str(dmg) + " damage to Boxer!")
 
 
 # =============================================================================
