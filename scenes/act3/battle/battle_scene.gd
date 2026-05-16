@@ -428,6 +428,22 @@ func _update_hud() -> void:
 	_enemy_hp_bar.value = _enemy_hp
 	_enemy_hp_label.text = str(_enemy_hp) + "/" + str(_enemy_data["max_hp"])
 
+	_tint_hp_bar(_boxer_hp_bar, float(_boxer_hp) / float(_boxer_max_hp))
+	_tint_hp_bar(_enemy_hp_bar, float(_enemy_hp) / float(_enemy_data["max_hp"]))
+
+
+func _tint_hp_bar(bar: ProgressBar, frac: float) -> void:
+	# HP bar shifts animalism-green -> wheat-gold -> propaganda-red as HP drops.
+	var sb: StyleBoxFlat = bar.get_theme_stylebox("fill") as StyleBoxFlat
+	if sb == null:
+		return
+	if frac > 0.5:
+		sb.bg_color = Color(0.32, 0.56, 0.2)
+	elif frac > 0.2:
+		sb.bg_color = Color(0.82, 0.64, 0.24)
+	else:
+		sb.bg_color = Color(0.66, 0.13, 0.11)
+
 
 func _log(text: String) -> void:
 	_battle_log.append_text(text + "\n")
