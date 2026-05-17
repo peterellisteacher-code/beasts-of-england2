@@ -1,11 +1,11 @@
-[gd_scene load_steps=68 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=74 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/act1/ui/hearts_hud.tscn" id="3"]
 [ext_resource type="Script" path="res://scenes/act1/objects/moses_circler.gd" id="4"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/grass_top.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tiles/soil_fill.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/soil_tile.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/cabin/cabin_full.png" id="7"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/trees/pine_full.png" id="8"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/trees/pine_med.png" id="9"]
@@ -45,6 +45,12 @@
 [ext_resource type="Script" path="res://scenes/act1/objects/fireflies.gd" id="46"]
 [ext_resource type="Script" path="res://scenes/act1/objects/moon_follow.gd" id="47"]
 [ext_resource type="Script" path="res://scenes/act1/objects/chimney_smoke.gd" id="48"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/vignette.png" id="49"]
+[ext_resource type="Script" path="res://scenes/act1/objects/lantern_flicker.gd" id="50"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/farmhouse.png" id="51"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/oak_tree.png" id="52"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/chicken_coop.png" id="53"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/hen.png" id="54"]
 
 [sub_resource type="AtlasTexture" id="Moses_fly0"]
 atlas = ExtResource("36")
@@ -174,7 +180,7 @@ size = Vector2(80.0, 160.0)
 script = ExtResource("1")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color(0.32, 0.38, 0.62, 1)
+color = Color(0.26, 0.3, 0.47, 1)
 
 [node name="NightSky" type="ColorRect" parent="."]
 offset_left = -2000.0
@@ -193,11 +199,11 @@ modulate = Color(2.4, 2.3, 2.0, 1)
 script = ExtResource("47")
 
 [node name="HillsBack" type="Polygon2D" parent="World"]
-color = Color(0.55, 0.55, 0.7, 1)
+color = Color(0.34, 0.36, 0.48, 1)
 polygon = PackedVector2Array(-1000, 580, -650, 480, -300, 540, 50, 470, 350, 520, 700, 440, 1050, 500, 1400, 450, 1750, 510, 2100, 460, 2450, 500, 2450, 720, -1000, 720)
 
 [node name="HillsMid" type="Polygon2D" parent="World"]
-color = Color(0.42, 0.45, 0.6, 1)
+color = Color(0.28, 0.3, 0.42, 1)
 polygon = PackedVector2Array(-1000, 600, -700, 520, -400, 570, -100, 500, 200, 550, 500, 490, 800, 540, 1100, 480, 1400, 530, 1700, 470, 2000, 520, 2300, 500, 2450, 540, 2450, 720, -1000, 720)
 
 [node name="Star0" type="Sprite2D" parent="World"]
@@ -395,60 +401,61 @@ position = Vector2(1820, 470)
 texture = ExtResource("7")
 scale = Vector2(0.42, 0.42)
 
-[node name="MidTree0" type="Sprite2D" parent="World"]
-position = Vector2(420, 490)
-texture = ExtResource("9")
-scale = Vector2(0.6, 0.6)
-
-[node name="MidTree1" type="Sprite2D" parent="World"]
-position = Vector2(640, 480)
-texture = ExtResource("10")
-scale = Vector2(0.85, 0.85)
-
-[node name="MidTree2" type="Sprite2D" parent="World"]
-position = Vector2(820, 490)
-texture = ExtResource("8")
-scale = Vector2(0.5, 0.5)
-
-[node name="MidTree3" type="Sprite2D" parent="World"]
-position = Vector2(1280, 490)
-texture = ExtResource("9")
-scale = Vector2(0.7, 0.7)
-
-[node name="MidTree4" type="Sprite2D" parent="World"]
-position = Vector2(1480, 480)
-texture = ExtResource("8")
-scale = Vector2(0.55, 0.55)
-
-[node name="MidTree5" type="Sprite2D" parent="World"]
-position = Vector2(2100, 490)
-texture = ExtResource("10")
-scale = Vector2(0.95, 0.95)
-
-[node name="NearTree0" type="Sprite2D" parent="World"]
-position = Vector2(160, 530)
-texture = ExtResource("8")
-scale = Vector2(1.0, 1.0)
-
-[node name="NearTree1" type="Sprite2D" parent="World"]
-position = Vector2(560, 525)
-texture = ExtResource("9")
+[node name="JonesFarmhouse" type="Sprite2D" parent="World"]
+position = Vector2(840, 392)
+texture = ExtResource("51")
 scale = Vector2(1.15, 1.15)
 
-[node name="NearTree2" type="Sprite2D" parent="World"]
-position = Vector2(1180, 530)
-texture = ExtResource("8")
+[node name="JonesWindow" type="PointLight2D" parent="World/JonesFarmhouse"]
+position = Vector2(-26, 36)
+energy = 1.05
+color = Color(1, 0.78, 0.42, 1)
+texture_scale = 0.5
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="NearTree0" type="Sprite2D" parent="World"]
+position = Vector2(160, 453)
+texture = ExtResource("52")
 scale = Vector2(1.05, 1.05)
 
+[node name="NearTree1" type="Sprite2D" parent="World"]
+position = Vector2(540, 466)
+texture = ExtResource("52")
+scale = Vector2(0.92, 0.92)
+flip_h = true
+
+[node name="NearTree2" type="Sprite2D" parent="World"]
+position = Vector2(1180, 448)
+texture = ExtResource("52")
+scale = Vector2(1.1, 1.1)
+
 [node name="NearTree3" type="Sprite2D" parent="World"]
-position = Vector2(1660, 520)
-texture = ExtResource("9")
-scale = Vector2(1.2, 1.2)
+position = Vector2(1680, 473)
+texture = ExtResource("52")
+scale = Vector2(0.85, 0.85)
+flip_h = true
 
 [node name="NearTree4" type="Sprite2D" parent="World"]
-position = Vector2(2160, 530)
-texture = ExtResource("8")
-scale = Vector2(0.95, 0.95)
+position = Vector2(2150, 458)
+texture = ExtResource("52")
+scale = Vector2(1, 1)
+
+[node name="Oak0" type="Sprite2D" parent="World"]
+position = Vector2(660, 412)
+texture = ExtResource("52")
+scale = Vector2(1.4, 1.4)
+
+[node name="Oak1" type="Sprite2D" parent="World"]
+position = Vector2(1380, 405)
+texture = ExtResource("52")
+scale = Vector2(1.5, 1.5)
+flip_h = true
+
+[node name="Oak2" type="Sprite2D" parent="World"]
+position = Vector2(1980, 416)
+texture = ExtResource("52")
+scale = Vector2(1.32, 1.32)
 
 [node name="Waterwell" type="Sprite2D" parent="World"]
 position = Vector2(940, 555)
@@ -486,42 +493,42 @@ texture = ExtResource("17")
 scale = Vector2(1.3, 1.3)
 
 [node name="BackFence0" type="Sprite2D" parent="World"]
-position = Vector2(0, 595)
+position = Vector2(0, 536)
 texture = ExtResource("20")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence1" type="Sprite2D" parent="World"]
-position = Vector2(80, 595)
+position = Vector2(80, 536)
 texture = ExtResource("19")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence2" type="Sprite2D" parent="World"]
-position = Vector2(160, 595)
+position = Vector2(160, 536)
 texture = ExtResource("19")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence3" type="Sprite2D" parent="World"]
-position = Vector2(240, 595)
+position = Vector2(240, 536)
 texture = ExtResource("19")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence4" type="Sprite2D" parent="World"]
-position = Vector2(320, 595)
+position = Vector2(320, 536)
 texture = ExtResource("21")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence5" type="Sprite2D" parent="World"]
-position = Vector2(1700, 595)
+position = Vector2(1700, 536)
 texture = ExtResource("20")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence6" type="Sprite2D" parent="World"]
-position = Vector2(1780, 595)
+position = Vector2(1780, 536)
 texture = ExtResource("19")
 scale = Vector2(1.6, 1.6)
 
 [node name="BackFence7" type="Sprite2D" parent="World"]
-position = Vector2(1860, 595)
+position = Vector2(1860, 536)
 texture = ExtResource("21")
 scale = Vector2(1.6, 1.6)
 
@@ -532,6 +539,7 @@ position = Vector2(1300.0, 600.0)
 shape = SubResource("GroundShape")
 
 [node name="GrassTop" type="TextureRect" parent="World/Ground"]
+self_modulate = Color(0.5, 0.56, 0.5, 1)
 offset_left = -1700.0
 offset_top = -40.0
 offset_right = 1700.0
@@ -541,6 +549,7 @@ expand_mode = 1
 stretch_mode = 1
 
 [node name="SoilFill" type="TextureRect" parent="World/Ground"]
+light_mask = 2
 offset_left = -1700.0
 offset_top = -24.0
 offset_right = 1700.0
@@ -582,116 +591,55 @@ position = Vector2(2093, 578)
 texture = ExtResource("28")
 scale = Vector2(1.57, 1.57)
 
-[node name="Mushroom0" type="Sprite2D" parent="World"]
-position = Vector2(347, 582)
-texture = ExtResource("29")
-scale = Vector2(1.72, 1.72)
+[node name="Coop0" type="Sprite2D" parent="World"]
+position = Vector2(120, 458)
+texture = ExtResource("53")
+scale = Vector2(1, 1)
+
+[node name="Coop1" type="Sprite2D" parent="World"]
+position = Vector2(470, 470)
+texture = ExtResource("53")
+scale = Vector2(0.86, 0.86)
 flip_h = true
 
-[node name="Mushroom1" type="Sprite2D" parent="World"]
-position = Vector2(793, 582)
-texture = ExtResource("30")
-scale = Vector2(1.31, 1.31)
+[node name="Hen0" type="Sprite2D" parent="World"]
+position = Vector2(250, 530)
+texture = ExtResource("54")
+scale = Vector2(0.62, 0.62)
 
-[node name="Mushroom2" type="Sprite2D" parent="World"]
-position = Vector2(1488, 582)
-texture = ExtResource("31")
-scale = Vector2(1.84, 1.84)
+[node name="Hen1" type="Sprite2D" parent="World"]
+position = Vector2(338, 533)
+texture = ExtResource("54")
+scale = Vector2(0.56, 0.56)
 flip_h = true
 
-[node name="Mushroom3" type="Sprite2D" parent="World"]
-position = Vector2(1874, 582)
-texture = ExtResource("32")
-scale = Vector2(1.42, 1.42)
+[node name="Hen2" type="Sprite2D" parent="World"]
+position = Vector2(560, 531)
+texture = ExtResource("54")
+scale = Vector2(0.6, 0.6)
 
-[node name="Tuft0" type="Sprite2D" parent="World"]
-position = Vector2(1761, 581)
-texture = ExtResource("35")
-scale = Vector2(1.95, 1.95)
+[node name="Hen3" type="Sprite2D" parent="World"]
+position = Vector2(690, 534)
+texture = ExtResource("54")
+scale = Vector2(0.54, 0.54)
 flip_h = true
 
-[node name="Tuft1" type="Sprite2D" parent="World"]
-position = Vector2(1652, 582)
-texture = ExtResource("35")
-scale = Vector2(2.35, 2.35)
-
-[node name="Tuft2" type="Sprite2D" parent="World"]
-position = Vector2(912, 581)
-texture = ExtResource("35")
-scale = Vector2(2.07, 2.07)
-flip_h = true
-
-[node name="Tuft3" type="Sprite2D" parent="World"]
-position = Vector2(841, 583)
-texture = ExtResource("35")
-scale = Vector2(1.88, 1.88)
-
-[node name="Tuft4" type="Sprite2D" parent="World"]
-position = Vector2(1037, 582)
-texture = ExtResource("35")
-scale = Vector2(2.41, 2.41)
-flip_h = true
-
-[node name="Tuft5" type="Sprite2D" parent="World"]
-position = Vector2(1124, 581)
-texture = ExtResource("35")
-scale = Vector2(1.93, 1.93)
-
-[node name="Tuft6" type="Sprite2D" parent="World"]
-position = Vector2(652, 582)
-texture = ExtResource("35")
-scale = Vector2(2.28, 2.28)
-flip_h = true
-
-[node name="Tuft7" type="Sprite2D" parent="World"]
-position = Vector2(461, 581)
-texture = ExtResource("35")
-scale = Vector2(2.14, 2.14)
-
-
-[node name="FrontFence0" type="Sprite2D" parent="World"]
-position = Vector2(80, 620)
-texture = ExtResource("20")
-scale = Vector2(2.2, 2.2)
-
-[node name="FrontFence1" type="Sprite2D" parent="World"]
-position = Vector2(160, 620)
-texture = ExtResource("21")
-scale = Vector2(2.2, 2.2)
-
-[node name="FrontFence2" type="Sprite2D" parent="World"]
-position = Vector2(1480, 620)
-texture = ExtResource("20")
-scale = Vector2(2.2, 2.2)
-
-[node name="FrontFence3" type="Sprite2D" parent="World"]
-position = Vector2(1560, 620)
-texture = ExtResource("21")
-scale = Vector2(2.2, 2.2)
-
-[node name="FrontFence4" type="Sprite2D" parent="World"]
-position = Vector2(2200, 620)
-texture = ExtResource("20")
-scale = Vector2(2.2, 2.2)
-
-[node name="FrontFence5" type="Sprite2D" parent="World"]
-position = Vector2(2280, 620)
-texture = ExtResource("21")
-scale = Vector2(2.2, 2.2)
 
 [node name="OldMajor" parent="World" instance=ExtResource("2")]
 position = Vector2(180.0, 470.0)
 z_index = 1
 
 [node name="LanternGlow" type="PointLight2D" parent="World/OldMajor"]
-position = Vector2(-40.0, 85.0)
-energy = 1.9
-texture_scale = 2.6
+position = Vector2(8.0, 26.0)
+energy = 1.7
+texture_scale = 2.5
 range_layer_max = 0
 texture = ExtResource("38")
+script = ExtResource("50")
 
 [node name="Camera2D" type="Camera2D" parent="World/OldMajor"]
 enabled = true
+offset = Vector2(0, -88)
 zoom = Vector2(1.5, 1.5)
 limit_left = -100
 limit_right = 3100
@@ -705,14 +653,14 @@ position = Vector2(1500.0, 200.0)
 
 [node name="Moses" type="AnimatedSprite2D" parent="World/MosesNest"]
 scale = Vector2(1.1, 1.1)
-modulate = Color(1.3, 1.35, 1.5, 1)
+modulate = Color(1, 1.05, 1.18, 1)
 sprite_frames = SubResource("SpriteFrames_Moses")
 animation = &"fly"
 autoplay = "fly"
 script = ExtResource("4")
 
 [node name="MosesGlow" type="PointLight2D" parent="World/MosesNest/Moses"]
-energy = 0.35
+energy = 0.22
 color = Color(0.7, 0.8, 1.0, 1)
 texture_scale = 1.8
 range_layer_max = 0
@@ -731,14 +679,14 @@ position = Vector2(2400.0, 500.0)
 shape = SubResource("BarnDoorShape")
 
 [node name="BarnVisual" type="Sprite2D" parent="World/BarnDoor"]
-position = Vector2(-20.0, -200.0)
+position = Vector2(-20.0, -172.0)
 texture = ExtResource("7")
 scale = Vector2(1.4, 1.4)
 
 [node name="BarnLight" type="PointLight2D" parent="World/BarnDoor"]
 position = Vector2(0.0, -120.0)
 color = Color(0.769, 0.635, 0.290, 1)
-energy = 1.4
+energy = 1.0
 texture_scale = 3.2
 range_layer_max = 0
 texture = ExtResource("38")
@@ -747,6 +695,18 @@ texture = ExtResource("38")
 stream = ExtResource("40")
 bus = &"SFX"
 autoplay = false
+
+[node name="Vignette" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="VignetteRect" type="TextureRect" parent="Vignette"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("49")
+expand_mode = 1
+mouse_filter = 2
 
 [node name="HeartsHUD" parent="." instance=ExtResource("3")]
 
@@ -760,7 +720,7 @@ animation = &"chew"
 autoplay = "chew"
 
 [node name="SleepingCat" type="AnimatedSprite2D" parent="World"]
-position = Vector2(430, 570)
+position = Vector2(430, 533)
 scale = Vector2(1.6, 1.6)
 modulate = Color(0.75, 0.72, 0.65, 0.9)
 sprite_frames = SubResource("SpriteFrames_Cat")

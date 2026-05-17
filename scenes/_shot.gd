@@ -11,6 +11,12 @@ func _ready() -> void:
 	var out: String = args[1] if args.size() > 1 else "user://shot.png"
 	var scene: Node = (load(target) as PackedScene).instantiate()
 	add_child(scene)
+	# Optional 3rd arg: move the "player" node to this world-x so the
+	# camera pans there — lets us screenshot any part of a long level.
+	if args.size() > 2:
+		var players: Array = get_tree().get_nodes_in_group(&"player")
+		if players.size() > 0:
+			(players[0] as Node2D).global_position.x = args[2].to_float()
 	await get_tree().create_timer(2.0).timeout
 	var intro: Node = scene.get_node_or_null("ActIntro")
 	if intro != null:
