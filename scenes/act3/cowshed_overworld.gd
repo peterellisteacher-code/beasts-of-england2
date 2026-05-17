@@ -6,7 +6,9 @@ extends Node2D
 # Constants
 # =============================================================================
 
-const TOTAL_BATTLES: int = 4
+## Five visible enemies stand in the farmyard; the sixth (Mr Jones) is the
+## secret boss, revealed only once the five men are beaten.
+const TOTAL_BATTLES: int = 6
 
 # =============================================================================
 # Onready references
@@ -58,11 +60,18 @@ func _try_start_battle(battle_index: int) -> void:
 
 
 func _update_encounter_zones() -> void:
-	# Enable only the zone matching the next battle to win
+	# Enable only the zone matching the next battle to win.
 	var next_battle: int = GameState.battle_wins
 	for i: int in range(_encounter_zones.size()):
-		_encounter_zones[i].monitoring = (i == next_battle)
-		_encounter_zones[i].monitorable = (i == next_battle)
+		var is_current: bool = (i == next_battle)
+		_encounter_zones[i].monitoring = is_current
+		_encounter_zones[i].monitorable = is_current
+		# Only the current enemy stands in the farmyard — beaten enemies are
+		# gone, and later ones (the secret Mr Jones included) stay hidden
+		# until it is their turn.
+		var enemy: CanvasItem = _encounter_zones[i].get_node_or_null(^"Enemy") as CanvasItem
+		if enemy != null:
+			enemy.visible = is_current
 
 
 func _check_act_complete() -> void:

@@ -167,6 +167,12 @@ func _setup_enemy() -> void:
 	_enemy_hp = _enemy_data["max_hp"]
 	_enemy_attack_stage = 0
 	_enemy_defense_stage = 0
+	# Each enemy carries its own SpriteFrames — swap the EnemySprite to it.
+	var sf_path: String = _enemy_data.get("sprite_frames", "")
+	if sf_path != "" and ResourceLoader.exists(sf_path):
+		var sf: SpriteFrames = load(sf_path) as SpriteFrames
+		if sf != null:
+			_enemy_sprite.sprite_frames = sf
 
 
 func _setup_move_buttons() -> void:

@@ -263,9 +263,9 @@ modulate = Color(0, 0, 0, 0.46)
 texture = ExtResource("6")
 
 [node name="EnemyShadow" type="Sprite2D" parent="."]
-position = Vector2(980, 366)
-scale = Vector2(0.46, 0.2)
-modulate = Color(0, 0, 0, 0.46)
+position = Vector2(980, 372)
+scale = Vector2(0.62, 0.26)
+modulate = Color(0, 0, 0, 0.52)
 texture = ExtResource("6")
 
 [node name="BoxerSprite" type="AnimatedSprite2D" parent="."]
@@ -276,9 +276,9 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="EnemySprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(980, 304)
-scale = Vector2(1.6, 1.6)
-flip_h = true
+position = Vector2(980, 245)
+scale = Vector2(2.2, 2.2)
+flip_h = false
 sprite_frames = SubResource("enemy_frames")
 animation = &"idle"
 autoplay = "idle"

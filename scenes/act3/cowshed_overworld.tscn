@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://act3_cowshed"]
+[gd_scene load_steps=35 format=3 uid="uid://act3_cowshed"]
 
 [ext_resource type="Script" path="res://scenes/act3/cowshed_overworld.gd" id="scn_root"]
 [ext_resource type="Script" path="res://scripts/world/ground_builder.gd" id="scn_ground"]
@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/fx/vignette.png" id="tex_vignette"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/dirt_patch_act3.png" id="tex_dirt"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fx/shadow.png" id="tex_shadow"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tileset/signpost.png" id="tex_signpost"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/cowshed.png" id="tex_cowshed"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/barrel.png" id="tex_barrel"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/bush.png" id="tex_bush"]
@@ -27,6 +26,12 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tall_grass.png" id="tex_tall_grass"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tree_autumn.png" id="tex_tree_autumn"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tileset/props/tree_green.png" id="tex_tree_green"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act3_enemies/jones_pawn_frames.tres" id="ef_1"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act3_enemies/red_archer_frames.tres" id="ef_2"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act3_enemies/foxwood_lancer_frames.tres" id="ef_3"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act3_enemies/stable_lad_frames.tres" id="ef_4"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act3_enemies/pinchfield_brute_frames.tres" id="ef_5"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act3_enemies/mr_jones_frames.tres" id="ef_6"]
 
 [sub_resource type="RectangleShape2D" id="col_cowshed"]
 size = Vector2(210, 26)
@@ -310,120 +315,112 @@ offset = Vector2(-67, -67)
 position = Vector2(640, 580)
 
 [node name="EncounterZone1" type="Area2D" parent="World"]
-position = Vector2(300, 360)
+position = Vector2(190, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone1"]
 shape = SubResource("ZoneShape")
 
 [node name="Shadow" type="Sprite2D" parent="World/EncounterZone1"]
 texture = ExtResource("tex_shadow")
-modulate = Color(1, 1, 1, 0.32)
-scale = Vector2(0.179, 0.179)
+modulate = Color(1, 1, 1, 0.4)
+scale = Vector2(0.42, 0.2)
 
-[node name="Signpost" type="Sprite2D" parent="World/EncounterZone1"]
-centered = false
-texture = ExtResource("tex_signpost")
-offset = Vector2(-27, -115)
-
-[node name="Number" type="Label" parent="World/EncounterZone1"]
-offset_left = -18.0
-offset_top = -98.6
-offset_right = 18.0
-offset_bottom = -64.6
-text = "1"
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
-theme_override_constants/outline_size = 6
+[node name="Enemy" type="AnimatedSprite2D" parent="World/EncounterZone1"]
+offset = Vector2(0, -56)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("ef_1")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="EncounterZone2" type="Area2D" parent="World"]
-position = Vector2(540, 360)
+position = Vector2(370, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone2"]
 shape = SubResource("ZoneShape")
 
 [node name="Shadow" type="Sprite2D" parent="World/EncounterZone2"]
 texture = ExtResource("tex_shadow")
-modulate = Color(1, 1, 1, 0.32)
-scale = Vector2(0.179, 0.179)
+modulate = Color(1, 1, 1, 0.4)
+scale = Vector2(0.42, 0.2)
 
-[node name="Signpost" type="Sprite2D" parent="World/EncounterZone2"]
-centered = false
-texture = ExtResource("tex_signpost")
-offset = Vector2(-27, -115)
-
-[node name="Number" type="Label" parent="World/EncounterZone2"]
-offset_left = -18.0
-offset_top = -98.6
-offset_right = 18.0
-offset_bottom = -64.6
-text = "2"
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
-theme_override_constants/outline_size = 6
+[node name="Enemy" type="AnimatedSprite2D" parent="World/EncounterZone2"]
+offset = Vector2(0, -56)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("ef_2")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="EncounterZone3" type="Area2D" parent="World"]
-position = Vector2(780, 360)
+position = Vector2(550, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone3"]
 shape = SubResource("ZoneShape")
 
 [node name="Shadow" type="Sprite2D" parent="World/EncounterZone3"]
 texture = ExtResource("tex_shadow")
-modulate = Color(1, 1, 1, 0.32)
-scale = Vector2(0.179, 0.179)
+modulate = Color(1, 1, 1, 0.4)
+scale = Vector2(0.42, 0.2)
 
-[node name="Signpost" type="Sprite2D" parent="World/EncounterZone3"]
-centered = false
-texture = ExtResource("tex_signpost")
-offset = Vector2(-27, -115)
-
-[node name="Number" type="Label" parent="World/EncounterZone3"]
-offset_left = -18.0
-offset_top = -98.6
-offset_right = 18.0
-offset_bottom = -64.6
-text = "3"
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
-theme_override_constants/outline_size = 6
+[node name="Enemy" type="AnimatedSprite2D" parent="World/EncounterZone3"]
+offset = Vector2(0, -56)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("ef_3")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="EncounterZone4" type="Area2D" parent="World"]
-position = Vector2(1020, 360)
+position = Vector2(730, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone4"]
 shape = SubResource("ZoneShape")
 
 [node name="Shadow" type="Sprite2D" parent="World/EncounterZone4"]
 texture = ExtResource("tex_shadow")
-modulate = Color(1, 1, 1, 0.32)
-scale = Vector2(0.179, 0.179)
+modulate = Color(1, 1, 1, 0.4)
+scale = Vector2(0.42, 0.2)
 
-[node name="Signpost" type="Sprite2D" parent="World/EncounterZone4"]
-centered = false
-texture = ExtResource("tex_signpost")
-offset = Vector2(-27, -115)
+[node name="Enemy" type="AnimatedSprite2D" parent="World/EncounterZone4"]
+offset = Vector2(0, -56)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("ef_4")
+animation = &"idle"
+autoplay = "idle"
 
-[node name="Number" type="Label" parent="World/EncounterZone4"]
-offset_left = -18.0
-offset_top = -98.6
-offset_right = 18.0
-offset_bottom = -64.6
-text = "4"
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0.1, 0.06, 0.03, 1)
-theme_override_constants/outline_size = 6
+[node name="EncounterZone5" type="Area2D" parent="World"]
+position = Vector2(910, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone5"]
+shape = SubResource("ZoneShape")
+
+[node name="Shadow" type="Sprite2D" parent="World/EncounterZone5"]
+texture = ExtResource("tex_shadow")
+modulate = Color(1, 1, 1, 0.4)
+scale = Vector2(0.42, 0.2)
+
+[node name="Enemy" type="AnimatedSprite2D" parent="World/EncounterZone5"]
+offset = Vector2(0, -56)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("ef_5")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="EncounterZone6" type="Area2D" parent="World"]
+position = Vector2(1090, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EncounterZone6"]
+shape = SubResource("ZoneShape")
+
+[node name="Shadow" type="Sprite2D" parent="World/EncounterZone6"]
+texture = ExtResource("tex_shadow")
+modulate = Color(1, 1, 1, 0.4)
+scale = Vector2(0.42, 0.2)
+
+[node name="Enemy" type="AnimatedSprite2D" parent="World/EncounterZone6"]
+offset = Vector2(0, -56)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("ef_6")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="AmbientLife" type="Node2D" parent="World"]
 script = ExtResource("scn_ambient")
@@ -438,12 +435,12 @@ texture = ExtResource("tex_vignette")
 position = Vector2(640, 360)
 
 [node name="ControlsHUD" parent="." instance=ExtResource("ps_chud")]
-controls = Array[String](["WASD / Arrows: Move", "Walk onto a signpost to fight", "H: Hide controls"])
+controls = Array[String](["WASD / Arrows: Move", "Walk up to an enemy to fight", "H: Hide controls"])
 
 [node name="ActIntro" parent="." instance=ExtResource("ps_actintro")]
 act_label_text = "ACT 3 — CHAPTER 4"
 title_text = "THE BATTLE OF THE COWSHED"
 protagonist_text = "You are BOXER — defender of Animal Farm."
-story_text = "News of the Rebellion has spread. Jones and his men are coming back, armed and angry. Squealer sends you to meet them at four points around the cowshed. Win, and the farm endures."
-goal_text = "Walk into each numbered signpost (1 → 4) in order to enter a turn-based battle. Win all four to finish the act."
-controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Step onto a numbered signpost to start that battle", "Battles use mouse / click — instructions appear on screen"])
+story_text = "News of the Rebellion has spread. Jones and his men are coming back, armed and angry. Squealer sends you out to meet them around the cowshed. Win, and the farm endures."
+goal_text = "Walk up to each enemy you meet to enter a turn-based battle. Defeat them all to finish the act."
+controls = Array[String](["Move: WASD  or  ← ↑ → ↓", "Walk up to an enemy to start a battle", "Battles use mouse / click — instructions appear on screen"])

@@ -70,12 +70,14 @@ const MOVES: Dictionary = {
 }
 
 # =============================================================================
-# Constants — Enemy definitions (index matches battle_index 0-3)
+# Constants — Enemy definitions (index matches battle_index 0-5).
+# Index 5 (Mr Jones) is the secret boss — see cowshed_overworld.gd.
 # =============================================================================
 
 const ENEMIES: Array = [
 	{
 		"name": "Jones' Pawn",
+		"sprite_frames": "res://assets/sprites/act3_enemies/jones_pawn_frames.tres",
 		"max_hp": 35,
 		"attack": 30,
 		"defense": 25,
@@ -88,6 +90,7 @@ const ENEMIES: Array = [
 	},
 	{
 		"name": "Red Archer",
+		"sprite_frames": "res://assets/sprites/act3_enemies/red_archer_frames.tres",
 		"max_hp": 45,
 		"attack": 45,
 		"defense": 30,
@@ -100,6 +103,7 @@ const ENEMIES: Array = [
 	},
 	{
 		"name": "Foxwood Lancer",
+		"sprite_frames": "res://assets/sprites/act3_enemies/foxwood_lancer_frames.tres",
 		"max_hp": 60,
 		"attack": 55,
 		"defense": 60,
@@ -112,6 +116,7 @@ const ENEMIES: Array = [
 	},
 	{
 		"name": "Stable-lad",
+		"sprite_frames": "res://assets/sprites/act3_enemies/stable_lad_frames.tres",
 		"max_hp": 70,
 		"attack": 60,
 		"defense": 45,
@@ -120,6 +125,33 @@ const ENEMIES: Array = [
 		"moves": [
 			{"name": "Pitchfork", "base_power": 65, "type": "Normal", "pp": 15, "effect": "none"},
 			{"name": "Desperate Swing", "base_power": 85, "type": "Normal", "pp": 10, "effect": "miss_20pct"},
+		],
+	},
+	{
+		"name": "Pinchfield Brute",
+		"sprite_frames": "res://assets/sprites/act3_enemies/pinchfield_brute_frames.tres",
+		"max_hp": 90,
+		"attack": 72,
+		"defense": 58,
+		"speed": 38,
+		"level": 12,
+		"moves": [
+			{"name": "Cudgel Smash", "base_power": 78, "type": "Normal", "pp": 12, "effect": "none"},
+			{"name": "Bellow", "base_power": 0, "type": "Status", "pp": 15, "effect": "raise_attack"},
+		],
+	},
+	{
+		"name": "Mr Jones",
+		"sprite_frames": "res://assets/sprites/act3_enemies/mr_jones_frames.tres",
+		"max_hp": 120,
+		"attack": 84,
+		"defense": 66,
+		"speed": 52,
+		"level": 15,
+		"moves": [
+			{"name": "Shotgun Blast", "base_power": 92, "type": "Normal", "pp": 8, "effect": "none"},
+			{"name": "Whip Crack", "base_power": 62, "type": "Normal", "pp": 14, "effect": "flinch_30pct"},
+			{"name": "Cruel Sneer", "base_power": 0, "type": "Status", "pp": 12, "effect": "lower_attack"},
 		],
 	},
 ]
