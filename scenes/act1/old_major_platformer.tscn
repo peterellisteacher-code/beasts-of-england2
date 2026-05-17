@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=68 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2"]
@@ -39,6 +39,12 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/lantern_light.png" id="38"]
 [ext_resource type="AudioStream" path="res://assets/audio/raven_caw.mp3" id="39"]
 [ext_resource type="AudioStream" path="res://assets/audio/owl_hoot.mp3" id="40"]
+[ext_resource type="Texture2D" path="res://assets/sprites/critters/cow_chew_sheet.png" id="41"]
+[ext_resource type="Texture2D" path="res://assets/sprites/critters/cat_sleep_sheet.png" id="42"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shadow.png" id="44"]
+[ext_resource type="Script" path="res://scenes/act1/objects/fireflies.gd" id="46"]
+[ext_resource type="Script" path="res://scenes/act1/objects/moon_follow.gd" id="47"]
+[ext_resource type="Script" path="res://scenes/act1/objects/chimney_smoke.gd" id="48"]
 
 [sub_resource type="AtlasTexture" id="Moses_fly0"]
 atlas = ExtResource("36")
@@ -90,6 +96,74 @@ animations = [{
 "speed": 1.0
 }]
 
+[sub_resource type="AtlasTexture" id="Cow_f0"]
+atlas = ExtResource("41")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="Cow_f1"]
+atlas = ExtResource("41")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="Cow_f2"]
+atlas = ExtResource("41")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="Cow_f3"]
+atlas = ExtResource("41")
+region = Rect2(150, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="Cow_f4"]
+atlas = ExtResource("41")
+region = Rect2(200, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="Cow_f5"]
+atlas = ExtResource("41")
+region = Rect2(250, 0, 50, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_Cow"]
+animations = [{
+"frames": [
+{"duration": 1.0, "texture": SubResource("Cow_f0")},
+{"duration": 1.0, "texture": SubResource("Cow_f1")},
+{"duration": 1.0, "texture": SubResource("Cow_f2")},
+{"duration": 1.0, "texture": SubResource("Cow_f3")},
+{"duration": 1.0, "texture": SubResource("Cow_f4")},
+{"duration": 1.0, "texture": SubResource("Cow_f5")}
+],
+"loop": true,
+"name": &"chew",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="Cat_f0"]
+atlas = ExtResource("42")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="Cat_f1"]
+atlas = ExtResource("42")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="Cat_f2"]
+atlas = ExtResource("42")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="Cat_f3"]
+atlas = ExtResource("42")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_Cat"]
+animations = [{
+"frames": [
+{"duration": 1.0, "texture": SubResource("Cat_f0")},
+{"duration": 1.0, "texture": SubResource("Cat_f1")},
+{"duration": 1.0, "texture": SubResource("Cat_f2")},
+{"duration": 1.0, "texture": SubResource("Cat_f3")}
+],
+"loop": true,
+"name": &"sleep",
+"speed": 2.0
+}]
+
 [sub_resource type="RectangleShape2D" id="GroundShape"]
 size = Vector2(3400.0, 80.0)
 
@@ -112,10 +186,11 @@ color = Color(0.04, 0.05, 0.12, 1)
 [node name="World" type="Node2D" parent="."]
 
 [node name="Moon" type="Sprite2D" parent="World"]
-position = Vector2(900, 100)
+position = Vector2(180, 120)
 texture = ExtResource("34")
-scale = Vector2(5, 5)
+scale = Vector2(0.58, 0.58)
 modulate = Color(2.4, 2.3, 2.0, 1)
+script = ExtResource("47")
 
 [node name="HillsBack" type="Polygon2D" parent="World"]
 color = Color(0.55, 0.55, 0.7, 1)
@@ -306,7 +381,7 @@ scale = Vector2(2.0, 2.0)
 modulate = Color(2.5, 2.5, 2.3, 0.62)
 
 [node name="DistantCabin0" type="Sprite2D" parent="World"]
-position = Vector2(180, 470)
+position = Vector2(380, 470)
 texture = ExtResource("7")
 scale = Vector2(0.45, 0.45)
 
@@ -674,5 +749,37 @@ bus = &"SFX"
 autoplay = false
 
 [node name="HeartsHUD" parent="." instance=ExtResource("3")]
+
+
+[node name="CowChewing" type="AnimatedSprite2D" parent="World"]
+position = Vector2(720, 555)
+scale = Vector2(2.2, 2.2)
+modulate = Color(0.85, 0.88, 0.92, 1)
+sprite_frames = SubResource("SpriteFrames_Cow")
+animation = &"chew"
+autoplay = "chew"
+
+[node name="SleepingCat" type="AnimatedSprite2D" parent="World"]
+position = Vector2(430, 570)
+scale = Vector2(1.6, 1.6)
+modulate = Color(0.75, 0.72, 0.65, 0.9)
+sprite_frames = SubResource("SpriteFrames_Cat")
+animation = &"sleep"
+autoplay = "sleep"
+
+[node name="OldMajorShadow" type="Sprite2D" parent="World/OldMajor"]
+position = Vector2(0, 82)
+texture = ExtResource("44")
+scale = Vector2(1.6, 0.35)
+modulate = Color(0.05, 0.05, 0.12, 0.55)
+z_index = -1
+
+
+[node name="Fireflies" type="Node2D" parent="World"]
+script = ExtResource("46")
+
+[node name="ChimneySmoke" type="Node2D" parent="World"]
+position = Vector2(2470, 118)
+script = ExtResource("48")
 
 [connection signal="body_entered" from="World/BarnDoor" to="." method="on_barn_reached"]

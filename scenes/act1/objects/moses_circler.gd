@@ -2,9 +2,11 @@
 ## the barn roof when Old Major approaches. Plays raven-caw SFX at intervals.
 extends AnimatedSprite2D
 
-@export var arc_radius_x: float = 520.0
-@export var arc_radius_y: float = 90.0
-@export var fly_speed: float = 0.38
+@export var arc_radius_x: float = 240.0
+@export var arc_radius_y: float = 58.0
+@export var fly_speed: float = 0.42
+## Sky height Moses circles at (kept inside the camera view).
+@export var sky_y: float = 300.0
 ## World-space x-position of the barn door (triggers perch behaviour)
 @export var barn_x: float = 2400.0
 ## Player proximity (px) to barn that triggers the perch
@@ -26,12 +28,18 @@ const ARC_SPEED: float = 0.6
 
 
 func _ready() -> void:
-	_origin = global_position
 	play("fly")
 	# Find player in group
-	var players = get_tree().get_nodes_in_group("player")
+	var players: Array = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
-		_player = players[0]
+		_player = players[0] as Node2D
+	# Centre the flight circle above Old Major so Moses stays on-screen
+	# for the whole walk (fixes the "Moses invisible" report).
+	if _player != null:
+		_origin = Vector2(_player.global_position.x + 30.0, sky_y)
+		global_position = _origin
+	else:
+		_origin = global_position
 	# Find raven audio sibling (added to Moses node in scene)
 	_raven_audio = get_node_or_null("RavenCaw")
 	_schedule_caw()
@@ -48,6 +56,7 @@ func _process(delta: float) -> void:
 		var lerped: Vector2 = _arc_start.lerp(perch_pos, t)
 		lerped.y -= sin(t * PI) * 80.0  # bow upward mid-arc
 		global_position = lerped
+		# Sprite faces RIGHT — flip to face left when arcing leftward.
 		flip_h = perch_pos.x < _arc_start.x
 		if _arc_progress >= 1.0:
 			global_position = perch_pos
@@ -57,9 +66,14 @@ func _process(delta: float) -> void:
 				_raven_audio.play()
 		return
 
-	# Normal looping arc flight
+	# Normal looping arc flight — circle centre drifts to stay above Old Major.
 	_t += delta * fly_speed
+	if _player != null:
+		_origin.x = lerp(_origin.x, _player.global_position.x + 30.0,
+				clamp(delta * 1.6, 0.0, 1.0))
 	global_position = _origin + Vector2(cos(_t) * arc_radius_x, sin(_t) * arc_radius_y)
+	# Sprite art faces RIGHT (verified against moses_perch.png); horizontal
+	# velocity ∝ -sin(_t), so flip to face left when moving left (sin(_t) > 0).
 	flip_h = sin(_t) > 0.0
 
 	# Check if player is within trigger distance of barn
