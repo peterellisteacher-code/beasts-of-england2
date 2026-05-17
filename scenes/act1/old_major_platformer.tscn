@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=38 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2"]
@@ -17,7 +17,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/crate1.png" id="15"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/crate2.png" id="16"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/bucket1.png" id="17"]
-[ext_resource type="Texture2D" path="res://assets/sprites/erw/props/chimney_smoke.png" id="18"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/fence/f_mid.png" id="19"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/fence/f_left.png" id="20"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/fence/f_right.png" id="21"]
@@ -36,7 +35,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/moon.png" id="34"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/grass_tuft.png" id="35"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/moses_flying.png" id="36"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/lantern.png" id="37"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/lantern_light.png" id="38"]
 
 [sub_resource type="RectangleShape2D" id="GroundShape"]
@@ -268,18 +266,6 @@ scale = Vector2(0.5, 0.5)
 position = Vector2(1820, 470)
 texture = ExtResource("7")
 scale = Vector2(0.42, 0.42)
-
-[node name="Smoke0" type="Sprite2D" parent="World"]
-position = Vector2(180, 380)
-texture = ExtResource("18")
-scale = Vector2(0.18, 0.18)
-modulate = Color(1.6, 1.6, 1.8, 0.55)
-
-[node name="Smoke1" type="Sprite2D" parent="World"]
-position = Vector2(1820, 390)
-texture = ExtResource("18")
-scale = Vector2(0.18, 0.18)
-modulate = Color(1.6, 1.6, 1.8, 0.55)
 
 [node name="MidTree0" type="Sprite2D" parent="World"]
 position = Vector2(420, 490)
@@ -557,11 +543,7 @@ scale = Vector2(2.2, 2.2)
 
 [node name="OldMajor" parent="World" instance=ExtResource("2")]
 position = Vector2(180.0, 470.0)
-
-[node name="Lantern" type="Sprite2D" parent="World/OldMajor"]
-position = Vector2(-40.0, 50.0)
-texture = ExtResource("37")
-scale = Vector2(0.85, 0.85)
+z_index = 1
 
 [node name="LanternGlow" type="PointLight2D" parent="World/OldMajor"]
 position = Vector2(-40.0, 50.0)
@@ -586,6 +568,7 @@ position = Vector2(1500.0, 200.0)
 [node name="Moses" type="Sprite2D" parent="World/MosesNest"]
 texture = ExtResource("36")
 scale = Vector2(1.1, 1.1)
+modulate = Color(3.0, 2.6, 1.7, 1)
 script = ExtResource("4")
 
 [node name="BarnDoor" type="Area2D" parent="World"]

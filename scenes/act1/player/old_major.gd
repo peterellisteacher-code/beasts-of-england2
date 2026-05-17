@@ -41,7 +41,7 @@ func _physics_process(delta: float) -> void:
 		var direction: float = Input.get_axis(&"move_left", &"move_right")
 		if direction != 0.0:
 			velocity.x = direction * SPEED
-			animated_sprite.flip_h = direction < 0.0
+			animated_sprite.flip_h = direction > 0.0
 			if animated_sprite.animation != &"run":
 				animated_sprite.play(&"run")
 		else:

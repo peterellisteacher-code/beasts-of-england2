@@ -1,5 +1,5 @@
 class_name Opening
-extends Node2D
+extends Control
 
 # =============================================================================
 # Private state
