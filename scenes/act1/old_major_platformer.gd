@@ -40,6 +40,16 @@ func _ready() -> void:
 	add_to_group(GROUP_SCENE_COORDINATOR)
 	if GameState.hearts <= 0:
 		GameState.hearts = 3
+	_schedule_owl_hoot()
+
+
+func _schedule_owl_hoot() -> void:
+	var wait: float = randf_range(15.0, 30.0)
+	await get_tree().create_timer(wait).timeout
+	var owl: AudioStreamPlayer = get_node_or_null("OwlHoot")
+	if owl and owl.stream:
+		owl.play()
+	_schedule_owl_hoot()
 
 # =============================================================================
 # Public methods — coordinator API (called by Old Major)

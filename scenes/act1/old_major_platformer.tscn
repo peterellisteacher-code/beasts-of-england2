@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=50 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2"]
@@ -34,8 +34,61 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/star.png" id="33"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/moon.png" id="34"]
 [ext_resource type="Texture2D" path="res://assets/sprites/erw/props/grass_tuft.png" id="35"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/moses_flying.png" id="36"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/moses_fly_sheet.png" id="36"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/moses_perch.png" id="37"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/lantern_light.png" id="38"]
+[ext_resource type="AudioStream" path="res://assets/audio/raven_caw.mp3" id="39"]
+[ext_resource type="AudioStream" path="res://assets/audio/owl_hoot.mp3" id="40"]
+
+[sub_resource type="AtlasTexture" id="Moses_fly0"]
+atlas = ExtResource("36")
+region = Rect2(0, 0, 102, 102)
+
+[sub_resource type="AtlasTexture" id="Moses_fly1"]
+atlas = ExtResource("36")
+region = Rect2(102, 0, 102, 102)
+
+[sub_resource type="AtlasTexture" id="Moses_fly2"]
+atlas = ExtResource("36")
+region = Rect2(204, 0, 102, 102)
+
+[sub_resource type="AtlasTexture" id="Moses_fly3"]
+atlas = ExtResource("36")
+region = Rect2(306, 0, 102, 102)
+
+[sub_resource type="AtlasTexture" id="Moses_fly4"]
+atlas = ExtResource("36")
+region = Rect2(408, 0, 102, 102)
+
+[sub_resource type="AtlasTexture" id="Moses_fly5"]
+atlas = ExtResource("36")
+region = Rect2(510, 0, 102, 102)
+
+[sub_resource type="AtlasTexture" id="Moses_perch0"]
+atlas = ExtResource("37")
+region = Rect2(0, 0, 110, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_Moses"]
+animations = [{
+"frames": [
+{"duration": 1.0, "texture": SubResource("Moses_fly0")},
+{"duration": 1.0, "texture": SubResource("Moses_fly1")},
+{"duration": 1.0, "texture": SubResource("Moses_fly2")},
+{"duration": 1.0, "texture": SubResource("Moses_fly3")},
+{"duration": 1.0, "texture": SubResource("Moses_fly4")},
+{"duration": 1.0, "texture": SubResource("Moses_fly5")}
+],
+"loop": true,
+"name": &"fly",
+"speed": 8.0
+}, {
+"frames": [
+{"duration": 1.0, "texture": SubResource("Moses_perch0")}
+],
+"loop": false,
+"name": &"perch",
+"speed": 1.0
+}]
 
 [sub_resource type="RectangleShape2D" id="GroundShape"]
 size = Vector2(3400.0, 80.0)
@@ -61,7 +114,7 @@ color = Color(0.04, 0.05, 0.12, 1)
 [node name="Moon" type="Sprite2D" parent="World"]
 position = Vector2(900, 100)
 texture = ExtResource("34")
-scale = Vector2(3, 3)
+scale = Vector2(5, 5)
 modulate = Color(2.4, 2.3, 2.0, 1)
 
 [node name="HillsBack" type="Polygon2D" parent="World"]
@@ -422,94 +475,104 @@ expand_mode = 1
 stretch_mode = 1
 
 [node name="Flower0" type="Sprite2D" parent="World"]
-position = Vector2(280, 575)
+position = Vector2(273, 576)
 texture = ExtResource("23")
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.38, 1.38)
+flip_h = true
 
 [node name="Flower1" type="Sprite2D" parent="World"]
-position = Vector2(520, 580)
+position = Vector2(531, 579)
 texture = ExtResource("24")
-scale = Vector2(1.4, 1.4)
+scale = Vector2(1.52, 1.52)
 
 [node name="Flower2" type="Sprite2D" parent="World"]
-position = Vector2(920, 578)
+position = Vector2(907, 577)
 texture = ExtResource("25")
-scale = Vector2(1.6, 1.6)
+scale = Vector2(1.45, 1.45)
+flip_h = true
 
 [node name="Flower3" type="Sprite2D" parent="World"]
-position = Vector2(1320, 575)
+position = Vector2(1335, 576)
 texture = ExtResource("26")
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.61, 1.61)
 
 [node name="Flower4" type="Sprite2D" parent="World"]
-position = Vector2(1620, 580)
+position = Vector2(1608, 579)
 texture = ExtResource("27")
-scale = Vector2(1.4, 1.4)
+scale = Vector2(1.33, 1.33)
+flip_h = true
 
 [node name="Flower5" type="Sprite2D" parent="World"]
-position = Vector2(2080, 578)
+position = Vector2(2093, 578)
 texture = ExtResource("28")
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.57, 1.57)
 
 [node name="Mushroom0" type="Sprite2D" parent="World"]
-position = Vector2(360, 583)
+position = Vector2(347, 582)
 texture = ExtResource("29")
-scale = Vector2(1.6, 1.6)
+scale = Vector2(1.72, 1.72)
+flip_h = true
 
 [node name="Mushroom1" type="Sprite2D" parent="World"]
-position = Vector2(780, 583)
+position = Vector2(793, 582)
 texture = ExtResource("30")
-scale = Vector2(1.4, 1.4)
+scale = Vector2(1.31, 1.31)
 
 [node name="Mushroom2" type="Sprite2D" parent="World"]
-position = Vector2(1500, 583)
+position = Vector2(1488, 582)
 texture = ExtResource("31")
-scale = Vector2(1.7, 1.7)
+scale = Vector2(1.84, 1.84)
+flip_h = true
 
 [node name="Mushroom3" type="Sprite2D" parent="World"]
-position = Vector2(1860, 583)
+position = Vector2(1874, 582)
 texture = ExtResource("32")
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.42, 1.42)
 
 [node name="Tuft0" type="Sprite2D" parent="World"]
-position = Vector2(1754, 582)
+position = Vector2(1761, 581)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(1.95, 1.95)
+flip_h = true
 
 [node name="Tuft1" type="Sprite2D" parent="World"]
-position = Vector2(1659, 582)
+position = Vector2(1652, 582)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(2.35, 2.35)
 
 [node name="Tuft2" type="Sprite2D" parent="World"]
-position = Vector2(919, 582)
+position = Vector2(912, 581)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(2.07, 2.07)
+flip_h = true
 
 [node name="Tuft3" type="Sprite2D" parent="World"]
-position = Vector2(832, 582)
+position = Vector2(841, 583)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(1.88, 1.88)
 
 [node name="Tuft4" type="Sprite2D" parent="World"]
-position = Vector2(1043, 582)
+position = Vector2(1037, 582)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(2.41, 2.41)
+flip_h = true
 
 [node name="Tuft5" type="Sprite2D" parent="World"]
-position = Vector2(1117, 582)
+position = Vector2(1124, 581)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(1.93, 1.93)
 
 [node name="Tuft6" type="Sprite2D" parent="World"]
-position = Vector2(645, 582)
+position = Vector2(652, 582)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(2.28, 2.28)
+flip_h = true
 
 [node name="Tuft7" type="Sprite2D" parent="World"]
-position = Vector2(454, 582)
+position = Vector2(461, 581)
 texture = ExtResource("35")
-scale = Vector2(2.2, 2.2)
+scale = Vector2(2.14, 2.14)
+
 
 [node name="FrontFence0" type="Sprite2D" parent="World"]
 position = Vector2(80, 620)
@@ -546,7 +609,7 @@ position = Vector2(180.0, 470.0)
 z_index = 1
 
 [node name="LanternGlow" type="PointLight2D" parent="World/OldMajor"]
-position = Vector2(-40.0, 50.0)
+position = Vector2(-40.0, 85.0)
 energy = 1.9
 texture_scale = 2.6
 range_layer_max = 0
@@ -556,7 +619,7 @@ texture = ExtResource("38")
 enabled = true
 zoom = Vector2(1.5, 1.5)
 limit_left = -100
-limit_right = 2700
+limit_right = 3100
 limit_top = -100
 limit_bottom = 720
 position_smoothing_enabled = true
@@ -565,11 +628,26 @@ position_smoothing_speed = 4.0
 [node name="MosesNest" type="Node2D" parent="World"]
 position = Vector2(1500.0, 200.0)
 
-[node name="Moses" type="Sprite2D" parent="World/MosesNest"]
-texture = ExtResource("36")
+[node name="Moses" type="AnimatedSprite2D" parent="World/MosesNest"]
 scale = Vector2(1.1, 1.1)
-modulate = Color(3.0, 2.6, 1.7, 1)
+modulate = Color(1.3, 1.35, 1.5, 1)
+sprite_frames = SubResource("SpriteFrames_Moses")
+animation = &"fly"
+autoplay = "fly"
 script = ExtResource("4")
+
+[node name="MosesGlow" type="PointLight2D" parent="World/MosesNest/Moses"]
+energy = 0.35
+color = Color(0.7, 0.8, 1.0, 1)
+texture_scale = 1.8
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="RavenCaw" type="AudioStreamPlayer2D" parent="World/MosesNest/Moses"]
+stream = ExtResource("39")
+bus = &"SFX"
+max_distance = 1200.0
+attenuation = 1.0
 
 [node name="BarnDoor" type="Area2D" parent="World"]
 position = Vector2(2400.0, 500.0)
@@ -581,6 +659,19 @@ shape = SubResource("BarnDoorShape")
 position = Vector2(-20.0, -200.0)
 texture = ExtResource("7")
 scale = Vector2(1.4, 1.4)
+
+[node name="BarnLight" type="PointLight2D" parent="World/BarnDoor"]
+position = Vector2(0.0, -120.0)
+color = Color(0.769, 0.635, 0.290, 1)
+energy = 1.4
+texture_scale = 3.2
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="OwlHoot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("40")
+bus = &"SFX"
+autoplay = false
 
 [node name="HeartsHUD" parent="." instance=ExtResource("3")]
 

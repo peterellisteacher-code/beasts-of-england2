@@ -30,6 +30,7 @@ var can_move: bool = true
 
 func _ready() -> void:
 	add_to_group(&"player")
+	animated_sprite.flip_h = false
 	animated_sprite.play(&"idle")
 
 
@@ -41,7 +42,8 @@ func _physics_process(delta: float) -> void:
 		var direction: float = Input.get_axis(&"move_left", &"move_right")
 		if direction != 0.0:
 			velocity.x = direction * SPEED
-			animated_sprite.flip_h = direction > 0.0
+			# Old Major's sprite art faces right — flip only when moving left.
+			animated_sprite.flip_h = direction < 0.0
 			if animated_sprite.animation != &"run":
 				animated_sprite.play(&"run")
 		else:
