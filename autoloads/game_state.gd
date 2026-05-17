@@ -5,6 +5,14 @@ extends Node
 # =============================================================================
 
 const SAVE_PATH: String = "user://boe_save.json"
+const SAVE_TMP_PATH: String = "user://boe_save.json.tmp"
+const SAVE_BAK_PATH: String = "user://boe_save.json.bak"
+
+const SAVE_VERSION: int = 1
+
+const MAX_HEARTS: int = 3
+const MAX_ACT: int = 4
+const MAX_BATTLE_WINS: int = 4
 
 const COMMANDMENTS: Array[String] = [
 	"Whatever goes upon two legs is an enemy.",
@@ -76,7 +84,26 @@ var snowball_expelled: bool = false
 # =============================================================================
 
 func _ready() -> void:
+	_recover_orphaned_tmp()
 	load_from_disk()
+
+
+# If the browser tab was killed between `rename(main -> bak)` and
+# `rename(tmp -> main)`, the newest save sits in .tmp while main is missing.
+# Promote .tmp to main before load so we don't fall back to the stale .bak.
+# If .tmp exists alongside a valid main, the second rename never happened —
+# the .tmp is stale and we delete it.
+func _recover_orphaned_tmp() -> void:
+	if not FileAccess.file_exists(SAVE_TMP_PATH):
+		return
+	if FileAccess.file_exists(SAVE_PATH):
+		var rm_err: int = DirAccess.remove_absolute(SAVE_TMP_PATH)
+		if rm_err != OK:
+			push_warning("GameState._recover_orphaned_tmp: could not remove stale .tmp (error %d)" % rm_err)
+		return
+	var promote_err: int = DirAccess.rename_absolute(SAVE_TMP_PATH, SAVE_PATH)
+	if promote_err != OK:
+		push_error("GameState._recover_orphaned_tmp: failed to promote .tmp to main (error %d)" % promote_err)
 
 # =============================================================================
 # Public methods
@@ -101,26 +128,13 @@ func complete_act(act: int) -> void:
 		push_error("GameState.complete_act: act %d is not valid (expected 1-4)" % act)
 		return
 	# Advance the persistent act pointer so save/load stays consistent.
-	current_act = mini(act + 1, 4)
+	current_act = mini(act + 1, MAX_ACT)
 	act_completed.emit(act)
 	save_to_disk()
 
 
 func reset_all() -> void:
-	current_act = 1
-	commandments_corrupted = 0
-	corrupted_commandment_indices = []
-	hearts = 3
-	has_secret_scroll = false
-	lamb_rescued = false
-	collected_key_ids = []
-	opened_door_ids = []
-	has_gatekeeper_bonus = false
-	jones_men_driven_off = false
-	jones_men_driven = 0
-	boxer_moves = ["charge", "brace"]
-	battle_wins = 0
-	snowball_expelled = false
+	_reset_to_defaults()
 	save_to_disk()
 
 
@@ -144,9 +158,13 @@ func reset_act_state() -> void:
 	# Persist immediately so a browser refresh/close doesn't roll back the reset.
 	save_to_disk()
 
+# =============================================================================
+# Persistence — atomic save, crash-safe load
+# =============================================================================
 
 func save_to_disk() -> void:
 	var data: Dictionary = {
+		"version": SAVE_VERSION,
 		"current_act": current_act,
 		"commandments_corrupted": commandments_corrupted,
 		"corrupted_commandment_indices": corrupted_commandment_indices,
@@ -162,47 +180,57 @@ func save_to_disk() -> void:
 		"battle_wins": battle_wins,
 		"snowball_expelled": snowball_expelled,
 	}
-	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	# Atomic write: write to .tmp, snapshot the old save as .bak, then rename
+	# .tmp -> main. Prevents a half-written/corrupt save if the browser tab is
+	# closed mid-write — a real risk for an HTML5 classroom game.
+	var file: FileAccess = FileAccess.open(SAVE_TMP_PATH, FileAccess.WRITE)
 	if file == null:
 		push_error("GameState.save_to_disk: could not open %s for writing (error %d)" % [
-			SAVE_PATH, FileAccess.get_open_error()
+			SAVE_TMP_PATH, FileAccess.get_open_error()
 		])
 		return
 	file.store_string(JSON.stringify(data, "\t"))
 	file.close()
 
+	if FileAccess.file_exists(SAVE_PATH):
+		# rename_absolute fails if the destination exists (Windows / HTML5 do not
+		# overwrite on rename) — clear any stale .bak first.
+		if FileAccess.file_exists(SAVE_BAK_PATH):
+			DirAccess.remove_absolute(SAVE_BAK_PATH)
+		# Snapshot the previous good save as .bak before overwriting.
+		var bak_err: int = DirAccess.rename_absolute(SAVE_PATH, SAVE_BAK_PATH)
+		if bak_err != OK:
+			push_warning("GameState.save_to_disk: could not back up previous save (error %d)" % bak_err)
+	# If the backup rename failed, main still exists — clear it so tmp -> main
+	# cannot fail on an existing destination. _recover_orphaned_tmp() promotes
+	# the .tmp on next launch if the tab is killed in this window.
+	if FileAccess.file_exists(SAVE_PATH):
+		DirAccess.remove_absolute(SAVE_PATH)
+	var rename_err: int = DirAccess.rename_absolute(SAVE_TMP_PATH, SAVE_PATH)
+	if rename_err != OK:
+		push_error("GameState.save_to_disk: rename tmp -> main failed (error %d)" % rename_err)
+
 
 func load_from_disk() -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return
-	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if file == null:
-		push_error("GameState.load_from_disk: could not open %s for reading (error %d)" % [
-			SAVE_PATH, FileAccess.get_open_error()
-		])
-		return
-	var raw: String = file.get_as_text()
-	file.close()
-
-	var parsed: Variant = JSON.parse_string(raw)
-	if parsed == null:
-		push_error("GameState.load_from_disk: JSON parse failed — save file may be corrupt")
-		return
-	if not parsed is Dictionary:
-		push_error("GameState.load_from_disk: unexpected JSON root type")
+	# Try the main save first, fall back to .bak, otherwise reset to defaults.
+	var data: Dictionary = _try_load_path(SAVE_PATH)
+	if data.is_empty() and FileAccess.file_exists(SAVE_BAK_PATH):
+		push_warning("GameState.load_from_disk: main save unreadable, falling back to .bak")
+		data = _try_load_path(SAVE_BAK_PATH)
+	if data.is_empty():
+		_reset_to_defaults()
 		return
 
-	var data: Dictionary = parsed as Dictionary
-	current_act                    = _read_int(data, "current_act", 1)
+	current_act                   = _read_int(data, "current_act", 1)
 	commandments_corrupted         = _read_int(data, "commandments_corrupted", 0)
 	corrupted_commandment_indices  = _read_int_array(data, "corrupted_commandment_indices", [])
-	# If a save from before this fix exists, it won't have the indices array.
+	# If a save from before the indices fix exists, it won't have the array.
 	# Reconstruct it from the count by assuming the first N were corrupted —
 	# which matches the old (buggy) display assumption and is the best we can do.
 	if corrupted_commandment_indices.is_empty() and commandments_corrupted > 0:
 		for i: int in range(commandments_corrupted):
 			corrupted_commandment_indices.append(i)
-	hearts                         = _read_int(data, "hearts", 3)
+	hearts                         = _read_int(data, "hearts", MAX_HEARTS)
 	has_secret_scroll              = _read_bool(data, "has_secret_scroll", false)
 	lamb_rescued                   = _read_bool(data, "lamb_rescued", false)
 	collected_key_ids              = _read_int_array(data, "collected_key_ids", [])
@@ -213,12 +241,59 @@ func load_from_disk() -> void:
 	boxer_moves                    = _read_string_array(data, "boxer_moves", ["charge", "brace"])
 	battle_wins                    = _read_int(data, "battle_wins", 0)
 	snowball_expelled              = _read_bool(data, "snowball_expelled", false)
+	_clamp_loaded_state()
 
-	# Clamp loaded values so a corrupt or stale browser save cannot route to an
-	# invalid act, over/underflow hearts, or disable every encounter zone.
-	current_act = clampi(current_act, 1, 4)
-	hearts = clampi(hearts, 0, 3)
-	battle_wins = clampi(battle_wins, 0, 4)
+
+func _try_load_path(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		push_error("GameState._try_load_path: could not open %s (error %d)" % [
+			path, FileAccess.get_open_error()
+		])
+		return {}
+	var raw: String = file.get_as_text()
+	file.close()
+	var parsed: Variant = JSON.parse_string(raw)
+	if parsed == null or not parsed is Dictionary:
+		push_error("GameState._try_load_path: parse failed for %s — file may be corrupt" % path)
+		return {}
+	return parsed as Dictionary
+
+
+func _reset_to_defaults() -> void:
+	current_act = 1
+	commandments_corrupted = 0
+	corrupted_commandment_indices = []
+	hearts = MAX_HEARTS
+	has_secret_scroll = false
+	lamb_rescued = false
+	collected_key_ids = []
+	opened_door_ids = []
+	has_gatekeeper_bonus = false
+	jones_men_driven_off = false
+	jones_men_driven = 0
+	boxer_moves = ["charge", "brace"]
+	battle_wins = 0
+	snowball_expelled = false
+
+
+# Defensive bounds against a corrupt or stale browser save (e.g. battle_wins
+# from a hacked file) — keeps loaded values inside the ranges the act code
+# assumes. These are NOT game-design caps.
+func _clamp_loaded_state() -> void:
+	current_act = clampi(current_act, 1, MAX_ACT)
+	hearts = clampi(hearts, 0, MAX_HEARTS)
+	battle_wins = clampi(battle_wins, 0, MAX_BATTLE_WINS)
+	# Drop out-of-range commandment indices, then keep the integer count in
+	# sync with the (now-valid) index list.
+	var valid_indices: Array[int] = []
+	for idx: int in corrupted_commandment_indices:
+		if idx >= 0 and idx < COMMANDMENTS.size() and not valid_indices.has(idx):
+			valid_indices.append(idx)
+	corrupted_commandment_indices = valid_indices
+	commandments_corrupted = corrupted_commandment_indices.size()
 
 # =============================================================================
 # Private helpers — safe typed reads from an untyped JSON Dictionary
@@ -245,10 +320,19 @@ func _read_int_array(data: Dictionary, key: String, default_value: Array[int]) -
 		return default_value
 	var result: Array[int] = []
 	for element: Variant in (data[key] as Array):
+		var value: int
 		if element is float:
-			result.append(int(element))
+			value = int(element)
 		elif element is int:
-			result.append(element)
+			value = element
+		else:
+			continue
+		# Reject negative IDs (key/door/commandment indices are non-negative) and dedupe.
+		if value < 0:
+			continue
+		if value in result:
+			continue
+		result.append(value)
 	return result
 
 
