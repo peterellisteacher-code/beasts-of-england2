@@ -10,11 +10,12 @@ const INITIAL_COLS: int = 8
 const ROWS: int = 6
 const CELL_SIZE: int = 80
 
-# Grid drawing colours
-const COLOR_GRID_BORDER: Color     = Color(0.2, 0.1, 0.05, 0.8)
-const COLOR_SHRUNK_AREA: Color     = Color(0.05, 0.0, 0.0, 0.9)
-const COLOR_VALID_MOVE: Color      = Color(0.3, 0.7, 0.3, 0.4)
-const COLOR_SELECTED_UNIT: Color   = Color(0.9, 0.9, 0.3, 0.5)
+# Grid drawing colours — constructivist palette, legible over the barn floor
+const COLOR_CELL_FILL: Color       = Color(0.04, 0.03, 0.02, 0.32)
+const COLOR_GRID_BORDER: Color     = Color(0.77, 0.64, 0.29, 0.55)
+const COLOR_SHRUNK_AREA: Color     = Color(0.35, 0.05, 0.04, 0.92)
+const COLOR_VALID_MOVE: Color      = Color(0.4, 0.46, 0.18, 0.46)
+const COLOR_SELECTED_UNIT: Color   = Color(0.86, 0.7, 0.33, 0.5)
 
 # =============================================================================
 # Enums
@@ -169,12 +170,12 @@ func _setup_units() -> void:
 	@warning_ignore("integer_division")
 	_place_unit(_snowball, Vector2i(_grid_cols - 1, ROWS / 2))
 
-	# Dogs start on the left
-	_place_unit(dog1, Vector2i(1, 2))
-	_place_unit(dog2, Vector2i(1, 3))
+	# Dogs start on the left, spread apart so they read as separate units
+	_place_unit(dog1, Vector2i(1, 0))
+	_place_unit(dog2, Vector2i(2, 5))
 
 	# Squealer at the far left
-	_place_unit(_squealer, Vector2i(0, 2))
+	_place_unit(_squealer, Vector2i(0, 3))
 
 # =============================================================================
 # Private methods — grid
@@ -257,6 +258,7 @@ func _draw_active_cells() -> void:
 				float(CELL_SIZE - 2),
 				float(CELL_SIZE - 2)
 			)
+			draw_rect(rect, COLOR_CELL_FILL)
 			draw_rect(rect, COLOR_GRID_BORDER, false, 2.0)
 
 

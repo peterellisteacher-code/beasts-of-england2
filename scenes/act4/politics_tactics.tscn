@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://scenes/act4/politics_tactics.gd" id="1_tactics"]
 [ext_resource type="Script" path="res://scenes/act4/units/unit_base.gd" id="2_unit"]
-[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/act4_interior.png" id="3_bg"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/snowball.png" id="4_snowball"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/dog_topdown.png" id="5_dog"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/squealer.png" id="6_squealer"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act4/barn_floor.png" id="3_bg"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act4/snowball_idle_frames.tres" id="4_snowball"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act4/dog_idle_frames.tres" id="5_dog"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/act4/squealer_idle_frames.tres" id="6_squealer"]
 [ext_resource type="PackedScene" uid="uid://boe_act_intro" path="res://scenes/ui/act_intro.tscn" id="7_intro"]
 [ext_resource type="PackedScene" uid="uid://boe_controls_hud" path="res://scenes/ui/controls_hud.tscn" id="8_chud"]
 
@@ -13,6 +13,7 @@
 script = ExtResource("1_tactics")
 
 [node name="Background" type="TextureRect" parent="."]
+show_behind_parent = true
 offset_right = 1280.0
 offset_bottom = 720.0
 texture = ExtResource("3_bg")
@@ -20,9 +21,10 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="DarkOverlay" type="ColorRect" parent="."]
+show_behind_parent = true
 offset_right = 1280.0
 offset_bottom = 720.0
-color = Color(0.04, 0.01, 0.01, 0.74)
+color = Color(0.03, 0.02, 0.05, 0.15)
 
 [node name="GridLayer" type="Node2D" parent="."]
 
@@ -36,9 +38,11 @@ max_hp = 8
 attack = 3
 move_range = 3
 
-[node name="Sprite" type="Sprite2D" parent="Units/Snowball"]
-texture = ExtResource("4_snowball")
-scale = Vector2(0.27, 0.27)
+[node name="Sprite" type="AnimatedSprite2D" parent="Units/Snowball"]
+sprite_frames = ExtResource("4_snowball")
+animation = &"idle"
+autoplay = "idle"
+scale = Vector2(0.75, 0.75)
 
 [node name="NameLabel" type="Label" parent="Units/Snowball"]
 offset_left = -35.0
@@ -48,6 +52,8 @@ offset_bottom = -32.0
 text = "Snowball"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 11
+theme_override_colors/font_outline_color = Color(0.09, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 5
 
 [node name="Dog1" type="Node2D" parent="Units"]
 unique_name_in_owner = true
@@ -57,9 +63,12 @@ max_hp = 6
 attack = 4
 move_range = 2
 
-[node name="Sprite" type="Sprite2D" parent="Units/Dog1"]
-texture = ExtResource("5_dog")
-scale = Vector2(0.6, 0.6)
+[node name="Sprite" type="AnimatedSprite2D" parent="Units/Dog1"]
+sprite_frames = ExtResource("5_dog")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -18)
+scale = Vector2(1.25, 1.25)
 
 [node name="NameLabel" type="Label" parent="Units/Dog1"]
 offset_left = -30.0
@@ -69,6 +78,8 @@ offset_bottom = -28.0
 text = "Dog"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 11
+theme_override_colors/font_outline_color = Color(0.09, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 5
 
 [node name="Dog2" type="Node2D" parent="Units"]
 unique_name_in_owner = true
@@ -78,9 +89,12 @@ max_hp = 6
 attack = 4
 move_range = 2
 
-[node name="Sprite" type="Sprite2D" parent="Units/Dog2"]
-texture = ExtResource("5_dog")
-scale = Vector2(0.6, 0.6)
+[node name="Sprite" type="AnimatedSprite2D" parent="Units/Dog2"]
+sprite_frames = ExtResource("5_dog")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -18)
+scale = Vector2(1.25, 1.25)
 
 [node name="NameLabel" type="Label" parent="Units/Dog2"]
 offset_left = -30.0
@@ -90,6 +104,8 @@ offset_bottom = -28.0
 text = "Dog"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 11
+theme_override_colors/font_outline_color = Color(0.09, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 5
 
 [node name="Squealer" type="Node2D" parent="Units"]
 unique_name_in_owner = true
@@ -99,18 +115,22 @@ max_hp = 4
 attack = 0
 move_range = 1
 
-[node name="Sprite" type="Sprite2D" parent="Units/Squealer"]
-texture = ExtResource("6_squealer")
-scale = Vector2(0.22, 0.22)
+[node name="Sprite" type="AnimatedSprite2D" parent="Units/Squealer"]
+sprite_frames = ExtResource("6_squealer")
+animation = &"idle"
+autoplay = "idle"
+scale = Vector2(0.72, 0.72)
 
 [node name="NameLabel" type="Label" parent="Units/Squealer"]
 offset_left = -32.0
-offset_top = -44.0
+offset_top = -70.0
 offset_right = 32.0
-offset_bottom = -24.0
+offset_bottom = -50.0
 text = "Squealer"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 11
+theme_override_colors/font_outline_color = Color(0.09, 0.06, 0.03, 1)
+theme_override_constants/outline_size = 5
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -195,7 +215,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="ControlsHUD" parent="." instance=ExtResource("8_chud")]
-controls = Array[String](["Click a green tile to move", "Click an action button (Battle Cry / Windmill / Wait)", "H: Hide controls"])
+controls = Array[String](["Click a highlighted tile to move", "Click an action button (Battle Cry / Windmill / Wait)", "H: Hide controls"])
 
 [node name="ActIntro" parent="." instance=ExtResource("7_intro")]
 act_label_text = "ACT 4 — CHAPTER 5"
@@ -203,4 +223,4 @@ title_text = "SNOWBALL'S EXPULSION"
 protagonist_text = "You are SNOWBALL — visionary, planner, builder of the windmill."
 story_text = "At every meeting Napoleon has set himself against you. Now he has unleashed nine fierce dogs, raised in secret. They mean to chase you off the farm — and Squealer's lies are turning the others against you too."
 goal_text = "Survive as long as you can. The grid shrinks every three rounds — there is no winning move, only how long you last."
-controls = Array[String](["Click a highlighted GREEN tile to move Snowball", "Then choose Battle Cry, Windmill Plans, or Wait", "Battle Cry: push a nearby dog away", "Windmill Plans: gain defence this round", "Wait: skip your action"])
+controls = Array[String](["Click a highlighted tile to move Snowball", "Then choose Battle Cry, Windmill Plans, or Wait", "Battle Cry: push a nearby dog away", "Windmill Plans: gain defence this round", "Wait: skip your action"])
