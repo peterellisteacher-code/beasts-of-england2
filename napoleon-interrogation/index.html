@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Napoleon — Animal Farm</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1c1008;
+      --parchment:  #e8d9b0;
+      --parchment2: #d4c48a;
+      --parchment3: #c9b87a;
+      --leather:    #6b3d1a;
+      --blood:      #7a1a1a;
+      --amber:      #c8790a;
+      --worn-edge:  #8b6b3a;
+      --nameplate:  #f0e0b0;
+      --serif:      Georgia, 'Times New Roman', serif;
+      --ui:         system-ui, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: #0a0704;
+      font-family: var(--serif);
+      color: var(--ink);
+    }
+
+    /* ── PORTRAIT STAGE ─────────────────────────────────────── */
+    #stage {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    #stage img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: opacity 300ms ease;
+    }
+
+    #portrait-a { z-index: 1; opacity: 1; }
+    #portrait-b { z-index: 2; opacity: 0; }
+
+    /* dark gradient at the bottom so the dialogue box reads clearly */
+    #stage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 38%,
+        rgba(10,6,2,0.55) 55%,
+        rgba(8,4,1,0.85) 72%,
+        rgba(6,3,1,0.96) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* ── BRIEFING CARD OVERLAY ──────────────────────────────── */
+    #briefing-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(6,3,1,0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    #briefing-card {
+      background: var(--parchment);
+      border: 3px solid var(--worn-edge);
+      border-radius: 2px;
+      max-width: 640px;
+      width: 100%;
+      padding: 40px 44px 36px;
+      box-shadow:
+        0 0 0 1px var(--parchment3) inset,
+        0 8px 40px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      position: relative;
+      /* aged paper texture via layered gradients */
+      background-image:
+        radial-gradient(ellipse at 20% 15%, rgba(200,180,120,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 85%, rgba(160,130,70,0.3) 0%, transparent 55%),
+        radial-gradient(ellipse at 60% 40%, rgba(240,220,160,0.2) 0%, transparent 70%);
+    }
+
+    #briefing-card::before {
+      content: 'NAPOLEON';
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--leather);
+      color: var(--nameplate);
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: 0.22em;
+      padding: 5px 22px 4px;
+      border: 2px solid var(--worn-edge);
+      clip-path: polygon(6px 0%, calc(100% - 6px) 0%, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0% 50%);
+    }
+
+    #briefing-card h2 {
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      text-align: center;
+      color: var(--leather);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--worn-edge);
+      padding-bottom: 12px;
+    }
+
+    #briefing-card p {
+      font-size: 0.97rem;
+      line-height: 1.72;
+      color: #2a1a08;
+      margin-bottom: 14px;
+    }
+
+    #briefing-card p em {
+      font-style: italic;
+      color: var(--leather);
+    }
+
+    #briefing-card .warning-note {
+      font-size: 0.88rem;
+      color: var(--blood);
+      border-left: 3px solid var(--blood);
+      padding: 8px 12px;
+      margin-bottom: 20px;
+      background: rgba(122,26,26,0.06);
+      font-style: italic;
+    }
+
+    #enter-btn {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      background: var(--leather);
+      color: var(--nameplate);
+      border: 2px solid var(--worn-edge);
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-style: italic;
+      letter-spacing: 0.06em;
+      padding: 13px 24px;
+      cursor: pointer;
+      clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+      transition: filter 150ms;
+    }
+
+    #enter-btn:hover { filter: brightness(1.18); }
+
+    /* ── DEATH OVERLAY ──────────────────────────────────────── */
+    #death-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(80, 0, 0, 0.0);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      text-align: center;
+      transition: background 600ms ease;
+    }
+
+    #death-overlay.active {
+      display: flex;
+      background: rgba(80, 0, 0, 0.92);
+    }
+
+    #death-text {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: #e8c8a0;
+      max-width: 620px;
+      margin-bottom: 32px;
+      font-style: italic;
+    }
+
+    #death-text em { font-style: normal; }
+
+    #death-score {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: #f0d080;
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    #death-score-sub {
+      font-family: var(--ui);
+      font-size: 0.8rem;
+      color: rgba(240,208,128,0.65);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    #restart-btn {
+      background: transparent;
+      border: 2px solid #c8a060;
+      color: #e8c8a0;
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-style: italic;
+      padding: 12px 36px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: background 150ms, color 150ms;
+    }
+
+    #restart-btn:hover {
+      background: rgba(200,160,96,0.18);
+    }
+
+    /* ── MAIN UI (over the stage) ───────────────────────────── */
+    #ui {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      pointer-events: none; /* children opt back in */
+    }
+
+    /* ── DIALOGUE BOX ───────────────────────────────────────── */
+    #dialogue-box {
+      pointer-events: all;
+      position: relative;
+      /* aged parchment background */
+      background: var(--parchment);
+      background-image:
+        radial-gradient(ellipse at 15% 20%, rgba(220,190,120,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(170,140,70,0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(240,225,175,0.3) 0%, transparent 65%);
+      border-top: 3px solid var(--worn-edge);
+      box-shadow:
+        0 -6px 32px rgba(0,0,0,0.7),
+        0 -1px 0 var(--parchment3),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+      /* torn-top paper edge via SVG clip */
+      padding: 0 0 0 0;
+    }
+
+    /* torn paper top edge simulation */
+    #dialogue-box::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 0;
+      right: 0;
+      height: 14px;
+      background: var(--parchment);
+      background-image:
+        radial-gradient(ellipse at 15% 20%, rgba(220,190,120,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(170,140,70,0.4) 0%, transparent 50%);
+      clip-path: polygon(
+        0% 100%, 0.8% 45%, 1.5% 80%, 2.3% 30%, 3.1% 65%, 4% 20%,
+        5% 55%, 6% 15%, 7% 50%, 8% 25%, 9% 60%, 10% 10%,
+        11% 45%, 12% 75%, 13% 30%, 14% 65%, 15% 20%, 16% 55%,
+        17% 35%, 18% 70%, 19% 15%, 20% 50%, 21% 80%, 22% 25%,
+        23% 60%, 24% 10%, 25% 45%, 26% 75%, 27% 30%, 28% 65%,
+        29% 20%, 30% 55%, 31% 85%, 32% 40%, 33% 70%, 34% 25%,
+        35% 60%, 36% 15%, 37% 50%, 38% 80%, 39% 35%, 40% 65%,
+        41% 20%, 42% 55%, 43% 30%, 44% 70%, 45% 10%, 46% 45%,
+        47% 75%, 48% 25%, 49% 60%, 50% 90%, 51% 55%, 52% 20%,
+        53% 50%, 54% 30%, 55% 65%, 56% 15%, 57% 50%, 58% 80%,
+        59% 35%, 60% 70%, 61% 25%, 62% 55%, 63% 10%, 64% 45%,
+        65% 75%, 66% 30%, 67% 65%, 68% 20%, 69% 55%, 70% 85%,
+        71% 40%, 72% 70%, 73% 25%, 74% 60%, 75% 15%, 76% 50%,
+        77% 80%, 78% 35%, 79% 65%, 80% 20%, 81% 55%, 82% 30%,
+        83% 70%, 84% 10%, 85% 45%, 86% 75%, 87% 25%, 88% 60%,
+        89% 20%, 90% 55%, 91% 85%, 92% 40%, 93% 65%, 94% 15%,
+        95% 50%, 96% 75%, 97% 30%, 98% 60%, 99% 20%, 100% 50%,
+        100% 100%
+      );
+    }
+
+    /* ── NAMEPLATE ──────────────────────────────────────────── */
+    #nameplate {
+      position: absolute;
+      top: -36px;
+      left: 20px;
+      background: var(--leather);
+      color: var(--nameplate);
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      font-weight: bold;
+      letter-spacing: 0.2em;
+      padding: 6px 20px 5px;
+      border: 2px solid var(--worn-edge);
+      /* torn-paper hexagon */
+      clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%);
+      z-index: 2;
+      white-space: nowrap;
+    }
+
+    /* ── NAPOLEON'S SPEECH (scrollable) ─────────────────────── */
+    #napoleon-speech {
+      min-height: 80px;
+      max-height: 160px;
+      overflow-y: auto;
+      padding: 20px 24px 12px;
+      font-size: 1.0rem;
+      line-height: 1.7;
+      color: #1c1008;
+      scroll-behavior: smooth;
+    }
+
+    #napoleon-speech::-webkit-scrollbar { width: 6px; }
+    #napoleon-speech::-webkit-scrollbar-track { background: rgba(139,107,58,0.15); }
+    #napoleon-speech::-webkit-scrollbar-thumb { background: var(--worn-edge); border-radius: 3px; }
+
+    #napoleon-speech em { font-style: italic; color: #3a1f08; }
+
+    /* divider between speech and input row */
+    #dialogue-divider {
+      border: none;
+      border-top: 1px solid var(--parchment3);
+      margin: 0 16px;
+    }
+
+    /* ── INPUT ROW ──────────────────────────────────────────── */
+    #input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      padding: 10px 12px 14px;
+    }
+
+    #msg-input {
+      flex: 1;
+      font-family: var(--serif);
+      font-size: 0.93rem;
+      color: var(--ink);
+      background: rgba(200,180,120,0.25);
+      border: 1px solid var(--parchment3);
+      border-right: none;
+      border-radius: 2px 0 0 2px;
+      padding: 8px 12px;
+      resize: none;
+      line-height: 1.5;
+      outline: none;
+    }
+
+    #msg-input:focus {
+      background: rgba(220,200,140,0.35);
+      border-color: var(--worn-edge);
+    }
+
+    #msg-input::placeholder { color: rgba(100,70,30,0.5); font-style: italic; }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .parchment-btn {
+      background: var(--parchment2);
+      background-image: linear-gradient(to bottom, var(--parchment), var(--parchment3));
+      color: var(--leather);
+      border: 1px solid var(--worn-edge);
+      font-family: var(--serif);
+      font-size: 0.78rem;
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      padding: 5px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      text-transform: uppercase;
+      transition: filter 120ms;
+    }
+
+    .parchment-btn:first-child { border-radius: 0 2px 0 0; }
+    .parchment-btn:last-child  { border-radius: 0 0 2px 0; }
+
+    .parchment-btn:hover { filter: brightness(0.92); }
+
+    .parchment-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* SEND button gets leather treatment */
+    #send-btn {
+      background: var(--leather);
+      background-image: linear-gradient(to bottom, #7a4520, #5c2e10);
+      color: var(--nameplate);
+      border-color: #3a1a06;
+    }
+
+    #send-btn:hover:not(:disabled) { filter: brightness(1.15); }
+
+    /* ── STATUS ROW (HUD) ───────────────────────────────────── */
+    #status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 6px 12px 0;
+      gap: 8px;
+    }
+
+    /* the small parchment panels at bottom corners */
+    .status-panel {
+      background: var(--parchment);
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(220,190,120,0.6) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(160,130,70,0.4) 0%, transparent 50%);
+      border: 2px solid var(--worn-edge);
+      border-radius: 2px;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      font-family: var(--ui);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #band-label {
+      font-weight: bold;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      transition: color 400ms;
+    }
+
+    .band-composed  { color: #3a5c1a; }
+    .band-wary      { color: #8b5a0a; }
+    .band-dangerous { color: var(--blood); }
+
+    #score-val {
+      font-weight: bold;
+      font-size: 0.85rem;
+      color: var(--leather);
+    }
+
+    /* history panel */
+    #history-panel {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(480px, 90vw);
+      height: 100%;
+      z-index: 50;
+      background: rgba(20,12,4,0.97);
+      border-left: 3px solid var(--worn-edge);
+      overflow-y: auto;
+      padding: 24px 20px;
+      pointer-events: all;
+    }
+
+    #history-panel.open { display: block; }
+
+    #history-panel h3 {
+      color: var(--parchment2);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--worn-edge);
+      padding-bottom: 10px;
+    }
+
+    .hist-turn {
+      margin-bottom: 18px;
+    }
+
+    .hist-label {
+      font-family: var(--ui);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: 4px;
+    }
+
+    .hist-label.student-label { color: #8ab0d0; }
+
+    .hist-body {
+      font-family: var(--serif);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--parchment);
+    }
+
+    .hist-body em { font-style: italic; color: var(--parchment2); }
+
+    #history-close {
+      position: sticky;
+      bottom: 12px;
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      background: transparent;
+      border: 1px solid var(--worn-edge);
+      color: var(--parchment2);
+      font-family: var(--serif);
+      font-size: 0.82rem;
+      font-style: italic;
+      padding: 8px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LOADING INDICATOR ──────────────────────────────────── */
+    #thinking {
+      display: none;
+      padding: 8px 24px 4px;
+      font-family: var(--ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(100,70,30,0.6);
+      font-style: italic;
+    }
+
+    #thinking.visible { display: block; }
+
+    /* ── ERROR LINE ─────────────────────────────────────────── */
+    .error-line {
+      font-family: var(--ui);
+      font-size: 0.78rem;
+      color: #c04040;
+      padding: 6px 24px;
+      font-style: italic;
+    }
+
+    /* ── SCROLLBAR for napoleon-speech ─────────────────────── */
+    #napoleon-speech { scrollbar-width: thin; scrollbar-color: var(--worn-edge) transparent; }
+  </style>
+</head>
+<body>
+
+<!-- PORTRAIT STAGE -->
+<div id="stage">
+  <img id="portrait-a" src="assets/portraits/cold_authority.png" alt="">
+  <img id="portrait-b" src="" alt="">
+</div>
+
+<!-- BRIEFING OVERLAY -->
+<div id="briefing-overlay">
+  <div id="briefing-card">
+    <h2>Napoleon — The Interrogation</h2>
+    <p>You have come to Animal Farm to question Napoleon. He will not tell you the truth — he hides what the pigs have done to the other animals. But the truth is in the novel, and you have read it.</p>
+    <p>Catch him in his lies. Name the specific words, the exact change, the real evidence — and Napoleon will <em>falter</em>. Every lie you expose is counted.</p>
+    <p>But be careful. Each time you corner him he grows more dangerous — watch his mood. And he is still the master of this farm: open defiance, and the dogs will be the last thing you see.</p>
+    <p>Expose as many lies as you can. Survive Napoleon.</p>
+    <p class="warning-note">Once Napoleon turns wary or dangerous he does not soften — clean, well-evidenced questions are the safe play.</p>
+    <button id="enter-btn"><em>[Enter the barn]</em></button>
+  </div>
+</div>
+
+<!-- DEATH OVERLAY -->
+<div id="death-overlay">
+  <div id="death-text"></div>
+  <div id="death-score">Lies exposed: <span id="death-score-val">0</span></div>
+  <div id="death-score-sub">Final score</div>
+  <button id="restart-btn"><em>Face him again</em></button>
+</div>
+
+<!-- MAIN UI -->
+<div id="ui">
+  <!-- HISTORY PANEL (slides in from right) -->
+  <div id="history-panel">
+    <h3>Transcript</h3>
+    <div id="history-list"></div>
+    <button id="history-close">Close transcript</button>
+  </div>
+
+  <!-- DIALOGUE BOX -->
+  <div id="dialogue-box">
+    <div id="nameplate">NAPOLEON</div>
+
+    <!-- Napoleon's speech area -->
+    <div id="napoleon-speech"></div>
+
+    <div id="thinking">Napoleon considers your words&hellip;</div>
+
+    <hr id="dialogue-divider">
+
+    <!-- Status row: band panel left, score panel right -->
+    <div id="status-row">
+      <div class="status-panel" id="band-panel">
+        <span style="opacity:0.6;font-size:0.65rem;">MOOD</span>
+        <span id="band-label" class="band-composed">COMPOSED</span>
+      </div>
+      <div class="status-panel" id="score-panel">
+        <span style="opacity:0.6;font-size:0.65rem;">LIES EXPOSED</span>
+        <span id="score-val">0</span>
+      </div>
+    </div>
+
+    <!-- Input row -->
+    <div id="input-row">
+      <textarea id="msg-input" rows="2" placeholder="Question Napoleon carefully…"></textarea>
+      <div class="btn-group">
+        <button class="parchment-btn" id="send-btn">Send</button>
+        <button class="parchment-btn" id="clear-btn">Clear</button>
+        <button class="parchment-btn" id="history-btn">History</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { NAPOLEON_FIRST_MESSAGE } from './system-prompt.js';
+
+const API_URL = 'http://localhost:8787/napoleon';
+
+// ── STATE ─────────────────────────────────────────────────
+let history = [];
+let menace  = 0;
+let score   = 0;
+let currentBand = 'composed';
+let activePortraitEl = 'a'; // which img is currently showing
+
+// ── DOM ───────────────────────────────────────────────────
+const speech       = document.getElementById('napoleon-speech');
+const msgInput     = document.getElementById('msg-input');
+const sendBtn      = document.getElementById('send-btn');
+const clearBtn     = document.getElementById('clear-btn');
+const historyBtn   = document.getElementById('history-btn');
+const bandLabel    = document.getElementById('band-label');
+const scoreVal     = document.getElementById('score-val');
+const thinking     = document.getElementById('thinking');
+const deathOverlay = document.getElementById('death-overlay');
+const deathText    = document.getElementById('death-text');
+const deathScoreV  = document.getElementById('death-score-val');
+const restartBtn   = document.getElementById('restart-btn');
+const briefing     = document.getElementById('briefing-overlay');
+const enterBtn     = document.getElementById('enter-btn');
+const histPanel    = document.getElementById('history-panel');
+const histList     = document.getElementById('history-list');
+const histClose    = document.getElementById('history-close');
+const portraitA    = document.getElementById('portrait-a');
+const portraitB    = document.getElementById('portrait-b');
+
+// ── UTILITIES ─────────────────────────────────────────────
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// *text* → <em>text</em> (after HTML-escaping)
+function formatNapoleon(raw) {
+  return escapeHtml(raw).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
+// ── PORTRAIT CROSSFADE ────────────────────────────────────
+function crossfadePortrait(file) {
+  if (!file) return;
+  const next = activePortraitEl === 'a' ? portraitB : portraitA;
+  const prev = activePortraitEl === 'a' ? portraitA : portraitB;
+
+  next.src = file;
+  next.style.transition = 'none';
+  next.style.opacity = '0';
+  next.style.zIndex = '2';
+  prev.style.zIndex = '1';
+
+  // force reflow so the transition fires
+  void next.offsetWidth;
+  next.style.transition = 'opacity 300ms ease';
+  next.style.opacity = '1';
+
+  setTimeout(() => {
+    prev.style.opacity = '0';
+  }, 20);
+
+  activePortraitEl = activePortraitEl === 'a' ? 'b' : 'a';
+}
+
+// ── SPEECH DISPLAY ────────────────────────────────────────
+function showNapoleonSpeech(html) {
+  speech.innerHTML = html;
+  speech.scrollTop = speech.scrollHeight;
+}
+
+// ── HUD UPDATE ────────────────────────────────────────────
+const BAND_LABELS = { composed: 'COMPOSED', wary: 'WARY', dangerous: 'DANGEROUS' };
+const BAND_CLASSES = { composed: 'band-composed', wary: 'band-wary', dangerous: 'band-dangerous' };
+
+function updateHud(band, newScore) {
+  currentBand = band;
+  bandLabel.textContent = BAND_LABELS[band] || band.toUpperCase();
+  bandLabel.className   = BAND_CLASSES[band] || '';
+  scoreVal.textContent  = newScore;
+
+  // darken the band panel as danger rises
+  const panel = document.getElementById('band-panel');
+  if (band === 'dangerous') {
+    panel.style.background = 'rgba(80,10,10,0.85)';
+    panel.style.borderColor = '#8b1a1a';
+  } else if (band === 'wary') {
+    panel.style.background = 'rgba(80,50,8,0.75)';
+    panel.style.borderColor = '#8b5a0a';
+  } else {
+    panel.style.background = '';
+    panel.style.borderColor = '';
+  }
+}
+
+// ── HISTORY PANEL ─────────────────────────────────────────
+function buildHistoryPanel() {
+  histList.innerHTML = '';
+  for (const turn of history) {
+    const div = document.createElement('div');
+    div.className = 'hist-turn';
+
+    const label = document.createElement('div');
+    label.className = turn.role === 'napoleon' ? 'hist-label' : 'hist-label student-label';
+    label.textContent = turn.role === 'napoleon' ? 'Napoleon' : 'You';
+    div.appendChild(label);
+
+    const body = document.createElement('div');
+    body.className = 'hist-body';
+    body.innerHTML = turn.role === 'napoleon'
+      ? formatNapoleon(turn.content)
+      : escapeHtml(turn.content);
+    div.appendChild(body);
+
+    histList.appendChild(div);
+  }
+  histList.scrollTop = histList.scrollHeight;
+}
+
+historyBtn.addEventListener('click', () => {
+  buildHistoryPanel();
+  histPanel.classList.toggle('open');
+});
+
+histClose.addEventListener('click', () => histPanel.classList.remove('open'));
+
+// ── ERROR DISPLAY ─────────────────────────────────────────
+function showError(msg) {
+  const el = document.createElement('div');
+  el.className = 'error-line';
+  el.textContent = `Error: ${msg}`;
+  speech.appendChild(el);
+  speech.scrollTop = speech.scrollHeight;
+}
+
+// ── DEATH SEQUENCE ────────────────────────────────────────
+function triggerDeath(text) {
+  // cross-fade to the_dogs portrait
+  crossfadePortrait('assets/portraits/the_dogs.png');
+
+  // disable input
+  msgInput.disabled = true;
+  sendBtn.disabled  = true;
+  clearBtn.disabled = true;
+
+  // show death narration in the speech box
+  showNapoleonSpeech(formatNapoleon(text));
+
+  // fill red overlay with narration + score
+  deathText.innerHTML = formatNapoleon(text);
+  deathScoreV.textContent = score;
+
+  // slight delay so the crossfade begins first
+  setTimeout(() => {
+    deathOverlay.classList.add('active');
+  }, 350);
+}
+
+// ── RESTART ───────────────────────────────────────────────
+function restartGame() {
+  // reset state
+  history = [];
+  menace  = 0;
+  score   = 0;
+  currentBand = 'composed';
+  activePortraitEl = 'a';
+
+  // reset portrait
+  portraitA.src = 'assets/portraits/cold_authority.png';
+  portraitA.style.opacity = '1';
+  portraitA.style.zIndex  = '1';
+  portraitB.style.opacity = '0';
+  portraitB.style.zIndex  = '2';
+  portraitB.src = '';
+
+  // reset UI
+  deathOverlay.classList.remove('active');
+  msgInput.disabled = false;
+  sendBtn.disabled  = false;
+  clearBtn.disabled = false;
+  histPanel.classList.remove('open');
+
+  updateHud('composed', 0);
+
+  // reset band panel styling
+  const panel = document.getElementById('band-panel');
+  panel.style.background   = '';
+  panel.style.borderColor  = '';
+
+  // clear the speech box; "Enter the barn" on the briefing re-seeds the opening
+  speech.innerHTML = '';
+
+  // re-show briefing
+  briefing.style.display = 'flex';
+}
+
+restartBtn.addEventListener('click', restartGame);
+
+// ── GAME START ────────────────────────────────────────────
+function seedOpening() {
+  const html = formatNapoleon(NAPOLEON_FIRST_MESSAGE);
+  showNapoleonSpeech(html);
+  history.push({ role: 'napoleon', content: NAPOLEON_FIRST_MESSAGE });
+}
+
+enterBtn.addEventListener('click', () => {
+  briefing.style.display = 'none';
+  seedOpening();
+  msgInput.focus();
+});
+
+// ── SEND ──────────────────────────────────────────────────
+async function send() {
+  const text = msgInput.value.trim();
+  if (!text || sendBtn.disabled) return;
+
+  msgInput.value = '';
+  sendBtn.disabled = true;
+  clearBtn.disabled = true;
+  thinking.classList.add('visible');
+  let ended = false;
+
+  history.push({ role: 'student', content: text });
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        history: history.slice(0, -1),
+        menace,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showError(data.error || `HTTP ${res.status}`);
+      history.pop();
+    } else {
+      const { text: reply, game, portrait } = data;
+
+      // Update menace from server response
+      menace = game.menace;
+
+      // Score +1 if falter
+      if (game.falter) score++;
+
+      // Update HUD (band from server)
+      updateHud(game.band, score);
+
+      // Update portrait
+      if (portrait && portrait.file) {
+        crossfadePortrait(portrait.file);
+      }
+
+      // Push napoleon reply to history
+      history.push({ role: 'napoleon', content: reply });
+
+      if (game.dogs) {
+        // Death sequence — the game is over; inputs stay disabled until restart
+        triggerDeath(reply);
+        ended = true;
+      } else {
+        // Normal display
+        showNapoleonSpeech(formatNapoleon(reply));
+      }
+    }
+  } catch (err) {
+    showError('Could not reach the worker — is wrangler dev running?');
+    history.pop();
+  }
+
+  thinking.classList.remove('visible');
+  if (!ended) {
+    sendBtn.disabled = false;
+    clearBtn.disabled = false;
+    msgInput.focus();
+  }
+}
+
+// ── EVENT LISTENERS ───────────────────────────────────────
+sendBtn.addEventListener('click', send);
+clearBtn.addEventListener('click', () => { msgInput.value = ''; msgInput.focus(); });
+msgInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    send();
+  }
+});
+</script>
+</body>
+</html>

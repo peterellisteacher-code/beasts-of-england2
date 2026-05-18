@@ -1,0 +1,5 @@
+# GitHub push protection blocks committing API keys, so .dev.vars (the
+# worker's OpenRouter key) must stay out of git. It still lives in the
+# working copy for local `wrangler dev`; recreate it from .dev.vars.example
+# on a fresh clone. The deployed worker uses `wrangler secret put` instead.
+.dev.vars

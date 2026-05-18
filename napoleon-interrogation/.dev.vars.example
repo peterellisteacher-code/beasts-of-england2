@@ -1,0 +1,4 @@
+# Local secret for `wrangler dev`. Copy this file to `.dev.vars` (same folder),
+# paste your real key, and never commit `.dev.vars`.
+# Haiku 4.5 is reached via OpenRouter (https://openrouter.ai/).
+OPENROUTER_API_KEY=sk-or-v1-your-key-here

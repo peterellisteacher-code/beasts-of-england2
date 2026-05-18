@@ -78,3 +78,9 @@ This is an autonomous build session. All 72 CCGS skills are pre-authorized.
 No new gameplay mechanics are to be invented — only existing reference code is reskinned and stitched together.
 
 > **Key constraint**: Do NOT invent new gameplay mechanics. Read from reference repos, port patterns to GDScript, apply Animal Farm skins.
+
+## Napoleon Interrogation — the game's final level
+
+`napoleon-interrogation/` is a complete, separately-built and verified activity to be folded in as the game's **final level** — an interrogate-Napoleon boss encounter (a Cloudflare Worker backend + an Animal Farm chapters 1–7 lorebook + a 16-portrait emotional visual layer + a Godot 4 integration stub).
+
+**Before working on it, read `napoleon-interrogation/INTEGRATION-START-HERE.md`.** It states exactly what is in the folder and the steps to make it work: deploy the Cloudflare Worker; rebuild the interrogation as a Godot scene from `napoleon-interrogation/godot/napoleon_interrogation.gd` and the 16 portraits; wire it as the finale. The worker and game logic are built, tested, and live-verified — the Godot front-end is a stub still to build out.

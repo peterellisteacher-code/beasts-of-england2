@@ -1,0 +1,12 @@
+{
+  "name": "napoleon-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "dev": "wrangler dev",
+    "serve": "python -m http.server 8000",
+    "eval": "node eval/napoleon-eval.js"
+  }
+}
