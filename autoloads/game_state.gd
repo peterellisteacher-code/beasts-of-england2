@@ -73,6 +73,15 @@ var jones_men_driven: int = 0
 var boxer_moves: Array[String] = ["charge", "brace"]
 var battle_wins: int = 0
 
+## party_roster — ordered list of unlocked character keys (always includes "boxer").
+## The tutorial ramp adds "jessie" after fight 1 win, "hen" after fight 2 win.
+var party_roster: Array[String] = ["boxer"]
+
+## party_moves — extra unlocked moves per character (beyond base_moves in PARTY def).
+## Keys are character keys ("boxer", "jessie", "hen"); values are Array[String] of move keys.
+## Base moves come from MoveData.PARTY and are NOT stored here to avoid duplication.
+var party_moves: Dictionary = {}
+
 # =============================================================================
 # Act 4 state
 # =============================================================================
@@ -153,6 +162,8 @@ func reset_act_state() -> void:
 		3:
 			boxer_moves = ["charge", "brace"]
 			battle_wins = 0
+			party_roster = ["boxer"]
+			party_moves = {}
 		4:
 			snowball_expelled = false
 	# Persist immediately so a browser refresh/close doesn't roll back the reset.
@@ -178,6 +189,8 @@ func save_to_disk() -> void:
 		"jones_men_driven": jones_men_driven,
 		"boxer_moves": boxer_moves,
 		"battle_wins": battle_wins,
+		"party_roster": party_roster,
+		"party_moves": party_moves,
 		"snowball_expelled": snowball_expelled,
 	}
 	# Atomic write: write to .tmp, snapshot the old save as .bak, then rename
@@ -240,6 +253,8 @@ func load_from_disk() -> void:
 	jones_men_driven               = _read_int(data, "jones_men_driven", 0)
 	boxer_moves                    = _read_string_array(data, "boxer_moves", ["charge", "brace"])
 	battle_wins                    = _read_int(data, "battle_wins", 0)
+	party_roster                   = _read_string_array(data, "party_roster", ["boxer"])
+	party_moves                    = _read_dict_of_string_arrays(data, "party_moves", {})
 	snowball_expelled              = _read_bool(data, "snowball_expelled", false)
 	_clamp_loaded_state()
 
@@ -276,6 +291,8 @@ func _reset_to_defaults() -> void:
 	jones_men_driven = 0
 	boxer_moves = ["charge", "brace"]
 	battle_wins = 0
+	party_roster = ["boxer"]
+	party_moves = {}
 	snowball_expelled = false
 
 
@@ -345,4 +362,22 @@ func _read_string_array(data: Dictionary, key: String, default_value: Array[Stri
 	for element: Variant in (data[key] as Array):
 		if element is String:
 			result.append(element)
+	return result
+
+
+func _read_dict_of_string_arrays(data: Dictionary, key: String, default_value: Dictionary) -> Dictionary:
+	if not data.has(key):
+		return default_value
+	if not data[key] is Dictionary:
+		return default_value
+	var result: Dictionary = {}
+	for char_key: Variant in (data[key] as Dictionary):
+		if not char_key is String:
+			continue
+		var arr: Array[String] = []
+		if data[key][char_key] is Array:
+			for m: Variant in (data[key][char_key] as Array):
+				if m is String:
+					arr.append(m)
+		result[char_key] = arr
 	return result

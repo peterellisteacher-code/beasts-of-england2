@@ -1,10 +1,10 @@
-[gd_scene load_steps=42 format=3]
+[gd_scene load_steps=50 format=3]
 
 [ext_resource type="Script" path="res://scenes/act3/battle/battle_scene.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/boxer_battle_idle.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/boxer_battle_attack.png" id="3"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/jones_man_idle.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/battle/battle_bg.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/battle/battle_bg_v3.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fx/shadow.png" id="6"]
 
 [sub_resource type="AtlasTexture" id="AT_bi_0"]
@@ -118,123 +118,171 @@ animations = [{
 "loop": true, "name": &"idle", "speed": 7.0
 }]
 
-[sub_resource type="StyleBoxFlat" id="panel_sb"]
-bg_color = Color(0.11, 0.08, 0.06, 0.94)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.77, 0.62, 0.28, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="log_sb"]
-bg_color = Color(0.09, 0.065, 0.05, 0.9)
+[sub_resource type="StyleBoxFlat" id="panel_cream"]
+bg_color = Color(0.98, 0.96, 0.90, 0.97)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.6, 0.49, 0.22, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+border_color = Color(0.56, 0.46, 0.26, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="log_sb"]
+bg_color = Color(0.97, 0.95, 0.88, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.56, 0.46, 0.26, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 content_margin_left = 14.0
 content_margin_top = 10.0
 content_margin_right = 14.0
 content_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxFlat" id="pbar_bg"]
-bg_color = Color(0.05, 0.04, 0.03, 1)
+bg_color = Color(0.80, 0.78, 0.72, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.34, 0.27, 0.13, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="pbar_fill_boxer"]
-bg_color = Color(0.32, 0.56, 0.2, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="pbar_fill_enemy"]
-bg_color = Color(0.32, 0.56, 0.2, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="btn_normal"]
-bg_color = Color(0.4, 0.13, 0.11, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.7, 0.56, 0.26, 1)
+border_color = Color(0.56, 0.46, 0.26, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="pbar_fill_boxer"]
+bg_color = Color(0.28, 0.72, 0.20, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="pbar_fill_enemy"]
+bg_color = Color(0.28, 0.72, 0.20, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="btn_normal"]
+bg_color = Color(0.97, 0.95, 0.88, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.56, 0.46, 0.26, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 content_margin_left = 8.0
 content_margin_top = 6.0
 content_margin_right = 8.0
 content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="btn_hover"]
-bg_color = Color(0.56, 0.19, 0.15, 1)
+bg_color = Color(0.88, 0.84, 0.68, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.88, 0.71, 0.34, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+border_color = Color(0.75, 0.58, 0.22, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 content_margin_left = 8.0
 content_margin_top = 6.0
 content_margin_right = 8.0
 content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="btn_pressed"]
-bg_color = Color(0.27, 0.09, 0.08, 1)
+bg_color = Color(0.78, 0.74, 0.58, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.6, 0.48, 0.22, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+border_color = Color(0.56, 0.44, 0.18, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 content_margin_left = 8.0
 content_margin_top = 6.0
 content_margin_right = 8.0
 content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="btn_disabled"]
-bg_color = Color(0.19, 0.16, 0.14, 1)
+bg_color = Color(0.88, 0.86, 0.80, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.34, 0.3, 0.22, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+border_color = Color(0.68, 0.65, 0.56, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="btn_switch_normal"]
+bg_color = Color(0.82, 0.90, 0.97, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.30, 0.55, 0.78, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="btn_switch_hover"]
+bg_color = Color(0.68, 0.82, 0.94, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.24, 0.46, 0.70, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="btn_switch_disabled"]
+bg_color = Color(0.88, 0.90, 0.92, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.60, 0.65, 0.70, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 content_margin_left = 8.0
 content_margin_top = 6.0
 content_margin_right = 8.0
@@ -250,22 +298,16 @@ texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="DarkOverlay" type="ColorRect" parent="."]
-offset_right = 1280.0
-offset_bottom = 720.0
-mouse_filter = 2
-color = Color(0.04, 0.02, 0.03, 0.46)
-
 [node name="BoxerShadow" type="Sprite2D" parent="."]
 position = Vector2(316, 518)
 scale = Vector2(0.92, 0.34)
-modulate = Color(0, 0, 0, 0.46)
+modulate = Color(0, 0, 0, 0.38)
 texture = ExtResource("6")
 
 [node name="EnemyShadow" type="Sprite2D" parent="."]
-position = Vector2(980, 372)
-scale = Vector2(0.62, 0.26)
-modulate = Color(0, 0, 0, 0.52)
+position = Vector2(980, 371)
+scale = Vector2(0.7, 0.3)
+modulate = Color(0, 0, 0, 0.55)
 texture = ExtResource("6")
 
 [node name="BoxerSprite" type="AnimatedSprite2D" parent="."]
@@ -276,8 +318,8 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="EnemySprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(980, 245)
-scale = Vector2(2.2, 2.2)
+position = Vector2(980, 252)
+scale = Vector2(1.1, 1.1)
 flip_h = false
 sprite_frames = SubResource("enemy_frames")
 animation = &"idle"
@@ -289,25 +331,25 @@ autoplay = "idle"
 offset_left = 30.0
 offset_top = 26.0
 offset_right = 440.0
-offset_bottom = 156.0
-theme_override_styles/panel = SubResource("panel_sb")
+offset_bottom = 168.0
+theme_override_styles/panel = SubResource("panel_cream")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/EnemyPanel"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="NameLabel" type="Label" parent="UI/EnemyPanel/VBoxContainer"]
-text = "Enemy"
-theme_override_colors/font_color = Color(0.86, 0.7, 0.33, 1)
-theme_override_font_sizes/font_size = 22
+text = "Enemy  Lv.?"
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_font_sizes/font_size = 20
 
 [node name="HPLabel" type="Label" parent="UI/EnemyPanel/VBoxContainer"]
-text = "0/0"
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_font_sizes/font_size = 17
+text = "HP  0/0"
+theme_override_colors/font_color = Color(0.28, 0.22, 0.12, 1)
+theme_override_font_sizes/font_size = 16
 
 [node name="HPBar" type="ProgressBar" parent="UI/EnemyPanel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 22)
 theme_override_styles/background = SubResource("pbar_bg")
 theme_override_styles/fill = SubResource("pbar_fill_enemy")
 min_value = 0.0
@@ -315,29 +357,32 @@ max_value = 100.0
 value = 100.0
 show_percentage = false
 
+[node name="PartyDots" type="HBoxContainer" parent="UI/EnemyPanel/VBoxContainer"]
+theme_override_constants/separation = 6
+
 [node name="BoxerPanel" type="PanelContainer" parent="UI"]
 offset_left = 758.0
-offset_top = 382.0
-offset_right = 1250.0
-offset_bottom = 506.0
-theme_override_styles/panel = SubResource("panel_sb")
+offset_top = 380.0
+offset_right = 1252.0
+offset_bottom = 518.0
+theme_override_styles/panel = SubResource("panel_cream")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/BoxerPanel"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="NameLabel" type="Label" parent="UI/BoxerPanel/VBoxContainer"]
-text = "BOXER"
-theme_override_colors/font_color = Color(0.86, 0.7, 0.33, 1)
-theme_override_font_sizes/font_size = 22
+text = "BOXER  Lv.10"
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_font_sizes/font_size = 20
 
 [node name="HPLabel" type="Label" parent="UI/BoxerPanel/VBoxContainer"]
-text = "0/0"
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_font_sizes/font_size = 17
+text = "HP  0/0"
+theme_override_colors/font_color = Color(0.28, 0.22, 0.12, 1)
+theme_override_font_sizes/font_size = 16
 
 [node name="HPBar" type="ProgressBar" parent="UI/BoxerPanel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 22)
 theme_override_styles/background = SubResource("pbar_bg")
 theme_override_styles/fill = SubResource("pbar_fill_boxer")
 min_value = 0.0
@@ -345,98 +390,131 @@ max_value = 100.0
 value = 100.0
 show_percentage = false
 
+[node name="PartyDots" type="HBoxContainer" parent="UI/BoxerPanel/VBoxContainer"]
+theme_override_constants/separation = 6
+
 [node name="BattleLog" type="RichTextLabel" parent="UI"]
 offset_left = 30.0
-offset_top = 514.0
+offset_top = 516.0
 offset_right = 742.0
-offset_bottom = 700.0
+offset_bottom = 704.0
 theme_override_styles/normal = SubResource("log_sb")
-theme_override_colors/default_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_font_sizes/normal_font_size = 18
+theme_override_colors/default_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_font_sizes/normal_font_size = 17
 bbcode_enabled = true
 scroll_following = true
 
 [node name="MoveButtons" type="GridContainer" parent="UI"]
 offset_left = 760.0
-offset_top = 514.0
-offset_right = 1250.0
-offset_bottom = 700.0
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 12
+offset_top = 528.0
+offset_right = 1172.0
+offset_bottom = 710.0
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
 columns = 2
 
 [node name="Move0" type="Button" parent="UI/MoveButtons"]
-custom_minimum_size = Vector2(233, 52)
+custom_minimum_size = Vector2(196, 50)
 theme_override_styles/normal = SubResource("btn_normal")
 theme_override_styles/hover = SubResource("btn_hover")
 theme_override_styles/pressed = SubResource("btn_pressed")
 theme_override_styles/disabled = SubResource("btn_disabled")
 theme_override_styles/focus = SubResource("btn_hover")
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.5, 0.44, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 15
 text = "-"
 
 [node name="Move1" type="Button" parent="UI/MoveButtons"]
-custom_minimum_size = Vector2(233, 52)
+custom_minimum_size = Vector2(196, 50)
 theme_override_styles/normal = SubResource("btn_normal")
 theme_override_styles/hover = SubResource("btn_hover")
 theme_override_styles/pressed = SubResource("btn_pressed")
 theme_override_styles/disabled = SubResource("btn_disabled")
 theme_override_styles/focus = SubResource("btn_hover")
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.5, 0.44, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 15
 text = "-"
 
 [node name="Move2" type="Button" parent="UI/MoveButtons"]
-custom_minimum_size = Vector2(233, 52)
+custom_minimum_size = Vector2(196, 50)
 theme_override_styles/normal = SubResource("btn_normal")
 theme_override_styles/hover = SubResource("btn_hover")
 theme_override_styles/pressed = SubResource("btn_pressed")
 theme_override_styles/disabled = SubResource("btn_disabled")
 theme_override_styles/focus = SubResource("btn_hover")
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.5, 0.44, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 15
 text = "-"
 visible = false
 
 [node name="Move3" type="Button" parent="UI/MoveButtons"]
-custom_minimum_size = Vector2(233, 52)
+custom_minimum_size = Vector2(196, 50)
 theme_override_styles/normal = SubResource("btn_normal")
 theme_override_styles/hover = SubResource("btn_hover")
 theme_override_styles/pressed = SubResource("btn_pressed")
 theme_override_styles/disabled = SubResource("btn_disabled")
 theme_override_styles/focus = SubResource("btn_hover")
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.5, 0.44, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 15
 text = "-"
 visible = false
 
 [node name="Move4" type="Button" parent="UI/MoveButtons"]
-custom_minimum_size = Vector2(233, 52)
+custom_minimum_size = Vector2(196, 50)
 theme_override_styles/normal = SubResource("btn_normal")
 theme_override_styles/hover = SubResource("btn_hover")
 theme_override_styles/pressed = SubResource("btn_pressed")
 theme_override_styles/disabled = SubResource("btn_disabled")
 theme_override_styles/focus = SubResource("btn_hover")
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.5, 0.44, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 15
 text = "-"
 visible = false
 
 [node name="Move5" type="Button" parent="UI/MoveButtons"]
-custom_minimum_size = Vector2(233, 52)
+custom_minimum_size = Vector2(196, 50)
 theme_override_styles/normal = SubResource("btn_normal")
 theme_override_styles/hover = SubResource("btn_hover")
 theme_override_styles/pressed = SubResource("btn_pressed")
 theme_override_styles/disabled = SubResource("btn_disabled")
 theme_override_styles/focus = SubResource("btn_hover")
-theme_override_colors/font_color = Color(0.96, 0.93, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.5, 0.44, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 15
 text = "-"
 visible = false
+
+[node name="SwitchButton" type="Button" parent="UI"]
+offset_left = 1182.0
+offset_top = 528.0
+offset_right = 1252.0
+offset_bottom = 710.0
+theme_override_styles/normal = SubResource("btn_switch_normal")
+theme_override_styles/hover = SubResource("btn_switch_hover")
+theme_override_styles/pressed = SubResource("btn_switch_hover")
+theme_override_styles/disabled = SubResource("btn_switch_disabled")
+theme_override_styles/focus = SubResource("btn_switch_hover")
+theme_override_colors/font_color = Color(0.14, 0.30, 0.52, 1)
+theme_override_colors/font_disabled_color = Color(0.55, 0.58, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "SWITCH"
+visible = false
+clip_text = false
+autowrap_mode = 3
+
+[node name="BenchPanel" type="PanelContainer" parent="UI"]
+offset_left = 462.0
+offset_top = 24.0
+offset_right = 762.0
+offset_bottom = 142.0
+theme_override_styles/panel = SubResource("panel_cream")
+visible = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/BenchPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
