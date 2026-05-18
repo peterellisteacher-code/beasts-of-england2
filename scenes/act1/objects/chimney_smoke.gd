@@ -5,13 +5,15 @@ extends Node2D
 
 const PUFF_TEX: String = "res://assets/sprites/ui/lantern_light.png"
 
-@export var spawn_interval: float = 1.05
+@export var spawn_interval: float = 0.9
 @export var rise_speed: float = 26.0
 @export var puff_lifetime: float = 5.0
-@export var puff_tint: Color = Color(0.60, 0.62, 0.70)
+# HDR tint (>1) so the puffs read through the scene's dark night CanvasModulate,
+# the same trick the stars and moon use.
+@export var puff_tint: Color = Color(2.4, 2.3, 2.2)
 
 var _tex: Texture2D
-var _spawn_t: float = 0.4
+var _spawn_t: float = 0.2
 var _puffs: Array[Dictionary] = []
 
 

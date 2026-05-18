@@ -739,7 +739,7 @@ z_index = -1
 script = ExtResource("46")
 
 [node name="ChimneySmoke" type="Node2D" parent="World"]
-position = Vector2(2470, 118)
+position = Vector2(926, 276)
 script = ExtResource("48")
 
 [connection signal="body_entered" from="World/BarnDoor" to="." method="on_barn_reached"]
