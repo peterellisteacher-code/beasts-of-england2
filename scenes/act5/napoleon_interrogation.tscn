@@ -1,0 +1,317 @@
+[gd_scene load_steps=2 format=3 uid="uid://act5_napoleon_interrogation"]
+
+[ext_resource type="Script" path="res://scenes/act5/napoleon_interrogation.gd" id="1_controller"]
+
+[node name="NapoleonInterrogation" type="Control"]
+script = ExtResource("1_controller")
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+custom_minimum_size = Vector2(1280, 720)
+
+[node name="PortraitA" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_filter = 1
+expand_mode = 1
+stretch_mode = 4
+z_index = 1
+
+[node name="PortraitB" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_filter = 1
+expand_mode = 1
+stretch_mode = 4
+z_index = 2
+modulate = Color(1, 1, 1, 0)
+
+[node name="GradientStrip" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 3
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="UiLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 10
+mouse_filter = 2
+
+[node name="BriefingOverlay" type="Panel" parent="UiLayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 100
+mouse_filter = 0
+
+[node name="BriefingCard" type="PanelContainer" parent="UiLayer/BriefingOverlay"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 60.0
+offset_right = 960.0
+offset_bottom = 660.0
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="UiLayer/BriefingOverlay/BriefingCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_right = 44
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Heading" type="Label" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+layout_mode = 2
+text = "Napoleon — The Interrogation"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.42, 0.24, 0.098, 1)
+
+[node name="Para1" type="Label" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+layout_mode = 2
+text = "You have come to Animal Farm to question Napoleon. He will not tell you the truth. He hides what the pigs have done to the other animals. But the truth is in the novel, and you have read it."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.165, 0.102, 0.031, 1)
+
+[node name="Para2" type="Label" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+layout_mode = 2
+text = "Catch him in his lies. Name the specific words, the exact change, the real evidence — and Napoleon will falter. Every lie you expose is counted."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.165, 0.102, 0.031, 1)
+
+[node name="Para3" type="Label" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+layout_mode = 2
+text = "But be careful. Each time you corner him he grows more dangerous — watch his mood. And he is still the master of this farm: open defiance, and the dogs will be the last thing you see."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.165, 0.102, 0.031, 1)
+
+[node name="Para4" type="Label" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+layout_mode = 2
+text = "Expose as many lies as you can. Survive Napoleon."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.165, 0.102, 0.031, 1)
+
+[node name="Warning" type="Label" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+layout_mode = 2
+text = "Warning: Once Napoleon turns wary or dangerous he does not soften — clean, well-evidenced questions are the safe play."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.478, 0.102, 0.102, 1)
+
+[node name="EnterBtn" type="Button" parent="UiLayer/BriefingOverlay/BriefingCard/MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "[Enter the barn]"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.941, 0.878, 0.69, 1)
+
+[node name="DialogueBox" type="Panel" parent="UiLayer"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 0.0
+offset_top = 440.0
+offset_right = 1280.0
+offset_bottom = 720.0
+z_index = 10
+
+[node name="VBox" type="VBoxContainer" parent="UiLayer/DialogueBox"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1280.0
+offset_bottom = 280.0
+theme_override_constants/separation = 0
+
+[node name="NameplateLabel" type="Label" parent="UiLayer/DialogueBox/VBox"]
+layout_mode = 2
+text = "NAPOLEON"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.42, 0.24, 0.098, 1)
+
+[node name="SpeechLabel" type="RichTextLabel" parent="UiLayer/DialogueBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 90)
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_following = true
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/italic_font_size = 16
+theme_override_colors/default_color = Color(0.11, 0.063, 0.031, 1)
+
+[node name="ThinkingLabel" type="Label" parent="UiLayer/DialogueBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Napoleon considers your words..."
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.392, 0.275, 0.118, 0.6)
+visible = false
+
+[node name="Divider" type="ColorRect" parent="UiLayer/DialogueBox/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 1)
+color = Color(0.545, 0.455, 0.231, 1)
+
+[node name="StatusRow" type="HBoxContainer" parent="UiLayer/DialogueBox/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="BandPanel" type="PanelContainer" parent="UiLayer/DialogueBox/VBox/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="BandHBox" type="HBoxContainer" parent="UiLayer/DialogueBox/VBox/StatusRow/BandPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MoodCaption" type="Label" parent="UiLayer/DialogueBox/VBox/StatusRow/BandPanel/BandHBox"]
+layout_mode = 2
+text = "MOOD"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.11, 0.063, 0.031, 0.6)
+
+[node name="BandLabel" type="Label" parent="UiLayer/DialogueBox/VBox/StatusRow/BandPanel/BandHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COMPOSED"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.227, 0.361, 0.102, 1)
+
+[node name="ScorePanel" type="PanelContainer" parent="UiLayer/DialogueBox/VBox/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="ScoreHBox" type="HBoxContainer" parent="UiLayer/DialogueBox/VBox/StatusRow/ScorePanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ScoreCaption" type="Label" parent="UiLayer/DialogueBox/VBox/StatusRow/ScorePanel/ScoreHBox"]
+layout_mode = 2
+text = "LIES EXPOSED"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.11, 0.063, 0.031, 0.6)
+
+[node name="ScoreLabel" type="Label" parent="UiLayer/DialogueBox/VBox/StatusRow/ScorePanel/ScoreHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.42, 0.24, 0.098, 1)
+
+[node name="Spacer" type="Control" parent="UiLayer/DialogueBox/VBox/StatusRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LeaveBtnSmall" type="Button" parent="UiLayer/DialogueBox/VBox/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Leave the barn"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.42, 0.24, 0.098, 0.7)
+
+[node name="InputRow" type="HBoxContainer" parent="UiLayer/DialogueBox/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MsgInput" type="LineEdit" parent="UiLayer/DialogueBox/VBox/InputRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Question Napoleon carefully..."
+theme_override_font_sizes/font_size = 15
+
+[node name="SendBtn" type="Button" parent="UiLayer/DialogueBox/VBox/InputRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Send"
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.941, 0.878, 0.69, 1)
+
+[node name="DeathOverlay" type="Panel" parent="UiLayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 90
+visible = false
+
+[node name="CenterContainer" type="CenterContainer" parent="UiLayer/DeathOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UiLayer/DeathOverlay/CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(620, 0)
+theme_override_constants/separation = 16
+
+[node name="DeathText" type="RichTextLabel" parent="UiLayer/DeathOverlay/CenterContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(620, 0)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/italic_font_size = 18
+theme_override_colors/default_color = Color(0.91, 0.784, 0.627, 1)
+
+[node name="DeathScore" type="Label" parent="UiLayer/DeathOverlay/CenterContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Lies exposed: 0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.941, 0.816, 0.502, 1)
+
+[node name="ContinueBtn" type="Button" parent="UiLayer/DeathOverlay/CenterContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.91, 0.784, 0.627, 1)

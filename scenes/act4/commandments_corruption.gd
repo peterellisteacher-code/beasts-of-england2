@@ -108,4 +108,4 @@ func _make_commandment_row(index: int) -> HBoxContainer:
 # =============================================================================
 
 func _on_continue() -> void:
-	SceneManager.go_to_scene("res://scenes/act4/credits.tscn")
+	SceneManager.go_to_scene("res://scenes/act5/napoleon_interrogation.tscn")

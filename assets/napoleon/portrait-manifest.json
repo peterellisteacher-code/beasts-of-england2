@@ -1,0 +1,24 @@
+{
+  "_comment": "Shared portrait manifest for the Napoleon interrogation. Read by the worker (selectPortrait), the web page, and the Godot export. The 4 emotion axes run 0..1; the worker snaps the model's per-turn emotion vector to the nearest portrait. 'the_dogs' has no emotion vector — it is the death image, shown only when the dogs are loose.",
+  "axes": ["composure", "threat", "suspicion", "contempt"],
+  "basePortrait": "cold_authority",
+  "deathPortrait": "the_dogs",
+  "portraits": [
+    { "id": "cold_authority",      "file": "assets/napoleon/portraits/cold_authority.png",      "band": "composed",  "emotion": { "composure": 0.95, "threat": 0.15, "suspicion": 0.20, "contempt": 0.45 } },
+    { "id": "false_warmth",        "file": "assets/napoleon/portraits/false_warmth.png",        "band": "composed",  "emotion": { "composure": 0.90, "threat": 0.10, "suspicion": 0.15, "contempt": 0.30 } },
+    { "id": "dismissive",          "file": "assets/napoleon/portraits/dismissive.png",          "band": "composed",  "emotion": { "composure": 0.90, "threat": 0.15, "suspicion": 0.10, "contempt": 0.65 } },
+    { "id": "sharp_interest",      "file": "assets/napoleon/portraits/sharp_interest.png",      "band": "composed",  "emotion": { "composure": 0.85, "threat": 0.30, "suspicion": 0.55, "contempt": 0.35 } },
+    { "id": "watchful",            "file": "assets/napoleon/portraits/watchful.png",            "band": "wary",      "emotion": { "composure": 0.75, "threat": 0.45, "suspicion": 0.70, "contempt": 0.40 } },
+    { "id": "faltered",            "file": "assets/napoleon/portraits/faltered.png",            "band": "wary",      "emotion": { "composure": 0.30, "threat": 0.35, "suspicion": 0.50, "contempt": 0.35 } },
+    { "id": "irritated",           "file": "assets/napoleon/portraits/irritated.png",           "band": "wary",      "emotion": { "composure": 0.60, "threat": 0.55, "suspicion": 0.55, "contempt": 0.55 } },
+    { "id": "cold_contempt",       "file": "assets/napoleon/portraits/cold_contempt.png",       "band": "wary",      "emotion": { "composure": 0.80, "threat": 0.45, "suspicion": 0.50, "contempt": 0.90 } },
+    { "id": "suspicion_hardening", "file": "assets/napoleon/portraits/suspicion_hardening.png", "band": "wary",      "emotion": { "composure": 0.70, "threat": 0.50, "suspicion": 0.95, "contempt": 0.45 } },
+    { "id": "warning",             "file": "assets/napoleon/portraits/warning.png",             "band": "dangerous", "emotion": { "composure": 0.70, "threat": 0.80, "suspicion": 0.70, "contempt": 0.55 } },
+    { "id": "dogs_alert",          "file": "assets/napoleon/portraits/dogs_alert.png",          "band": "dangerous", "emotion": { "composure": 0.65, "threat": 0.90, "suspicion": 0.65, "contempt": 0.50 } },
+    { "id": "controlled_fury",     "file": "assets/napoleon/portraits/controlled_fury.png",     "band": "dangerous", "emotion": { "composure": 0.40, "threat": 0.85, "suspicion": 0.75, "contempt": 0.70 } },
+    { "id": "paranoid_accusation", "file": "assets/napoleon/portraits/paranoid_accusation.png", "band": "dangerous", "emotion": { "composure": 0.35, "threat": 0.75, "suspicion": 1.00, "contempt": 0.60 } },
+    { "id": "snarling_rage",       "file": "assets/napoleon/portraits/snarling_rage.png",       "band": "dangerous", "emotion": { "composure": 0.10, "threat": 0.95, "suspicion": 0.80, "contempt": 0.80 } },
+    { "id": "triumphant_cruelty",  "file": "assets/napoleon/portraits/triumphant_cruelty.png",  "band": "dangerous", "emotion": { "composure": 0.85, "threat": 0.85, "suspicion": 0.55, "contempt": 0.90 } },
+    { "id": "the_dogs",            "file": "assets/napoleon/portraits/the_dogs.png",            "band": "death" }
+  ]
+}
