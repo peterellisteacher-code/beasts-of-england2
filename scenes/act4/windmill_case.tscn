@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://windmill_case_a4"]
+
+[ext_resource type="Script" path="res://scenes/act4/windmill_case.gd" id="1_root"]
+[ext_resource type="Script" path="res://scenes/act4/case/case_file_ui.gd" id="2_caseui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/controls_hud.tscn" id="3_chud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/act_intro.tscn" id="4_actintro"]
+
+[node name="WindmillCase" type="Node"]
+script = ExtResource("1_root")
+
+[node name="CaseFileUI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_caseui")
+
+[node name="ControlsHUD" parent="." instance=ExtResource("3_chud")]
+controls = Array[String](["Click a glowing mark to investigate", "Click a word, then a slot, to place it", "Click a filled slot to clear it", "H: hide controls"])
+
+[node name="ActIntro" parent="." instance=ExtResource("4_actintro")]
+act_label_text = "ACT 4 — CHAPTER 6"
+title_text = "THE WINDMILL"
+protagonist_text = "You are one of the animals of Animal Farm — awake before the others, at the wreck of the windmill."
+story_text = "In the night a great storm broke over the farm, and this morning the windmill — a year of the animals' labour — lies in ruins. Napoleon is already among the stones, and soon he will tell every animal who to blame. Before he does, walk the wreck yourself. Gather what you can see with your own eyes, and work out what truly brought the windmill down."
+goal_text = "Investigate both rooms, collect the evidence, and complete the two pages of your Casebook."
+controls = Array[String](["Click a glowing mark to investigate it", "Click an underlined word to add it to your evidence", "Open the Casebook, then click a word and a slot to place it", "Click a filled slot to clear it", "Press H to hide or show the controls"])

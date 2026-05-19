@@ -80,4 +80,4 @@ func _check_act_complete() -> void:
 	if GameState.battle_wins >= TOTAL_BATTLES and GameState.current_act <= 3:
 		GameState.corrupt_commandment(2)
 		GameState.complete_act(3)
-		SceneManager.go_to_scene("res://scenes/act4/politics_tactics.tscn")
+		SceneManager.go_to_scene("res://scenes/act4/windmill_case.tscn")

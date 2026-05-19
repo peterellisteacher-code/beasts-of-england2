@@ -8,7 +8,7 @@ const ACT_SCENES: Dictionary = {
 	1: "res://scenes/act1/old_major_platformer.tscn",
 	2: "res://scenes/act2/boxer_revolution.tscn",
 	3: "res://scenes/act3/cowshed_overworld.tscn",
-	4: "res://scenes/act4/politics_tactics.tscn",
+	4: "res://scenes/act4/windmill_case.tscn",
 }
 
 # =============================================================================
