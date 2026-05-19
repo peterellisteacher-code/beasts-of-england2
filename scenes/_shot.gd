@@ -21,7 +21,11 @@ func _ready() -> void:
 	var intro: Node = scene.get_node_or_null("ActIntro")
 	if intro != null:
 		intro.queue_free()  # _exit_tree() clears the global pause
-	await get_tree().create_timer(1.6).timeout
+	# Optional 4th arg: seconds to wait after dismissing the intro before the
+	# capture (default 1.6). Pass a small value to shoot a stealth scene before
+	# a detection catch triggers.
+	var settle: float = args[3].to_float() if args.size() > 3 else 1.6
+	await get_tree().create_timer(settle).timeout
 	var img: Image = get_viewport().get_texture().get_image()
 	var err: int = img.save_png(out)
 	print("[SHOT] target=", target, " out=", out, " size=", img.get_size(), " err=", err)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://act1_old_major"]
+[gd_scene load_steps=12 format=3 uid="uid://act1_old_major"]
 
 [ext_resource type="Script" path="res://scenes/act1/player/old_major.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/old_major_idle.png" id="2_sheet"]
@@ -78,7 +78,12 @@ animations = [{
 "speed": 1.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_sensor"]
+radius = 36.0
+
 [node name="OldMajor" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
 script = ExtResource("1_script")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -93,3 +98,12 @@ shape = SubResource("CapsuleShape2D_om_body")
 [node name="HurtTimer" type="Timer" parent="."]
 one_shot = true
 wait_time = 1.0
+
+[node name="BodySensor" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 24
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodySensor"]
+shape = SubResource("CircleShape2D_sensor")

@@ -1,8 +1,7 @@
-[gd_scene load_steps=74 format=3 uid="uid://act1_platformer"]
+[gd_scene load_steps=104 format=3 uid="uid://act1_platformer"]
 
 [ext_resource type="Script" path="res://scenes/act1/old_major_platformer.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/act1/player/old_major.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/act1/ui/hearts_hud.tscn" id="3"]
 [ext_resource type="Script" path="res://scenes/act1/objects/moses_circler.gd" id="4"]
 [ext_resource type="Texture2D" path="res://assets/sprites/tiles/grass_top.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/soil_tile.png" id="6"]
@@ -51,6 +50,17 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/oak_tree.png" id="52"]
 [ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/chicken_coop.png" id="53"]
 [ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/hen.png" id="54"]
+[ext_resource type="PackedScene" path="res://scenes/act1/objects/rousable_animal.tscn" id="55"]
+[ext_resource type="PackedScene" path="res://scenes/act1/ui/stealth_hud.tscn" id="56"]
+[ext_resource type="PackedScene" path="res://scenes/ui/act_intro.tscn" id="57"]
+[ext_resource type="PackedScene" path="res://scenes/ui/controls_hud.tscn" id="58"]
+[ext_resource type="Script" path="res://scenes/act1/objects/secret_scroll.gd" id="59"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/sheep.png" id="60"]
+[ext_resource type="Texture2D" path="res://assets/sprites/act1_uplift/clover.png" id="61"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/boxer_battle_idle.png" id="62"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tileset/hay_bales.png" id="63"]
+[ext_resource type="Script" path="res://scenes/act1/objects/shadow_zone.gd" id="64"]
+[ext_resource type="Script" path="res://scenes/act1/objects/light_zone.gd" id="65"]
 
 [sub_resource type="AtlasTexture" id="Moses_fly0"]
 atlas = ExtResource("36")
@@ -175,6 +185,64 @@ size = Vector2(3400.0, 80.0)
 
 [sub_resource type="RectangleShape2D" id="BarnDoorShape"]
 size = Vector2(80.0, 160.0)
+
+[sub_resource type="AtlasTexture" id="BoxerFrame0"]
+atlas = ExtResource("62")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="RectangleShape2D" id="Shadow0Shape"]
+size = Vector2(120.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="Shadow1Shape"]
+size = Vector2(110.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="Shadow2Shape"]
+size = Vector2(130.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="Shadow3Shape"]
+size = Vector2(100.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="Shadow4Shape"]
+size = Vector2(120.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="Shadow5Shape"]
+size = Vector2(110.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="Shadow6Shape"]
+size = Vector2(120.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="HayShadowShape"]
+size = Vector2(100.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="LightZone0Shape"]
+size = Vector2(100.0, 180.0)
+
+[sub_resource type="RectangleShape2D" id="LightZone1Shape"]
+size = Vector2(80.0, 160.0)
+
+[sub_resource type="RectangleShape2D" id="LightZone2Shape"]
+size = Vector2(90.0, 160.0)
+
+[sub_resource type="RectangleShape2D" id="LightZone3Shape"]
+size = Vector2(80.0, 160.0)
+
+[sub_resource type="RectangleShape2D" id="HayBale0Shape"]
+size = Vector2(80.0, 48.0)
+
+[sub_resource type="RectangleShape2D" id="HayBale1Shape"]
+size = Vector2(80.0, 48.0)
+
+[sub_resource type="RectangleShape2D" id="HayBale2Shape"]
+size = Vector2(80.0, 48.0)
+
+[sub_resource type="RectangleShape2D" id="HayBale3Shape"]
+size = Vector2(80.0, 48.0)
+
+[sub_resource type="RectangleShape2D" id="HayBale4Shape"]
+size = Vector2(80.0, 48.0)
+
+[sub_resource type="CircleShape2D" id="ScrollShape"]
+radius = 40.0
 
 [node name="OldMajorPlatformer" type="Node2D"]
 script = ExtResource("1")
@@ -534,6 +602,8 @@ scale = Vector2(1.6, 1.6)
 
 [node name="Ground" type="StaticBody2D" parent="World"]
 position = Vector2(1300.0, 600.0)
+collision_layer = 1
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Ground"]
 shape = SubResource("GroundShape")
@@ -602,28 +672,6 @@ texture = ExtResource("53")
 scale = Vector2(0.86, 0.86)
 flip_h = true
 
-[node name="Hen0" type="Sprite2D" parent="World"]
-position = Vector2(250, 530)
-texture = ExtResource("54")
-scale = Vector2(0.62, 0.62)
-
-[node name="Hen1" type="Sprite2D" parent="World"]
-position = Vector2(338, 533)
-texture = ExtResource("54")
-scale = Vector2(0.56, 0.56)
-flip_h = true
-
-[node name="Hen2" type="Sprite2D" parent="World"]
-position = Vector2(560, 531)
-texture = ExtResource("54")
-scale = Vector2(0.6, 0.6)
-
-[node name="Hen3" type="Sprite2D" parent="World"]
-position = Vector2(690, 534)
-texture = ExtResource("54")
-scale = Vector2(0.54, 0.54)
-flip_h = true
-
 
 [node name="OldMajor" parent="World" instance=ExtResource("2")]
 position = Vector2(180.0, 470.0)
@@ -631,8 +679,8 @@ z_index = 1
 
 [node name="LanternGlow" type="PointLight2D" parent="World/OldMajor"]
 position = Vector2(8.0, 26.0)
-energy = 1.7
-texture_scale = 2.5
+energy = 0.55
+texture_scale = 1.2
 range_layer_max = 0
 texture = ExtResource("38")
 script = ExtResource("50")
@@ -648,6 +696,13 @@ limit_bottom = 720
 position_smoothing_enabled = true
 position_smoothing_speed = 4.0
 
+[node name="OldMajorShadow" type="Sprite2D" parent="World/OldMajor"]
+position = Vector2(0, 82)
+texture = ExtResource("44")
+scale = Vector2(1.6, 0.35)
+modulate = Color(0.05, 0.05, 0.12, 0.55)
+z_index = -1
+
 [node name="MosesNest" type="Node2D" parent="World"]
 position = Vector2(1500.0, 200.0)
 
@@ -658,6 +713,21 @@ sprite_frames = SubResource("SpriteFrames_Moses")
 animation = &"fly"
 autoplay = "fly"
 script = ExtResource("4")
+
+[node name="ConeVisual" type="Polygon2D" parent="World/MosesNest/Moses"]
+color = Color(0.55, 0.62, 0.85, 0.18)
+polygon = PackedVector2Array(0, 0, -212, 340, 212, 340)
+
+[node name="Sight" type="RayCast2D" parent="World/MosesNest/Moses"]
+enabled = true
+collision_mask = 4
+
+[node name="AlertIcon" type="Label" parent="World/MosesNest/Moses"]
+position = Vector2(-12, -60)
+text = "!"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.85, 0.2, 0.2, 1)
+visible = false
 
 [node name="MosesGlow" type="PointLight2D" parent="World/MosesNest/Moses"]
 energy = 0.22
@@ -671,6 +741,380 @@ stream = ExtResource("39")
 bus = &"SFX"
 max_distance = 1200.0
 attenuation = 1.0
+
+[node name="ShadowPools" type="Node2D" parent="World"]
+
+[node name="Shadow0" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(300.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow0"]
+shape = SubResource("Shadow0Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow0"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.47, 0.55)
+
+[node name="Shadow1" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(660.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow1"]
+shape = SubResource("Shadow1Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow1"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.43, 0.55)
+
+[node name="Shadow2" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(1000.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow2"]
+shape = SubResource("Shadow2Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow2"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.51, 0.55)
+
+[node name="Shadow3" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(1320.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow3"]
+shape = SubResource("Shadow3Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow3"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.39, 0.55)
+
+[node name="Shadow4" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(1640.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow4"]
+shape = SubResource("Shadow4Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow4"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.47, 0.55)
+
+[node name="Shadow5" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(1950.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow5"]
+shape = SubResource("Shadow5Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow5"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.43, 0.55)
+
+[node name="Shadow6" type="Area2D" parent="World/ShadowPools"]
+position = Vector2(2200.0, 470.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ShadowPools/Shadow6"]
+shape = SubResource("Shadow6Shape")
+
+[node name="Visual" type="Sprite2D" parent="World/ShadowPools/Shadow6"]
+position = Vector2(0.0, 60.0)
+modulate = Color(0.05, 0.04, 0.12, 0.55)
+texture = ExtResource("44")
+scale = Vector2(0.47, 0.55)
+
+[node name="LightPools" type="Node2D" parent="World"]
+
+[node name="LightZone0" type="Area2D" parent="World/LightPools"]
+position = Vector2(840.0, 470.0)
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LightPools/LightZone0"]
+shape = SubResource("LightZone0Shape")
+
+[node name="LightVisual" type="PointLight2D" parent="World/LightPools/LightZone0"]
+position = Vector2(0.0, -60.0)
+energy = 0.6
+color = Color(1.0, 0.82, 0.45, 1)
+texture_scale = 1.2
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="LightZone1" type="Area2D" parent="World/LightPools"]
+position = Vector2(1200.0, 470.0)
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LightPools/LightZone1"]
+shape = SubResource("LightZone1Shape")
+
+[node name="LightVisual" type="PointLight2D" parent="World/LightPools/LightZone1"]
+position = Vector2(0.0, -60.0)
+energy = 0.55
+color = Color(1.0, 0.82, 0.45, 1)
+texture_scale = 1.0
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="LightZone2" type="Area2D" parent="World/LightPools"]
+position = Vector2(1750.0, 470.0)
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LightPools/LightZone2"]
+shape = SubResource("LightZone2Shape")
+
+[node name="LightVisual" type="PointLight2D" parent="World/LightPools/LightZone2"]
+position = Vector2(0.0, -60.0)
+energy = 0.55
+color = Color(1.0, 0.82, 0.45, 1)
+texture_scale = 1.0
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="LightZone3" type="Area2D" parent="World/LightPools"]
+position = Vector2(2100.0, 470.0)
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LightPools/LightZone3"]
+shape = SubResource("LightZone3Shape")
+
+[node name="LightVisual" type="PointLight2D" parent="World/LightPools/LightZone3"]
+position = Vector2(0.0, -60.0)
+energy = 0.5
+color = Color(1.0, 0.82, 0.45, 1)
+texture_scale = 1.0
+range_layer_max = 0
+texture = ExtResource("38")
+
+[node name="HayBales" type="Node2D" parent="World"]
+
+[node name="HayBale0" type="StaticBody2D" parent="World/HayBales"]
+position = Vector2(440.0, 554.0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale0"]
+shape = SubResource("HayBale0Shape")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/HayBales/HayBale0"]
+texture = ExtResource("63")
+scale = Vector2(1.0, 1.0)
+
+[node name="HayShadow0" type="Area2D" parent="World/HayBales/HayBale0"]
+position = Vector2(50.0, -60.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale0/HayShadow0"]
+shape = SubResource("HayShadowShape")
+
+[node name="HayBale1" type="StaticBody2D" parent="World/HayBales"]
+position = Vector2(760.0, 554.0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale1"]
+shape = SubResource("HayBale1Shape")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/HayBales/HayBale1"]
+texture = ExtResource("63")
+scale = Vector2(1.0, 1.0)
+
+[node name="HayShadow1" type="Area2D" parent="World/HayBales/HayBale1"]
+position = Vector2(50.0, -60.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale1/HayShadow1"]
+shape = SubResource("HayShadowShape")
+
+[node name="HayBale2" type="StaticBody2D" parent="World/HayBales"]
+position = Vector2(1280.0, 554.0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale2"]
+shape = SubResource("HayBale2Shape")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/HayBales/HayBale2"]
+texture = ExtResource("63")
+scale = Vector2(1.0, 1.0)
+
+[node name="HayShadow2" type="Area2D" parent="World/HayBales/HayBale2"]
+position = Vector2(50.0, -60.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale2/HayShadow2"]
+shape = SubResource("HayShadowShape")
+
+[node name="HayBale3" type="StaticBody2D" parent="World/HayBales"]
+position = Vector2(1590.0, 554.0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale3"]
+shape = SubResource("HayBale3Shape")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/HayBales/HayBale3"]
+texture = ExtResource("63")
+scale = Vector2(1.0, 1.0)
+
+[node name="HayShadow3" type="Area2D" parent="World/HayBales/HayBale3"]
+position = Vector2(50.0, -60.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale3/HayShadow3"]
+shape = SubResource("HayShadowShape")
+
+[node name="HayBale4" type="StaticBody2D" parent="World/HayBales"]
+position = Vector2(1900.0, 554.0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale4"]
+shape = SubResource("HayBale4Shape")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/HayBales/HayBale4"]
+texture = ExtResource("63")
+scale = Vector2(1.0, 1.0)
+
+[node name="HayShadow4" type="Area2D" parent="World/HayBales/HayBale4"]
+position = Vector2(50.0, -60.0)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/HayBales/HayBale4/HayShadow4"]
+shape = SubResource("HayShadowShape")
+
+[node name="Animals" type="Node2D" parent="World"]
+
+[node name="HenAnimal" parent="World/Animals" instance=ExtResource("55")]
+position = Vector2(520.0, 525.0)
+animal_id = &"hen"
+scurry_to_x = 2500.0
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Animals/HenAnimal"]
+texture = ExtResource("54")
+scale = Vector2(0.59, 0.59)
+
+[node name="SheepAnimal" parent="World/Animals" instance=ExtResource("55")]
+position = Vector2(1050.0, 515.0)
+animal_id = &"sheep"
+scurry_to_x = 2500.0
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Animals/SheepAnimal"]
+texture = ExtResource("60")
+scale = Vector2(2.0, 2.0)
+
+[node name="BoxerAnimal" parent="World/Animals" instance=ExtResource("55")]
+position = Vector2(1620.0, 490.0)
+animal_id = &"boxer"
+scurry_to_x = 2500.0
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Animals/BoxerAnimal"]
+texture = SubResource("BoxerFrame0")
+scale = Vector2(1.02, 1.02)
+
+[node name="CloverAnimal" parent="World/Animals" instance=ExtResource("55")]
+position = Vector2(2080.0, 492.0)
+animal_id = &"clover"
+scurry_to_x = 2500.0
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Animals/CloverAnimal"]
+texture = ExtResource("61")
+scale = Vector2(1.24, 1.24)
+
+[node name="SecretScroll" type="Area2D" parent="World"]
+position = Vector2(1300.0, 530.0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("59")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/SecretScroll"]
+shape = SubResource("ScrollShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/SecretScroll"]
+position = Vector2(0.0, -20.0)
+modulate = Color(0.95, 0.85, 0.65, 1)
+
+[node name="Prompt" type="Label" parent="World/SecretScroll"]
+position = Vector2(-24, -50)
+text = "[E] Read"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.769, 0.639, 0.290, 1)
+visible = false
 
 [node name="BarnDoor" type="Area2D" parent="World"]
 position = Vector2(2400.0, 500.0)
@@ -691,6 +1135,29 @@ texture_scale = 3.2
 range_layer_max = 0
 texture = ExtResource("38")
 
+[node name="CowChewing" type="AnimatedSprite2D" parent="World"]
+position = Vector2(720, 555)
+scale = Vector2(2.2, 2.2)
+modulate = Color(0.85, 0.88, 0.92, 1)
+sprite_frames = SubResource("SpriteFrames_Cow")
+animation = &"chew"
+autoplay = "chew"
+
+[node name="SleepingCat" type="AnimatedSprite2D" parent="World"]
+position = Vector2(430, 533)
+scale = Vector2(1.6, 1.6)
+modulate = Color(0.75, 0.72, 0.65, 0.9)
+sprite_frames = SubResource("SpriteFrames_Cat")
+animation = &"sleep"
+autoplay = "sleep"
+
+[node name="Fireflies" type="Node2D" parent="World"]
+script = ExtResource("46")
+
+[node name="ChimneySmoke" type="Node2D" parent="World"]
+position = Vector2(926, 276)
+script = ExtResource("48")
+
 [node name="OwlHoot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("40")
 bus = &"SFX"
@@ -708,38 +1175,17 @@ texture = ExtResource("49")
 expand_mode = 1
 mouse_filter = 2
 
-[node name="HeartsHUD" parent="." instance=ExtResource("3")]
+[node name="StealthHUD" parent="." instance=ExtResource("56")]
 
+[node name="ControlsHUD" parent="." instance=ExtResource("58")]
+controls = ["GOAL: wake 4 animals, reach the barn", "Move: A D or arrow keys", "Interact: E", "Hide: stand in shadow", "H: hide this panel"]
 
-[node name="CowChewing" type="AnimatedSprite2D" parent="World"]
-position = Vector2(720, 555)
-scale = Vector2(2.2, 2.2)
-modulate = Color(0.85, 0.88, 0.92, 1)
-sprite_frames = SubResource("SpriteFrames_Cow")
-animation = &"chew"
-autoplay = "chew"
-
-[node name="SleepingCat" type="AnimatedSprite2D" parent="World"]
-position = Vector2(430, 533)
-scale = Vector2(1.6, 1.6)
-modulate = Color(0.75, 0.72, 0.65, 0.9)
-sprite_frames = SubResource("SpriteFrames_Cat")
-animation = &"sleep"
-autoplay = "sleep"
-
-[node name="OldMajorShadow" type="Sprite2D" parent="World/OldMajor"]
-position = Vector2(0, 82)
-texture = ExtResource("44")
-scale = Vector2(1.6, 0.35)
-modulate = Color(0.05, 0.05, 0.12, 0.55)
-z_index = -1
-
-
-[node name="Fireflies" type="Node2D" parent="World"]
-script = ExtResource("46")
-
-[node name="ChimneySmoke" type="Node2D" parent="World"]
-position = Vector2(926, 276)
-script = ExtResource("48")
+[node name="ActIntro" parent="." instance=ExtResource("57")]
+act_label_text = "ACT 1 — CHAPTER 1"
+title_text = "OLD MAJOR'S DREAM"
+protagonist_text = "You are OLD MAJOR — the prize boar, wise and old."
+story_text = "Mr. Jones has drunk himself to sleep, and the light in the farmhouse has gone out at last. Word has passed from stall to coop: old Major has had a strange dream, and will tell it tonight in the big barn. But not every animal has crept in yet — and Moses, the tame raven, is Jones's spy. Move from shadow to shadow, wake the animals who still sleep, and bring them to the barn unseen."
+goal_text = "Wake all four sleeping animals and reach the big barn — without being caught by Moses or the light."
+controls = ["Move:  A / D  or  arrow keys", "Wake an animal / pick up:  E", "Hide:  stand in shadow or behind hay", "Show or hide controls:  H"]
 
 [connection signal="body_entered" from="World/BarnDoor" to="." method="on_barn_reached"]
